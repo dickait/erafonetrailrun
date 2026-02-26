@@ -76,7 +76,7 @@ return [
     'reg_dob' => 'Tanggal Lahir',
     'reg_identity' => 'Nomor Identitas (KTP/Paspor)',
     'reg_nationality' => 'Kewarganegaraan',
-    'reg_location' => 'Lokasi',
+    'reg_location' => 'Alamat Tempat Tinggal',
     'reg_country' => 'Negara',
     'reg_province' => 'Provinsi',
     'reg_city' => 'Kota',

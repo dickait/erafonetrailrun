@@ -25,8 +25,8 @@ class DatabaseSeeder extends Seeder
 
         // Create Country
         $indonesia = Country::create(['name' => 'Indonesia', 'code' => 'IDN']);
-        Country::create(['name' => 'Malaysia', 'code' => 'MYS']);
-        Country::create(['name' => 'Singapore', 'code' => 'SGP']);
+        // Country::create(['name' => 'Malaysia', 'code' => 'MYS']);
+        // Country::create(['name' => 'Singapore', 'code' => 'SGP']);
 
 
 

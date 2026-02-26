@@ -76,7 +76,7 @@ return [
     'reg_dob' => 'Date of Birth',
     'reg_identity' => 'Identity Number (KTP/Passport)',
     'reg_nationality' => 'Nationality',
-    'reg_location' => 'Location',
+    'reg_location' => 'Address Location',
     'reg_country' => 'Country',
     'reg_province' => 'Province',
     'reg_city' => 'City',
