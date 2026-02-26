@@ -20,20 +20,35 @@
                     <span class="font-display font-bold text-xl text-white">ERAFONE<span class="text-forest-400">TRAIL</span></span>
                 </a>
                 <div class="hidden md:flex items-center gap-8">
-                    <a href="{{ route('home') }}" class="text-sm font-medium text-gray-300 hover:text-forest-400 transition-colors">Home</a>
-                    <a href="{{ route('home') }}#categories" class="text-sm font-medium text-gray-300 hover:text-forest-400 transition-colors">Categories</a>
-                    <a href="{{ route('gallery') }}" class="text-sm font-medium text-gray-300 hover:text-forest-400 transition-colors">Gallery</a>
-                    <a href="{{ route('results') }}" class="text-sm font-medium text-gray-300 hover:text-forest-400 transition-colors">Results</a>
-                    <a href="{{ route('registration.status') }}" class="text-sm font-medium text-gray-300 hover:text-forest-400 transition-colors">Check Status</a>
+                    <a href="{{ route('home') }}" class="text-sm font-medium text-gray-300 hover:text-forest-400 transition-colors">{{ __('messages.nav_home') }}</a>
+                    <a href="{{ route('home') }}#categories" class="text-sm font-medium text-gray-300 hover:text-forest-400 transition-colors">{{ __('messages.nav_categories') }}</a>
+                    <a href="{{ route('gallery') }}" class="text-sm font-medium text-gray-300 hover:text-forest-400 transition-colors">{{ __('messages.nav_gallery') }}</a>
+                    <a href="{{ route('results') }}" class="text-sm font-medium text-gray-300 hover:text-forest-400 transition-colors">{{ __('messages.nav_results') }}</a>
+                    <a href="{{ route('registration.status') }}" class="text-sm font-medium text-gray-300 hover:text-forest-400 transition-colors">{{ __('messages.nav_check_status') }}</a>
                 </div>
                 <div class="hidden md:flex items-center gap-4">
+                    <!-- Language Switcher -->
+                    <div class="relative group">
+                        <button class="flex items-center gap-1.5 text-sm font-medium text-gray-400 hover:text-white transition-colors px-2 py-1 rounded-lg hover:bg-dark-700">
+                            {{ app()->getLocale() === 'id' ? '🇮🇩' : '🇬🇧' }}
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                        <div class="absolute right-0 top-full mt-1 w-36 bg-dark-800 border border-forest-900/50 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden z-50">
+                            <a href="{{ route('lang.switch', 'id') }}" class="flex items-center gap-2 px-4 py-2.5 text-sm {{ app()->getLocale() === 'id' ? 'text-forest-400 bg-forest-900/30' : 'text-gray-300 hover:bg-dark-700' }} transition-colors">
+                                🇮🇩 Indonesia
+                            </a>
+                            <a href="{{ route('lang.switch', 'en') }}" class="flex items-center gap-2 px-4 py-2.5 text-sm {{ app()->getLocale() === 'en' ? 'text-forest-400 bg-forest-900/30' : 'text-gray-300 hover:bg-dark-700' }} transition-colors">
+                                🇬🇧 English
+                            </a>
+                        </div>
+                    </div>
                     @auth
-                        <a href="{{ route('dashboard') }}" class="text-sm font-medium text-gray-300 hover:text-forest-400 transition-colors">Dashboard</a>
+                        <a href="{{ route('dashboard') }}" class="text-sm font-medium text-gray-300 hover:text-forest-400 transition-colors">{{ __('messages.nav_dashboard') }}</a>
                     @else
-                        <a href="{{ route('login') }}" class="text-sm font-medium text-gray-300 hover:text-forest-400 transition-colors">Login</a>
+                        <a href="{{ route('login') }}" class="text-sm font-medium text-gray-300 hover:text-forest-400 transition-colors">{{ __('messages.nav_login') }}</a>
                     @endauth
                     <a href="{{ route('register.create') }}" class="px-5 py-2.5 bg-gradient-to-r from-forest-600 to-forest-500 hover:from-forest-500 hover:to-forest-400 text-white text-sm font-semibold rounded-xl shadow-lg shadow-forest-500/25 hover:shadow-forest-500/40 transition-all duration-200 transform hover:-translate-y-0.5">
-                        Register Now
+                        {{ __('messages.nav_register') }}
                     </a>
                 </div>
                 <!-- Mobile menu button -->
@@ -45,16 +60,21 @@
         <!-- Mobile menu -->
         <div id="mobile-menu" class="hidden md:hidden border-t border-forest-900/50 bg-dark-900/95 backdrop-blur-xl">
             <div class="px-4 py-4 space-y-2">
-                <a href="{{ route('home') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-dark-700 transition-colors">Home</a>
-                <a href="{{ route('gallery') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-dark-700 transition-colors">Gallery</a>
-                <a href="{{ route('results') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-dark-700 transition-colors">Results</a>
-                <a href="{{ route('registration.status') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-dark-700 transition-colors">Check Status</a>
+                <a href="{{ route('home') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-dark-700 transition-colors">{{ __('messages.nav_home') }}</a>
+                <a href="{{ route('gallery') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-dark-700 transition-colors">{{ __('messages.nav_gallery') }}</a>
+                <a href="{{ route('results') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-dark-700 transition-colors">{{ __('messages.nav_results') }}</a>
+                <a href="{{ route('registration.status') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-dark-700 transition-colors">{{ __('messages.nav_check_status') }}</a>
                 @auth
-                    <a href="{{ route('dashboard') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-dark-700 transition-colors">Dashboard</a>
+                    <a href="{{ route('dashboard') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-dark-700 transition-colors">{{ __('messages.nav_dashboard') }}</a>
                 @else
-                    <a href="{{ route('login') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-dark-700 transition-colors">Login</a>
+                    <a href="{{ route('login') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-dark-700 transition-colors">{{ __('messages.nav_login') }}</a>
                 @endauth
-                <a href="{{ route('register.create') }}" class="block px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-forest-600 to-forest-500 text-center">Register Now</a>
+                <!-- Mobile Language Switcher -->
+                <div class="flex gap-2 px-4 py-2">
+                    <a href="{{ route('lang.switch', 'id') }}" class="px-3 py-1.5 text-xs rounded-lg {{ app()->getLocale() === 'id' ? 'bg-forest-900/40 text-forest-400' : 'text-gray-400 hover:bg-dark-700' }}">🇮🇩 ID</a>
+                    <a href="{{ route('lang.switch', 'en') }}" class="px-3 py-1.5 text-xs rounded-lg {{ app()->getLocale() === 'en' ? 'bg-forest-900/40 text-forest-400' : 'text-gray-400 hover:bg-dark-700' }}">🇬🇧 EN</a>
+                </div>
+                <a href="{{ route('register.create') }}" class="block px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-forest-600 to-forest-500 text-center">{{ __('messages.nav_register') }}</a>
             </div>
         </div>
     </nav>
@@ -75,19 +95,19 @@
                         </div>
                         <span class="font-display font-bold text-xl">ERAFONE<span class="text-forest-400">TRAIL</span></span>
                     </div>
-                    <p class="text-gray-400 text-sm max-w-md">Experience the ultimate trail running adventure through the stunning landscapes of Indonesia. Challenge yourself, connect with nature.</p>
+                    <p class="text-gray-400 text-sm max-w-md">{{ __('messages.footer_description') }}</p>
                 </div>
                 <div>
-                    <h4 class="font-display font-semibold text-sm uppercase tracking-wider text-forest-400 mb-4">Quick Links</h4>
+                    <h4 class="font-display font-semibold text-sm uppercase tracking-wider text-forest-400 mb-4">{{ __('messages.footer_quick_links') }}</h4>
                     <ul class="space-y-2">
-                        <li><a href="{{ route('home') }}" class="text-sm text-gray-400 hover:text-white transition-colors">Home</a></li>
-                        <li><a href="{{ route('register.create') }}" class="text-sm text-gray-400 hover:text-white transition-colors">Register</a></li>
-                        <li><a href="{{ route('gallery') }}" class="text-sm text-gray-400 hover:text-white transition-colors">Gallery</a></li>
-                        <li><a href="{{ route('results') }}" class="text-sm text-gray-400 hover:text-white transition-colors">Results</a></li>
+                        <li><a href="{{ route('home') }}" class="text-sm text-gray-400 hover:text-white transition-colors">{{ __('messages.nav_home') }}</a></li>
+                        <li><a href="{{ route('register.create') }}" class="text-sm text-gray-400 hover:text-white transition-colors">{{ __('messages.footer_register') }}</a></li>
+                        <li><a href="{{ route('gallery') }}" class="text-sm text-gray-400 hover:text-white transition-colors">{{ __('messages.nav_gallery') }}</a></li>
+                        <li><a href="{{ route('results') }}" class="text-sm text-gray-400 hover:text-white transition-colors">{{ __('messages.nav_results') }}</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-display font-semibold text-sm uppercase tracking-wider text-forest-400 mb-4">Contact</h4>
+                    <h4 class="font-display font-semibold text-sm uppercase tracking-wider text-forest-400 mb-4">{{ __('messages.footer_contact') }}</h4>
                     <ul class="space-y-2">
                         <li class="text-sm text-gray-400">info@erafonetrailrun.com</li>
                         <li class="text-sm text-gray-400">+62 812-3456-7890</li>
@@ -96,7 +116,7 @@
                 </div>
             </div>
             <div class="border-t border-forest-900/30 mt-8 pt-8 text-center">
-                <p class="text-sm text-gray-500">&copy; {{ date('Y') }} Erafone Trail Run. All rights reserved.</p>
+                <p class="text-sm text-gray-500">&copy; {{ date('Y') }} Erafone Trail Run. {{ __('messages.footer_rights') }}</p>
             </div>
         </div>
     </footer>

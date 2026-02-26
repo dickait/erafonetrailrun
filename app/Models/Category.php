@@ -44,4 +44,9 @@ class Category extends Model
         $registered = $this->participants()->whereIn('payment_status', ['pending', 'paid'])->count();
         return max(0, $this->quota - $registered);
     }
+
+    public function isEarlyBird(): bool
+    {
+        return $this->early_bird_price && $this->early_bird_deadline && now()->lte($this->early_bird_deadline) && $this->early_bird_price < $this->price;
+    }
 }

@@ -16,6 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'participant' => \App\Http\Middleware\ParticipantMiddleware::class,
         ]);
 
+        $middleware->web(append: [
+            \App\Http\Middleware\SetLocale::class,
+        ]);
+
         $middleware->validateCsrfTokens(except: [
             'webhook/*',
         ]);

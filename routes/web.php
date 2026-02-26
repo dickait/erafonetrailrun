@@ -7,6 +7,16 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\WebhookController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\App;
+
+// Language Switcher
+Route::get('/lang/{locale}', function (string $locale) {
+    $available = config('app.available_locales', ['id', 'en']);
+    if (in_array($locale, $available)) {
+        session()->put('locale', $locale);
+    }
+    return redirect()->back();
+})->name('lang.switch');
 
 /* |-------------------------------------------------------------------------- | Public Routes |-------------------------------------------------------------------------- */
 Route::get('/', [HomeController::class , 'index'])->name('home');
