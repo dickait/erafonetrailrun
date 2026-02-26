@@ -27,6 +27,7 @@ Route::get('/results', [HomeController::class , 'results'])->name('results');
 Route::get('/event-register', [RegistrationController::class , 'create'])->name('register.create');
 Route::post('/event-register', [RegistrationController::class , 'store'])->name('register.store')->middleware('throttle:5,1');
 Route::get('/status', [RegistrationController::class , 'checkStatus'])->name('registration.status');
+Route::get('/payment', [RegistrationController::class , 'payment'])->name('registration.payment');
 
 // API for cascading dropdowns
 Route::get('/api/provinces', [RegistrationController::class , 'getProvinces'])->name('api.provinces');

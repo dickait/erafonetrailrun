@@ -118,9 +118,30 @@ class RegistrationController extends Controller
         });
 
         // In production, redirect to Mayar payment link
-        // For now, redirect to status page
-        return redirect()->route('registration.status', ['email' => $participant->email])
+        // For now, redirect to payment page
+        return redirect()->route('registration.payment', ['email' => $participant->email])
             ->with('success', 'Registration successful! Please complete your payment.');
+    }
+
+    public function payment(Request $request)
+    {
+        $participant = null;
+
+        if ($request->has('email')) {
+            $event = Event::where('is_active', true)->latest('event_date')->first();
+            if ($event) {
+                $participant = Participant::with(['category', 'latestPayment', 'event'])
+                    ->where('event_id', $event->id)
+                    ->where('email', $request->email)
+                    ->first();
+            }
+        }
+
+        if (!$participant) {
+            return redirect()->route('home')->with('error', 'Peserta tidak ditemukan.');
+        }
+
+        return view('public.payment', compact('participant'));
     }
 
     public function checkStatus(Request $request)
