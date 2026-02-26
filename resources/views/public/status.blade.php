@@ -1,22 +1,22 @@
 @extends('layouts.public')
 @section('title', __('messages.status_title') . ' - Erafone Trail Run 2026')
 @section('content')
-<section class="pt-28 pb-20 bg-dark-900 min-h-screen">
+<section class="pt-28 pb-20 bg-surface-50 min-h-screen">
     <div class="max-w-2xl mx-auto px-4 sm:px-6">
         <div class="text-center mb-10">
-            <span class="inline-block px-4 py-1.5 bg-forest-900/40 text-forest-400 text-sm font-semibold rounded-full mb-6 tracking-wide uppercase">{{ __('messages.status_badge') }}</span>
-            <h1 class="font-display font-bold text-3xl md:text-4xl text-white mb-2">{{ __('messages.status_title') }}</h1>
-            <p class="text-gray-400">{{ __('messages.status_subtitle') }}</p>
+            <span class="inline-block px-4 py-1.5 bg-brand-50 text-brand-500 text-sm font-semibold rounded-full mb-6 tracking-wide uppercase">{{ __('messages.status_badge') }}</span>
+            <h1 class="font-display font-bold text-3xl md:text-4xl text-surface-900 mb-2">{{ __('messages.status_title') }}</h1>
+            <p class="text-surface-700">{{ __('messages.status_subtitle') }}</p>
         </div>
         <form method="GET" action="{{ route('registration.status') }}" class="flex gap-3 mb-8">
-            <input type="email" name="email" value="{{ request('email') }}" placeholder="{{ __('messages.status_placeholder') }}" class="flex-1 px-4 py-3 bg-dark-800 border border-forest-900/30 rounded-xl text-white placeholder-gray-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors">
-            <button type="submit" class="px-6 py-3 bg-gradient-to-r from-forest-600 to-forest-500 text-white font-semibold rounded-xl hover:from-forest-500 hover:to-forest-400 transition-all">{{ __('messages.status_check') }}</button>
+            <input type="email" name="email" value="{{ request('email') }}" placeholder="{{ __('messages.status_placeholder') }}" class="flex-1 px-4 py-3 bg-white border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+            <button type="submit" class="px-6 py-3 bg-gradient-to-r from-brand-500 to-brand-600 text-white font-semibold rounded-xl hover:from-brand-600 hover:to-brand-700 transition-all shadow-md">{{ __('messages.status_check') }}</button>
         </form>
         @if(isset($participant))
-        <div class="bg-dark-800 rounded-2xl border border-forest-900/30 p-6">
+        <div class="bg-white rounded-2xl border border-surface-200 p-6 shadow-sm">
             <div class="flex items-center gap-3 mb-6">
-                <div class="w-3 h-3 rounded-full {{ $participant->payment_status == 'paid' ? 'bg-forest-500' : ($participant->payment_status == 'pending' ? 'bg-amber-500' : 'bg-red-500') }}"></div>
-                <h3 class="font-display font-semibold text-lg text-white">{{ __('messages.status_found') }}</h3>
+                <div class="w-3 h-3 rounded-full {{ $participant->payment_status == 'paid' ? 'bg-emerald-500' : ($participant->payment_status == 'pending' ? 'bg-accent-500' : 'bg-brand-500') }}"></div>
+                <h3 class="font-display font-semibold text-lg text-surface-900">{{ __('messages.status_found') }}</h3>
             </div>
             <div class="space-y-4">
                 @php
@@ -30,29 +30,29 @@
                 ];
                 @endphp
                 @foreach($fields as $label => $val)
-                <div class="flex justify-between py-2 border-b border-dark-700 last:border-0">
-                    <span class="text-gray-400 text-sm">{{ $label }}</span>
-                    <span class="text-white text-sm font-medium">{{ $val }}</span>
+                <div class="flex justify-between py-2 border-b border-surface-100 last:border-0">
+                    <span class="text-surface-700 text-sm">{{ $label }}</span>
+                    <span class="text-surface-900 text-sm font-medium">{{ $val }}</span>
                 </div>
                 @endforeach
                 <div class="flex justify-between py-2">
-                    <span class="text-gray-400 text-sm">{{ __('messages.part_payment_status') }}</span>
-                    <span class="px-3 py-1 rounded-full text-xs font-semibold {{ $participant->payment_status == 'paid' ? 'bg-forest-900/40 text-forest-400' : ($participant->payment_status == 'pending' ? 'bg-amber-900/40 text-amber-400' : 'bg-red-900/40 text-red-400') }}">
+                    <span class="text-surface-700 text-sm">{{ __('messages.part_payment_status') }}</span>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold {{ $participant->payment_status == 'paid' ? 'bg-emerald-50 text-emerald-600' : ($participant->payment_status == 'pending' ? 'bg-accent-50 text-accent-600' : 'bg-brand-50 text-brand-500') }}">
                         {{ $participant->payment_status == 'paid' ? __('messages.status_paid') : ($participant->payment_status == 'pending' ? __('messages.status_pending') : __('messages.status_failed')) }}
                     </span>
                 </div>
             </div>
             @if($participant->payment_status == 'pending' && isset($participant->payments) && $participant->payments->first())
             <div class="mt-6">
-                <a href="{{ $participant->payments->first()->payment_link ?? '#' }}" target="_blank" class="block w-full py-3 text-center bg-gradient-to-r from-amber-600 to-amber-500 text-white font-semibold rounded-xl">{{ __('messages.status_complete_payment') }}</a>
+                <a href="{{ $participant->payments->first()->payment_link ?? '#' }}" target="_blank" class="block w-full py-3 text-center bg-gradient-to-r from-accent-500 to-accent-600 text-white font-semibold rounded-xl shadow-md">{{ __('messages.status_complete_payment') }}</a>
             </div>
             @endif
         </div>
         @elseif(request('email'))
-        <div class="bg-dark-800 rounded-2xl border border-red-900/30 p-8 text-center">
-            <svg class="w-16 h-16 mx-auto text-red-500/40 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <h3 class="font-display font-semibold text-lg text-white mb-2">{{ __('messages.status_not_found_title') }}</h3>
-            <p class="text-gray-400 text-sm">{{ __('messages.status_not_found_desc') }}</p>
+        <div class="bg-white rounded-2xl border border-brand-100 p-8 text-center shadow-sm">
+            <svg class="w-16 h-16 mx-auto text-brand-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <h3 class="font-display font-semibold text-lg text-surface-900 mb-2">{{ __('messages.status_not_found_title') }}</h3>
+            <p class="text-surface-700 text-sm">{{ __('messages.status_not_found_desc') }}</p>
         </div>
         @endif
     </div>

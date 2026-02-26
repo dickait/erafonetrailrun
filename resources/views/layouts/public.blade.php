@@ -8,73 +8,73 @@
     <meta name="description" content="@yield('meta_description', 'Join the ultimate trail running adventure - Erafone Trail Run 2026 in Sentul, Bogor')">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-dark-900 text-white font-sans antialiased">
+<body class="bg-white text-surface-900 font-sans antialiased">
     <!-- Navigation -->
-    <nav id="main-nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-dark-900/80 backdrop-blur-xl border-b border-forest-900/50">
+    <nav id="main-nav" class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-surface-200 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16 md:h-20">
                 <a href="{{ route('home') }}" class="flex items-center gap-3 group">
-                    <div class="w-10 h-10 bg-gradient-to-br from-forest-500 to-forest-700 rounded-xl flex items-center justify-center shadow-lg shadow-forest-500/20 group-hover:shadow-forest-500/40 transition-shadow">
+                    <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl flex items-center justify-center shadow-lg shadow-brand-500/20 group-hover:shadow-brand-500/40 transition-shadow">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     </div>
-                    <span class="font-display font-bold text-xl text-white">ERAFONE<span class="text-forest-400">TRAIL</span></span>
+                    <span class="font-display font-bold text-xl text-surface-900">ERAFONE<span class="text-brand-500">TRAIL</span></span>
                 </a>
                 <div class="hidden md:flex items-center gap-8">
-                    <a href="{{ route('home') }}" class="text-sm font-medium text-gray-300 hover:text-forest-400 transition-colors">{{ __('messages.nav_home') }}</a>
-                    <a href="{{ route('home') }}#categories" class="text-sm font-medium text-gray-300 hover:text-forest-400 transition-colors">{{ __('messages.nav_categories') }}</a>
-                    <a href="{{ route('gallery') }}" class="text-sm font-medium text-gray-300 hover:text-forest-400 transition-colors">{{ __('messages.nav_gallery') }}</a>
-                    <a href="{{ route('results') }}" class="text-sm font-medium text-gray-300 hover:text-forest-400 transition-colors">{{ __('messages.nav_results') }}</a>
-                    <a href="{{ route('registration.status') }}" class="text-sm font-medium text-gray-300 hover:text-forest-400 transition-colors">{{ __('messages.nav_check_status') }}</a>
+                    <a href="{{ route('home') }}" class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_home') }}</a>
+                    <a href="{{ route('home') }}#categories" class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_categories') }}</a>
+                    <a href="{{ route('gallery') }}" class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_gallery') }}</a>
+                    <a href="{{ route('results') }}" class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_results') }}</a>
+                    <a href="{{ route('registration.status') }}" class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_check_status') }}</a>
                 </div>
                 <div class="hidden md:flex items-center gap-4">
                     <!-- Language Switcher -->
                     <div class="relative group">
-                        <button class="flex items-center gap-1.5 text-sm font-medium text-gray-400 hover:text-white transition-colors px-2 py-1 rounded-lg hover:bg-dark-700">
+                        <button class="flex items-center gap-1.5 text-sm font-medium text-surface-700 hover:text-surface-900 transition-colors px-2 py-1 rounded-lg hover:bg-surface-100">
                             {{ app()->getLocale() === 'id' ? '🇮🇩' : '🇬🇧' }}
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                         </button>
-                        <div class="absolute right-0 top-full mt-1 w-36 bg-dark-800 border border-forest-900/50 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden z-50">
-                            <a href="{{ route('lang.switch', 'id') }}" class="flex items-center gap-2 px-4 py-2.5 text-sm {{ app()->getLocale() === 'id' ? 'text-forest-400 bg-forest-900/30' : 'text-gray-300 hover:bg-dark-700' }} transition-colors">
+                        <div class="absolute right-0 top-full mt-1 w-36 bg-white border border-surface-200 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden z-50">
+                            <a href="{{ route('lang.switch', 'id') }}" class="flex items-center gap-2 px-4 py-2.5 text-sm {{ app()->getLocale() === 'id' ? 'text-brand-500 bg-brand-50' : 'text-surface-600 hover:bg-surface-100' }} transition-colors">
                                 🇮🇩 Indonesia
                             </a>
-                            <a href="{{ route('lang.switch', 'en') }}" class="flex items-center gap-2 px-4 py-2.5 text-sm {{ app()->getLocale() === 'en' ? 'text-forest-400 bg-forest-900/30' : 'text-gray-300 hover:bg-dark-700' }} transition-colors">
+                            <a href="{{ route('lang.switch', 'en') }}" class="flex items-center gap-2 px-4 py-2.5 text-sm {{ app()->getLocale() === 'en' ? 'text-brand-500 bg-brand-50' : 'text-surface-600 hover:bg-surface-100' }} transition-colors">
                                 🇬🇧 English
                             </a>
                         </div>
                     </div>
                     @auth
-                        <a href="{{ route('dashboard') }}" class="text-sm font-medium text-gray-300 hover:text-forest-400 transition-colors">{{ __('messages.nav_dashboard') }}</a>
+                        <a href="{{ route('dashboard') }}" class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_dashboard') }}</a>
                     @else
-                        <a href="{{ route('login') }}" class="text-sm font-medium text-gray-300 hover:text-forest-400 transition-colors">{{ __('messages.nav_login') }}</a>
+                        <a href="{{ route('login') }}" class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_login') }}</a>
                     @endauth
-                    <a href="{{ route('register.create') }}" class="px-5 py-2.5 bg-gradient-to-r from-forest-600 to-forest-500 hover:from-forest-500 hover:to-forest-400 text-white text-sm font-semibold rounded-xl shadow-lg shadow-forest-500/25 hover:shadow-forest-500/40 transition-all duration-200 transform hover:-translate-y-0.5">
+                    <a href="{{ route('register.create') }}" class="px-5 py-2.5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white text-sm font-semibold rounded-xl shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 transition-all duration-200 transform hover:-translate-y-0.5">
                         {{ __('messages.nav_register') }}
                     </a>
                 </div>
                 <!-- Mobile menu button -->
-                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-dark-700 transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-surface-100 transition-colors">
+                    <svg class="w-6 h-6 text-surface-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
             </div>
         </div>
         <!-- Mobile menu -->
-        <div id="mobile-menu" class="hidden md:hidden border-t border-forest-900/50 bg-dark-900/95 backdrop-blur-xl">
+        <div id="mobile-menu" class="hidden md:hidden border-t border-surface-200 bg-white/95 backdrop-blur-xl">
             <div class="px-4 py-4 space-y-2">
-                <a href="{{ route('home') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-dark-700 transition-colors">{{ __('messages.nav_home') }}</a>
-                <a href="{{ route('gallery') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-dark-700 transition-colors">{{ __('messages.nav_gallery') }}</a>
-                <a href="{{ route('results') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-dark-700 transition-colors">{{ __('messages.nav_results') }}</a>
-                <a href="{{ route('registration.status') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-dark-700 transition-colors">{{ __('messages.nav_check_status') }}</a>
+                <a href="{{ route('home') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-surface-800 hover:text-brand-500 hover:bg-surface-100 transition-colors">{{ __('messages.nav_home') }}</a>
+                <a href="{{ route('gallery') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-surface-800 hover:text-brand-500 hover:bg-surface-100 transition-colors">{{ __('messages.nav_gallery') }}</a>
+                <a href="{{ route('results') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-surface-800 hover:text-brand-500 hover:bg-surface-100 transition-colors">{{ __('messages.nav_results') }}</a>
+                <a href="{{ route('registration.status') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-surface-800 hover:text-brand-500 hover:bg-surface-100 transition-colors">{{ __('messages.nav_check_status') }}</a>
                 @auth
-                    <a href="{{ route('dashboard') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-dark-700 transition-colors">{{ __('messages.nav_dashboard') }}</a>
+                    <a href="{{ route('dashboard') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-surface-800 hover:text-brand-500 hover:bg-surface-100 transition-colors">{{ __('messages.nav_dashboard') }}</a>
                 @else
-                    <a href="{{ route('login') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-dark-700 transition-colors">{{ __('messages.nav_login') }}</a>
+                    <a href="{{ route('login') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-surface-800 hover:text-brand-500 hover:bg-surface-100 transition-colors">{{ __('messages.nav_login') }}</a>
                 @endauth
                 <!-- Mobile Language Switcher -->
                 <div class="flex gap-2 px-4 py-2">
-                    <a href="{{ route('lang.switch', 'id') }}" class="px-3 py-1.5 text-xs rounded-lg {{ app()->getLocale() === 'id' ? 'bg-forest-900/40 text-forest-400' : 'text-gray-400 hover:bg-dark-700' }}">🇮🇩 ID</a>
-                    <a href="{{ route('lang.switch', 'en') }}" class="px-3 py-1.5 text-xs rounded-lg {{ app()->getLocale() === 'en' ? 'bg-forest-900/40 text-forest-400' : 'text-gray-400 hover:bg-dark-700' }}">🇬🇧 EN</a>
+                    <a href="{{ route('lang.switch', 'id') }}" class="px-3 py-1.5 text-xs rounded-lg {{ app()->getLocale() === 'id' ? 'bg-brand-50 text-brand-500' : 'text-surface-500 hover:bg-surface-100' }}">🇮🇩 ID</a>
+                    <a href="{{ route('lang.switch', 'en') }}" class="px-3 py-1.5 text-xs rounded-lg {{ app()->getLocale() === 'en' ? 'bg-brand-50 text-brand-500' : 'text-surface-500 hover:bg-surface-100' }}">🇬🇧 EN</a>
                 </div>
-                <a href="{{ route('register.create') }}" class="block px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-forest-600 to-forest-500 text-center">{{ __('messages.nav_register') }}</a>
+                <a href="{{ route('register.create') }}" class="block px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-brand-500 to-brand-600 text-center">{{ __('messages.nav_register') }}</a>
             </div>
         </div>
     </nav>
@@ -85,38 +85,38 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-dark-800 border-t border-forest-900/30">
+    <footer class="bg-surface-900 border-t border-surface-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div class="md:col-span-2">
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-10 bg-gradient-to-br from-forest-500 to-forest-700 rounded-xl flex items-center justify-center">
+                        <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl flex items-center justify-center">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                         </div>
-                        <span class="font-display font-bold text-xl">ERAFONE<span class="text-forest-400">TRAIL</span></span>
+                        <span class="font-display font-bold text-xl text-white">ERAFONE<span class="text-brand-400">TRAIL</span></span>
                     </div>
-                    <p class="text-gray-400 text-sm max-w-md">{{ __('messages.footer_description') }}</p>
+                    <p class="text-surface-400 text-sm max-w-md">{{ __('messages.footer_description') }}</p>
                 </div>
                 <div>
-                    <h4 class="font-display font-semibold text-sm uppercase tracking-wider text-forest-400 mb-4">{{ __('messages.footer_quick_links') }}</h4>
+                    <h4 class="font-display font-semibold text-sm uppercase tracking-wider text-accent-400 mb-4">{{ __('messages.footer_quick_links') }}</h4>
                     <ul class="space-y-2">
-                        <li><a href="{{ route('home') }}" class="text-sm text-gray-400 hover:text-white transition-colors">{{ __('messages.nav_home') }}</a></li>
-                        <li><a href="{{ route('register.create') }}" class="text-sm text-gray-400 hover:text-white transition-colors">{{ __('messages.footer_register') }}</a></li>
-                        <li><a href="{{ route('gallery') }}" class="text-sm text-gray-400 hover:text-white transition-colors">{{ __('messages.nav_gallery') }}</a></li>
-                        <li><a href="{{ route('results') }}" class="text-sm text-gray-400 hover:text-white transition-colors">{{ __('messages.nav_results') }}</a></li>
+                        <li><a href="{{ route('home') }}" class="text-sm text-surface-400 hover:text-white transition-colors">{{ __('messages.nav_home') }}</a></li>
+                        <li><a href="{{ route('register.create') }}" class="text-sm text-surface-400 hover:text-white transition-colors">{{ __('messages.footer_register') }}</a></li>
+                        <li><a href="{{ route('gallery') }}" class="text-sm text-surface-400 hover:text-white transition-colors">{{ __('messages.nav_gallery') }}</a></li>
+                        <li><a href="{{ route('results') }}" class="text-sm text-surface-400 hover:text-white transition-colors">{{ __('messages.nav_results') }}</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-display font-semibold text-sm uppercase tracking-wider text-forest-400 mb-4">{{ __('messages.footer_contact') }}</h4>
+                    <h4 class="font-display font-semibold text-sm uppercase tracking-wider text-accent-400 mb-4">{{ __('messages.footer_contact') }}</h4>
                     <ul class="space-y-2">
-                        <li class="text-sm text-gray-400">info@erafonetrailrun.com</li>
-                        <li class="text-sm text-gray-400">+62 812-3456-7890</li>
-                        <li class="text-sm text-gray-400">Sentul, Bogor, Indonesia</li>
+                        <li class="text-sm text-surface-400">info@erafonetrailrun.com</li>
+                        <li class="text-sm text-surface-400">+62 812-3456-7890</li>
+                        <li class="text-sm text-surface-400">Sentul, Bogor, Indonesia</li>
                     </ul>
                 </div>
             </div>
-            <div class="border-t border-forest-900/30 mt-8 pt-8 text-center">
-                <p class="text-sm text-gray-500">&copy; {{ date('Y') }} Erafone Trail Run. {{ __('messages.footer_rights') }}</p>
+            <div class="border-t border-surface-800 mt-8 pt-8 text-center">
+                <p class="text-sm text-surface-500">&copy; {{ date('Y') }} Erafone Trail Run. {{ __('messages.footer_rights') }}</p>
             </div>
         </div>
     </footer>

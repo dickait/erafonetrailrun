@@ -4,44 +4,44 @@
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 @endpush
 @section('content')
-<section class="pt-28 pb-20 bg-dark-900 min-h-screen">
+<section class="pt-28 pb-20 bg-surface-50 min-h-screen">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
         <div class="text-center mb-10">
-            <span class="inline-block px-4 py-1.5 bg-forest-900/40 text-forest-400 text-sm font-semibold rounded-full mb-6 tracking-wide uppercase">{{ __('messages.reg_badge') }}</span>
-            <h1 class="font-display font-bold text-3xl md:text-4xl text-white mb-2">{{ __('messages.reg_title') }} {{ $event->name ?? 'Erafone Trail Run 2026' }}</h1>
-            <p class="text-gray-400">{{ __('messages.reg_subtitle') }}</p>
+            <span class="inline-block px-4 py-1.5 bg-brand-50 text-brand-500 text-sm font-semibold rounded-full mb-6 tracking-wide uppercase">{{ __('messages.reg_badge') }}</span>
+            <h1 class="font-display font-bold text-3xl md:text-4xl text-surface-900 mb-2">{{ __('messages.reg_title') }} {{ $event->name ?? 'Erafone Trail Run 2026' }}</h1>
+            <p class="text-surface-700">{{ __('messages.reg_subtitle') }}</p>
         </div>
 
         @if($errors->any())
-        <div class="mb-6 p-4 bg-red-900/30 border border-red-700/50 rounded-xl">
-            <ul class="text-sm text-red-300 space-y-1">@foreach($errors->all() as $error)<li>• {{ $error }}</li>@endforeach</ul>
+        <div class="mb-6 p-4 bg-brand-50 border border-brand-200 rounded-xl">
+            <ul class="text-sm text-brand-600 space-y-1">@foreach($errors->all() as $error)<li>• {{ $error }}</li>@endforeach</ul>
         </div>
         @endif
 
         @if(session('success'))
-        <div class="mb-6 p-4 bg-forest-900/30 border border-forest-700/50 rounded-xl text-forest-300">{{ session('success') }}</div>
+        <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-700">{{ session('success') }}</div>
         @endif
 
         <form method="POST" action="{{ route('register.store') }}" class="space-y-8">
             @csrf
             <!-- Category Selection -->
-            <div class="bg-dark-800 rounded-2xl border border-forest-900/30 p-6">
-                <h3 class="font-display font-semibold text-lg text-white mb-4">{{ __('messages.reg_select_category') }}</h3>
+            <div class="bg-white rounded-2xl border border-surface-200 p-6 shadow-sm">
+                <h3 class="font-display font-semibold text-lg text-surface-900 mb-4">{{ __('messages.reg_select_category') }}</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     @foreach($categories as $cat)
                     <label class="cursor-pointer">
                         <input type="radio" name="category_id" value="{{ $cat->id }}" class="category-radio hidden peer" {{ old('category_id', request('category')) == $cat->id ? 'checked' : '' }}>
-                        <div class="border border-dark-600 rounded-xl p-4 text-center transition-all peer-checked:border-forest-500 peer-checked:bg-forest-900/20 hover:border-forest-700">
-                            <p class="font-display font-bold text-xl {{ $loop->index == 0 ? 'text-amber-400' : ($loop->index == 1 ? 'text-red-400' : 'text-forest-400') }}">{{ strtoupper(explode(' ', $cat->name)[0]) }}</p>
-                            <p class="text-sm text-gray-400">{{ $cat->name }}</p>
-                            <p class="text-sm text-forest-400 font-medium">Rp {{ number_format($cat->getCurrentPrice(), 0, ',', '.') }}</p>
+                        <div class="border border-surface-200 rounded-xl p-4 text-center transition-all peer-checked:border-brand-500 peer-checked:bg-brand-50 hover:border-brand-300">
+                            <p class="font-display font-bold text-xl {{ $loop->index == 0 ? 'text-accent-600' : ($loop->index == 1 ? 'text-brand-500' : 'text-emerald-600') }}">{{ strtoupper(explode(' ', $cat->name)[0]) }}</p>
+                            <p class="text-sm text-surface-700">{{ $cat->name }}</p>
+                            <p class="text-sm text-brand-500 font-medium">Rp {{ number_format($cat->getCurrentPrice(), 0, ',', '.') }}</p>
                         </div>
                     </label>
                     @endforeach
                 </div>
 
                 <!-- Dynamic Category Details -->
-                <div id="category-details-container" class="mt-6 border-t border-dark-700 pt-6 hidden">
+                <div id="category-details-container" class="mt-6 border-t border-surface-200 pt-6 hidden">
                     @foreach($categories as $cat)
                     @php
                     $distKm = $cat->distance_km ?? substr($cat->slug, 0, strpos($cat->slug, 'k'));
@@ -49,23 +49,23 @@
                     <div id="cat-detail-{{ $cat->id }}" class="category-detail-content hidden">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div class="space-y-3">
-                                <h4 class="font-display font-bold text-white mb-2">{{ $cat->name }}</h4>
-                                <p class="text-gray-400 text-sm mb-4">{{ $cat->description }}</p>
-                                <div class="flex justify-between text-sm"><span class="text-gray-500">{{ __('messages.categories_distance') }}</span><span class="text-white font-medium">{{ $distKm }} km</span></div>
-                                <div class="flex justify-between text-sm"><span class="text-gray-500">{{ __('messages.categories_elevation') }}</span><span class="text-white font-medium">{{ $cat->elevation ?? 0 }} m</span></div>
-                                <div class="flex justify-between text-sm"><span class="text-gray-500">{{ __('messages.categories_cot') }}</span><span class="text-white font-medium">{{ $cat->cot ?? 0 }} {{ app()->getLocale() == 'id' ? 'Jam' : 'Hours' }}</span></div>
+                                <h4 class="font-display font-bold text-surface-900 mb-2">{{ $cat->name }}</h4>
+                                <p class="text-surface-700 text-sm mb-4">{{ $cat->description }}</p>
+                                <div class="flex justify-between text-sm"><span class="text-surface-700">{{ __('messages.categories_distance') }}</span><span class="text-surface-900 font-medium">{{ $distKm }} km</span></div>
+                                <div class="flex justify-between text-sm"><span class="text-surface-700">{{ __('messages.categories_elevation') }}</span><span class="text-surface-900 font-medium">{{ $cat->elevation ?? 0 }} m</span></div>
+                                <div class="flex justify-between text-sm"><span class="text-surface-700">{{ __('messages.categories_cot') }}</span><span class="text-surface-900 font-medium">{{ $cat->cot ?? 0 }} {{ app()->getLocale() == 'id' ? 'Jam' : 'Hours' }}</span></div>
                             </div>
                             <div>
-                                <p class="text-sm font-semibold text-white mb-3">{{ __('messages.categories_entitlements') }}:</p>
-                                <ul class="text-sm text-gray-400 space-y-2">
-                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-forest-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_jersey') }}</li>
-                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-forest-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_medal') }}</li>
-                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-forest-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_racepack') }}</li>
-                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-forest-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_refreshment') }}</li>
-                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-forest-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_cert') }}</li>
-                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-forest-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_timing') }}</li>
+                                <p class="text-sm font-semibold text-surface-900 mb-3">{{ __('messages.categories_entitlements') }}:</p>
+                                <ul class="text-sm text-surface-700 space-y-2">
+                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_jersey') }}</li>
+                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_medal') }}</li>
+                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_racepack') }}</li>
+                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_refreshment') }}</li>
+                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_cert') }}</li>
+                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_timing') }}</li>
                                     @if($cat->slug === '21k-ultra-trail')
-                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-earth-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-earth-400 font-medium">{{ __('messages.categories_item_finisher_tee') }}</span></li>
+                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-accent-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-accent-600 font-medium">{{ __('messages.categories_item_finisher_tee') }}</span></li>
                                     @endif
                                 </ul>
                             </div>
@@ -76,103 +76,103 @@
             </div>
 
             <!-- Personal Information -->
-            <div class="bg-dark-800 rounded-2xl border border-forest-900/30 p-6 space-y-5">
-                <h3 class="font-display font-semibold text-lg text-white">{{ __('messages.reg_personal_info') }}</h3>
+            <div class="bg-white rounded-2xl border border-surface-200 p-6 space-y-5 shadow-sm">
+                <h3 class="font-display font-semibold text-lg text-surface-900">{{ __('messages.reg_personal_info') }}</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_full_name') }} *</label>
-                        <input type="text" name="full_name" value="{{ old('full_name') }}" required class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white placeholder-gray-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors" placeholder="{{ __('messages.reg_full_name') }}">
+                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_full_name') }} *</label>
+                        <input type="text" name="full_name" value="{{ old('full_name') }}" required class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="{{ __('messages.reg_full_name') }}">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_bib_name') }} (Maks 15) *</label>
-                        <input type="text" name="bib_name" value="{{ old('bib_name') }}" required maxlength="15" class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white placeholder-gray-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors" placeholder="Name on BIB">
+                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_bib_name') }} (Maks 15) *</label>
+                        <input type="text" name="bib_name" value="{{ old('bib_name') }}" required maxlength="15" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="Name on BIB">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_email') }} *</label>
-                        <input type="email" name="email" value="{{ old('email') }}" required class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white placeholder-gray-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors" placeholder="your@email.com">
+                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_email') }} *</label>
+                        <input type="email" name="email" value="{{ old('email') }}" required class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="your@email.com">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_phone') }} *</label>
-                        <input type="text" name="phone" value="{{ old('phone') }}" required class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white placeholder-gray-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors" placeholder="08xxxxxxxxx">
+                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_phone') }} *</label>
+                        <input type="text" name="phone" value="{{ old('phone') }}" required class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="08xxxxxxxxx">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_gender') }} *</label>
-                        <select name="gender" required class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors">
+                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_gender') }} *</label>
+                        <select name="gender" required class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                             <option value="">{{ __('messages.reg_gender_select') }}</option>
                             <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>{{ __('messages.reg_gender_male') }}</option>
                             <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>{{ __('messages.reg_gender_female') }}</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_dob') }} *</label>
-                        <input type="date" name="date_of_birth" value="{{ old('date_of_birth') }}" required class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors">
+                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_dob') }} *</label>
+                        <input type="date" name="date_of_birth" value="{{ old('date_of_birth') }}" required class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_identity') }} *</label>
-                        <input type="text" name="identity_number" value="{{ old('identity_number') }}" required class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white placeholder-gray-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors" placeholder="KTP / Passport Number">
+                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_identity') }} *</label>
+                        <input type="text" name="identity_number" value="{{ old('identity_number') }}" required class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="KTP / Passport Number">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_nationality') }} *</label>
-                        <input type="text" name="nationality" value="{{ old('nationality', 'Indonesia') }}" required class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors">
+                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_nationality') }} *</label>
+                        <input type="text" name="nationality" value="{{ old('nationality', 'Indonesia') }}" required class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                     </div>
                 </div>
             </div>
 
             <!-- Location -->
-            <div class="bg-dark-800 rounded-2xl border border-forest-900/30 p-6 space-y-5">
-                <h3 class="font-display font-semibold text-lg text-white">{{ __('messages.reg_location') }}</h3>
+            <div class="bg-white rounded-2xl border border-surface-200 p-6 space-y-5 shadow-sm">
+                <h3 class="font-display font-semibold text-lg text-surface-900">{{ __('messages.reg_location') }}</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_country') }}</label>
-                        <select name="country_id" id="country" class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors">
+                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_country') }}</label>
+                        <select name="country_id" id="country" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                             <option value="">{{ __('messages.reg_select_country') }}</option>
                             @foreach($countries as $country)<option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>{{ $country->name }}</option>@endforeach
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_province') }}</label>
-                        <select name="province_id" id="province" class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors">
+                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_province') }}</label>
+                        <select name="province_id" id="province" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                             <option value="">{{ __('messages.reg_select_province') }}</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_city') }}</label>
-                        <select name="city_id" id="city" class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors">
+                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_city') }}</label>
+                        <select name="city_id" id="city" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                             <option value="">{{ __('messages.reg_select_city') }}</option>
                         </select>
                     </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_address') }}</label>
-                    <input type="text" name="address" value="{{ old('address') }}" class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white placeholder-gray-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors">
+                    <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_address') }}</label>
+                    <input type="text" name="address" value="{{ old('address') }}" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                 </div>
             </div>
 
             <!-- Additional Info -->
-            <div class="bg-dark-800 rounded-2xl border border-forest-900/30 p-6 space-y-5">
-                <h3 class="font-display font-semibold text-lg text-white">{{ __('messages.reg_additional') }}</h3>
+            <div class="bg-white rounded-2xl border border-surface-200 p-6 space-y-5 shadow-sm">
+                <h3 class="font-display font-semibold text-lg text-surface-900">{{ __('messages.reg_additional') }}</h3>
                 
                 <div>
                     <div class="flex justify-between items-end mb-1.5">
-                        <label class="block text-sm font-medium text-gray-300">{{ __('messages.reg_jersey_size') }}</label>
-                        <button type="button" onclick="document.getElementById('sizeChartModal').classList.remove('hidden')" class="text-xs text-forest-400 hover:text-forest-300 underline font-medium">Panduan / Size Chart</button>
+                        <label class="block text-sm font-medium text-surface-700">{{ __('messages.reg_jersey_size') }}</label>
+                        <button type="button" onclick="document.getElementById('sizeChartModal').classList.remove('hidden')" class="text-xs text-brand-500 hover:text-brand-600 underline font-medium">Panduan / Size Chart</button>
                     </div>
-                    <div class="mb-3 p-4 bg-dark-700 rounded-xl flex items-center gap-4 text-center">
-                        <div class="flex-shrink-0 w-16 h-16 text-forest-500">
+                    <div class="mb-3 p-4 bg-surface-50 rounded-xl flex items-center gap-4 text-center">
+                        <div class="flex-shrink-0 w-16 h-16 text-brand-400">
                             <svg viewBox="0 0 24 24" fill="currentColor" class="w-full h-full"><path d="M19.7 7.7L16 4.6C15.8 4.4 15.6 4.3 15.3 4.3H8.7C8.4 4.3 8.2 4.4 8 4.6L4.3 7.7C3.9 8 3.8 8.4 4 8.8L5.4 12c.1.3.4.4.7.4H7v8.3c0 .4.3.7.7.7h8.7c.4 0 .7-.3.7-.7V12.3h.9c.3 0 .6-.2.7-.4L20 8.8C20.2 8.4 20.1 8 19.7 7.7zM15 6.3V8c0 .6-.4 1-1 1H10C9.4 9 9 8.6 9 8V6.3c1-.3 2-1.3 3-1.3S14 6 15 6.3z"/></svg>
                         </div>
-                        <div class="text-xs text-gray-400 text-left w-full max-w-sm">
-                            <p class="mb-1"><span class="font-bold text-gray-200">A. Lebar Dada:</span> Dari ketiak ke ketiak.</p>
-                            <p><span class="font-bold text-gray-200">B. Panjang:</span> Dari kerah ke bawah.</p>
+                        <div class="text-xs text-surface-700 text-left w-full max-w-sm">
+                            <p class="mb-1"><span class="font-bold text-surface-700">A. Lebar Dada:</span> Dari ketiak ke ketiak.</p>
+                            <p><span class="font-bold text-surface-700">B. Panjang:</span> Dari kerah ke bawah.</p>
                         </div>
                     </div>
-                    <select name="jersey_size" class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors">
+                    <select name="jersey_size" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                         <option value="">{{ __('messages.reg_select') }}</option>
                         @foreach(['XS','S','M','L','XL','XXL'] as $sz)<option value="{{ $sz }}" {{ old('jersey_size') == $sz ? 'selected' : '' }}>{{ $sz }}</option>@endforeach
                     </select>
@@ -180,66 +180,66 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_blood_type') }}</label>
-                        <select name="blood_type" class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors">
+                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_blood_type') }}</label>
+                        <select name="blood_type" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                             <option value="">{{ __('messages.reg_select') }}</option>
                             @foreach(['A','B','AB','O'] as $bt)<option value="{{ $bt }}" {{ old('blood_type') == $bt ? 'selected' : '' }}>{{ $bt }}</option>@endforeach
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_community') }}</label>
-                        <input type="text" name="community" value="{{ old('community') }}" class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white placeholder-gray-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors">
+                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_community') }}</label>
+                        <input type="text" name="community" value="{{ old('community') }}" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                     </div>
                 </div>
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_emergency_name') }}</label>
-                        <input type="text" name="emergency_contact_name" value="{{ old('emergency_contact_name') }}" class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white placeholder-gray-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors">
+                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_emergency_name') }}</label>
+                        <input type="text" name="emergency_contact_name" value="{{ old('emergency_contact_name') }}" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_emergency_phone') }}</label>
-                        <input type="text" name="emergency_contact_phone" value="{{ old('emergency_contact_phone') }}" class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white placeholder-gray-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors">
+                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_emergency_phone') }}</label>
+                        <input type="text" name="emergency_contact_phone" value="{{ old('emergency_contact_phone') }}" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_medical') }}</label>
-                    <textarea name="medical_conditions" rows="3" class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white placeholder-gray-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors" placeholder="{{ __('messages.reg_medical_placeholder') }}">{{ old('medical_conditions') }}</textarea>
+                    <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_medical') }}</label>
+                    <textarea name="medical_conditions" rows="3" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="{{ __('messages.reg_medical_placeholder') }}">{{ old('medical_conditions') }}</textarea>
                 </div>
             </div>
 
             <!-- Agreements & Recaptcha -->
-            <div class="bg-dark-800 rounded-2xl border border-forest-900/30 p-6 space-y-5">
+            <div class="bg-white rounded-2xl border border-surface-200 p-6 space-y-5 shadow-sm">
                 <div class="space-y-4">
                     <label class="flex items-start gap-3 cursor-pointer group">
                         <div class="flex-shrink-0 mt-1">
-                            <input type="checkbox" name="agreement_1" required class="w-5 h-5 rounded border-dark-600 bg-dark-700 text-forest-500 focus:ring-forest-500 focus:ring-offset-dark-800">
+                            <input type="checkbox" name="agreement_1" required class="w-5 h-5 rounded border-surface-300 bg-surface-50 text-brand-500 focus:ring-brand-500 focus:ring-offset-white">
                         </div>
-                        <span class="text-sm text-gray-300 group-hover:text-white transition-colors">{{ __('messages.reg_agreement_1') }} *</span>
+                        <span class="text-sm text-surface-600 group-hover:text-surface-900 transition-colors">{{ __('messages.reg_agreement_1') }} *</span>
                     </label>
 
                     <label class="flex items-start gap-3 cursor-pointer group">
                         <div class="flex-shrink-0 mt-1">
-                            <input type="checkbox" name="agreement_2" required class="w-5 h-5 rounded border-dark-600 bg-dark-700 text-forest-500 focus:ring-forest-500 focus:ring-offset-dark-800">
+                            <input type="checkbox" name="agreement_2" required class="w-5 h-5 rounded border-surface-300 bg-surface-50 text-brand-500 focus:ring-brand-500 focus:ring-offset-white">
                         </div>
-                        <span class="text-sm text-gray-300 group-hover:text-white transition-colors">{{ __('messages.reg_agreement_2') }} *</span>
+                        <span class="text-sm text-surface-600 group-hover:text-surface-900 transition-colors">{{ __('messages.reg_agreement_2') }} *</span>
                     </label>
 
                     <label class="flex items-start gap-3 cursor-pointer group">
                         <div class="flex-shrink-0 mt-1">
-                            <input type="checkbox" name="agreement_3" required class="w-5 h-5 rounded border-dark-600 bg-dark-700 text-forest-500 focus:ring-forest-500 focus:ring-offset-dark-800">
+                            <input type="checkbox" name="agreement_3" required class="w-5 h-5 rounded border-surface-300 bg-surface-50 text-brand-500 focus:ring-brand-500 focus:ring-offset-white">
                         </div>
-                        <span class="text-sm text-gray-300 group-hover:text-white transition-colors">{{ __('messages.reg_agreement_3') }} *</span>
+                        <span class="text-sm text-surface-600 group-hover:text-surface-900 transition-colors">{{ __('messages.reg_agreement_3') }} *</span>
                     </label>
                 </div>
                 
-                <div class="pt-4 border-t border-dark-700">
-                    <div class="g-recaptcha" data-theme="dark" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                <div class="pt-4 border-t border-surface-200">
+                    <div class="g-recaptcha" data-theme="light" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
                 </div>
             </div>
 
-            <button type="submit" class="w-full py-4 bg-gradient-to-r from-forest-600 to-forest-500 hover:from-forest-500 hover:to-forest-400 text-white font-bold rounded-2xl shadow-xl shadow-forest-500/25 hover:shadow-forest-500/40 transition-all duration-200 text-lg">
+            <button type="submit" class="w-full py-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold rounded-2xl shadow-xl shadow-brand-500/25 hover:shadow-brand-500/40 transition-all duration-200 text-lg">
                 {{ __('messages.reg_submit') }}
             </button>
         </form>
@@ -247,21 +247,21 @@
 </section>
 
 <!-- Size Chart Modal -->
-<div id="sizeChartModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/80 backdrop-blur-sm p-4">
-    <div class="bg-dark-800 border border-dark-600 rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
-        <div class="sticky top-0 bg-dark-800/90 backdrop-blur-md p-6 border-b border-dark-700 flex justify-between items-center z-10">
-            <h3 class="text-xl font-display font-bold text-white">Panduan Ukuran Jersey</h3>
-            <button type="button" onclick="document.getElementById('sizeChartModal').classList.add('hidden')" class="text-gray-400 hover:text-white transition-colors">
+<div id="sizeChartModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/60 backdrop-blur-sm p-4">
+    <div class="bg-white border border-surface-200 rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div class="sticky top-0 bg-white/90 backdrop-blur-md p-6 border-b border-surface-200 flex justify-between items-center z-10">
+            <h3 class="text-xl font-display font-bold text-surface-900">Panduan Ukuran Jersey</h3>
+            <button type="button" onclick="document.getElementById('sizeChartModal').classList.add('hidden')" class="text-surface-700 hover:text-surface-900 transition-colors">
                 <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
         <div class="p-6">
             <!-- Men Size Chart -->
             <div class="mb-8">
-                <h4 class="text-lg font-bold text-forest-400 mb-4 border-l-4 border-forest-500 pl-3">Laki-laki (Men's Size)</h4>
+                <h4 class="text-lg font-bold text-brand-500 mb-4 border-l-4 border-brand-500 pl-3">Laki-laki (Men's Size)</h4>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-sm text-left text-gray-300">
-                        <thead class="text-xs text-white uppercase bg-dark-700">
+                    <table class="w-full text-sm text-left text-surface-600">
+                        <thead class="text-xs text-surface-900 uppercase bg-surface-100">
                             <tr>
                                 <th scope="col" class="px-4 py-3 rounded-tl-lg">Ukuran (Size)</th>
                                 <th scope="col" class="px-4 py-3">Lebar Dada (cm)</th>
@@ -269,12 +269,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="border-b border-dark-700 hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white">XS</td><td class="px-4 py-3">46</td><td class="px-4 py-3">66</td></tr>
-                            <tr class="border-b border-dark-700 hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white">S</td><td class="px-4 py-3">48</td><td class="px-4 py-3">68</td></tr>
-                            <tr class="border-b border-dark-700 hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white">M</td><td class="px-4 py-3">50</td><td class="px-4 py-3">70</td></tr>
-                            <tr class="border-b border-dark-700 hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white">L</td><td class="px-4 py-3">52</td><td class="px-4 py-3">72</td></tr>
-                            <tr class="border-b border-dark-700 hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white">XL</td><td class="px-4 py-3">54</td><td class="px-4 py-3">74</td></tr>
-                            <tr class="hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white rounded-bl-lg">XXL</td><td class="px-4 py-3">56</td><td class="px-4 py-3 rounded-br-lg">76</td></tr>
+                            <tr class="border-b border-surface-100 hover:bg-surface-50"><td class="px-4 py-3 font-medium text-surface-900">XS</td><td class="px-4 py-3">46</td><td class="px-4 py-3">66</td></tr>
+                            <tr class="border-b border-surface-100 hover:bg-surface-50"><td class="px-4 py-3 font-medium text-surface-900">S</td><td class="px-4 py-3">48</td><td class="px-4 py-3">68</td></tr>
+                            <tr class="border-b border-surface-100 hover:bg-surface-50"><td class="px-4 py-3 font-medium text-surface-900">M</td><td class="px-4 py-3">50</td><td class="px-4 py-3">70</td></tr>
+                            <tr class="border-b border-surface-100 hover:bg-surface-50"><td class="px-4 py-3 font-medium text-surface-900">L</td><td class="px-4 py-3">52</td><td class="px-4 py-3">72</td></tr>
+                            <tr class="border-b border-surface-100 hover:bg-surface-50"><td class="px-4 py-3 font-medium text-surface-900">XL</td><td class="px-4 py-3">54</td><td class="px-4 py-3">74</td></tr>
+                            <tr class="hover:bg-surface-50"><td class="px-4 py-3 font-medium text-surface-900 rounded-bl-lg">XXL</td><td class="px-4 py-3">56</td><td class="px-4 py-3 rounded-br-lg">76</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -282,10 +282,10 @@
             
             <!-- Women Size Chart -->
             <div>
-                <h4 class="text-lg font-bold text-amber-400 mb-4 border-l-4 border-amber-500 pl-3">Perempuan (Women's Size)</h4>
+                <h4 class="text-lg font-bold text-accent-600 mb-4 border-l-4 border-accent-500 pl-3">Perempuan (Women's Size)</h4>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-sm text-left text-gray-300">
-                        <thead class="text-xs text-white uppercase bg-dark-700">
+                    <table class="w-full text-sm text-left text-surface-600">
+                        <thead class="text-xs text-surface-900 uppercase bg-surface-100">
                             <tr>
                                 <th scope="col" class="px-4 py-3 rounded-tl-lg">Ukuran (Size)</th>
                                 <th scope="col" class="px-4 py-3">Lebar Dada (cm)</th>
@@ -293,20 +293,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="border-b border-dark-700 hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white">XS</td><td class="px-4 py-3">42</td><td class="px-4 py-3">60</td></tr>
-                            <tr class="border-b border-dark-700 hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white">S</td><td class="px-4 py-3">44</td><td class="px-4 py-3">62</td></tr>
-                            <tr class="border-b border-dark-700 hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white">M</td><td class="px-4 py-3">46</td><td class="px-4 py-3">64</td></tr>
-                            <tr class="border-b border-dark-700 hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white">L</td><td class="px-4 py-3">48</td><td class="px-4 py-3">66</td></tr>
-                            <tr class="border-b border-dark-700 hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white">XL</td><td class="px-4 py-3">50</td><td class="px-4 py-3">68</td></tr>
-                            <tr class="hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white rounded-bl-lg">XXL</td><td class="px-4 py-3">52</td><td class="px-4 py-3 rounded-br-lg">70</td></tr>
+                            <tr class="border-b border-surface-100 hover:bg-surface-50"><td class="px-4 py-3 font-medium text-surface-900">XS</td><td class="px-4 py-3">42</td><td class="px-4 py-3">60</td></tr>
+                            <tr class="border-b border-surface-100 hover:bg-surface-50"><td class="px-4 py-3 font-medium text-surface-900">S</td><td class="px-4 py-3">44</td><td class="px-4 py-3">62</td></tr>
+                            <tr class="border-b border-surface-100 hover:bg-surface-50"><td class="px-4 py-3 font-medium text-surface-900">M</td><td class="px-4 py-3">46</td><td class="px-4 py-3">64</td></tr>
+                            <tr class="border-b border-surface-100 hover:bg-surface-50"><td class="px-4 py-3 font-medium text-surface-900">L</td><td class="px-4 py-3">48</td><td class="px-4 py-3">66</td></tr>
+                            <tr class="border-b border-surface-100 hover:bg-surface-50"><td class="px-4 py-3 font-medium text-surface-900">XL</td><td class="px-4 py-3">50</td><td class="px-4 py-3">68</td></tr>
+                            <tr class="hover:bg-surface-50"><td class="px-4 py-3 font-medium text-surface-900 rounded-bl-lg">XXL</td><td class="px-4 py-3">52</td><td class="px-4 py-3 rounded-br-lg">70</td></tr>
                         </tbody>
                     </table>
                 </div>
-                <p class="text-xs text-gray-400 mt-4 text-center">* Toleransi ukuran perbedaan 1-2 cm.</p>
+                <p class="text-xs text-surface-700 mt-4 text-center">* Toleransi ukuran perbedaan 1-2 cm.</p>
             </div>
             
             <div class="mt-8">
-                <button type="button" onclick="document.getElementById('sizeChartModal').classList.add('hidden')" class="w-full py-3 bg-dark-700 hover:bg-dark-600 text-white font-medium rounded-xl transition-colors">Tutup Panduan</button>
+                <button type="button" onclick="document.getElementById('sizeChartModal').classList.add('hidden')" class="w-full py-3 bg-surface-100 hover:bg-surface-200 text-surface-900 font-medium rounded-xl transition-colors">Tutup Panduan</button>
             </div>
         </div>
     </div>
