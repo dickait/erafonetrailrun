@@ -118,13 +118,27 @@
                 <p class="text-gray-400 text-sm mb-6">{{ $cat->description }}</p>
                 <div class="space-y-3 mb-6">
                     <div class="flex justify-between text-sm"><span class="text-gray-500">{{ __('messages.categories_distance') }}</span><span class="text-white font-medium">{{ $distKm }} km</span></div>
-                    <div class="flex justify-between text-sm"><span class="text-gray-500">{{ __('messages.categories_quota') }}</span><span class="text-white font-medium">{{ $cat->quota }} {{ __('messages.categories_runners') }}</span></div>
                     <div class="flex justify-between text-sm"><span class="text-gray-500">{{ __('messages.categories_price') }}</span><span class="text-white font-medium">Rp {{ number_format($cat->getCurrentPrice(), 0, ',', '.') }}</span></div>
                     @if($cat->isEarlyBird())
                     <div class="flex justify-between text-sm"><span class="{{ $colors[4] }}">{{ __('messages.categories_early_bird') }}</span><span class="{{ $colors[4] }} font-medium">Rp {{ number_format($cat->early_bird_price, 0, ',', '.') }}</span></div>
                     @endif
                 </div>
-                <a href="{{ route('register.create', ['category' => $cat->id]) }}" class="block w-full py-3 text-center bg-gradient-to-r {{ $colors[1] }} hover:opacity-90 text-white font-semibold rounded-xl transition-all duration-200">
+                <!-- Entitlements -->
+                <div class="mb-6 pt-4 border-t border-dark-600/50">
+                    <p class="text-sm font-semibold text-white mb-3">{{ __('messages.categories_entitlements') }}:</p>
+                    <ul class="text-sm text-gray-400 space-y-2">
+                        <li class="flex items-start gap-2"><svg class="w-4 h-4 text-forest-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_jersey') }}</li>
+                        <li class="flex items-start gap-2"><svg class="w-4 h-4 text-forest-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_medal') }}</li>
+                        <li class="flex items-start gap-2"><svg class="w-4 h-4 text-forest-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_racepack') }}</li>
+                        <li class="flex items-start gap-2"><svg class="w-4 h-4 text-forest-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_refreshment') }}</li>
+                        <li class="flex items-start gap-2"><svg class="w-4 h-4 text-forest-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_cert') }}</li>
+                        <li class="flex items-start gap-2"><svg class="w-4 h-4 text-forest-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_timing') }}</li>
+                        @if($cat->slug === '21k-ultra-trail')
+                        <li class="flex items-start gap-2"><svg class="w-4 h-4 text-earth-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-earth-400 font-medium">{{ __('messages.categories_item_finisher_tee') }}</span></li>
+                        @endif
+                    </ul>
+                </div>
+                <a href="{{ route('register.create', ['category' => $cat->id]) }}" class="block w-full py-3 text-center bg-gradient-to-r {{ $colors[1] }} hover:opacity-90 text-white font-semibold rounded-xl transition-all duration-200 mt-auto">
                     {{ __('messages.categories_register_for') }} {{ $cat->name }}
                 </a>
             </div>

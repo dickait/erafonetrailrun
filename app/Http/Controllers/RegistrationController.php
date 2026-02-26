@@ -11,6 +11,7 @@ use App\Models\Province;
 use App\Models\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class RegistrationController extends Controller
@@ -56,7 +57,27 @@ class RegistrationController extends Controller
             'jersey_size' => 'nullable|string|max:5',
             'community' => 'nullable|string|max:255',
             'medical_conditions' => 'nullable|string|max:1000',
+            'agreement_1' => 'accepted',
+            'agreement_2' => 'accepted',
+            'agreement_3' => 'accepted',
+            'g-recaptcha-response' => 'required',
+        ], [
+            'g-recaptcha-response.required' => 'Please verify that you are not a robot.',
+            'agreement_1.accepted' => 'You must accept the terms and conditions.',
+            'agreement_2.accepted' => 'You must accept the terms and conditions.',
+            'agreement_3.accepted' => 'You must accept the terms and conditions.',
         ]);
+
+        // Verify reCAPTCHA
+        $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret' => config('services.recaptcha.secret_key'),
+            'response' => $request->input('g-recaptcha-response'),
+            'remoteip' => $request->ip()
+        ]);
+
+        if (!$response->json('success')) {
+            return back()->withInput()->withErrors(['g-recaptcha-response' => 'Failed to verify reCAPTCHA. Please try again.']);
+        }
 
         // Check duplicate registration
         $existing = Participant::where('event_id', $event->id)

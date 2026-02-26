@@ -1,5 +1,8 @@
 @extends('layouts.public')
 @section('title', __('messages.reg_badge') . ' - Erafone Trail Run 2026')
+@push('scripts')
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+@endpush
 @section('content')
 <section class="pt-28 pb-20 bg-dark-900 min-h-screen">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
@@ -147,6 +150,36 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_medical') }}</label>
                     <textarea name="medical_conditions" rows="3" class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white placeholder-gray-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors" placeholder="{{ __('messages.reg_medical_placeholder') }}">{{ old('medical_conditions') }}</textarea>
+                </div>
+            </div>
+
+            <!-- Agreements & Recaptcha -->
+            <div class="bg-dark-800 rounded-2xl border border-forest-900/30 p-6 space-y-5">
+                <div class="space-y-4">
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <div class="flex-shrink-0 mt-1">
+                            <input type="checkbox" name="agreement_1" required class="w-5 h-5 rounded border-dark-600 bg-dark-700 text-forest-500 focus:ring-forest-500 focus:ring-offset-dark-800">
+                        </div>
+                        <span class="text-sm text-gray-300 group-hover:text-white transition-colors">{{ __('messages.reg_agreement_1') }} *</span>
+                    </label>
+
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <div class="flex-shrink-0 mt-1">
+                            <input type="checkbox" name="agreement_2" required class="w-5 h-5 rounded border-dark-600 bg-dark-700 text-forest-500 focus:ring-forest-500 focus:ring-offset-dark-800">
+                        </div>
+                        <span class="text-sm text-gray-300 group-hover:text-white transition-colors">{{ __('messages.reg_agreement_2') }} *</span>
+                    </label>
+
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <div class="flex-shrink-0 mt-1">
+                            <input type="checkbox" name="agreement_3" required class="w-5 h-5 rounded border-dark-600 bg-dark-700 text-forest-500 focus:ring-forest-500 focus:ring-offset-dark-800">
+                        </div>
+                        <span class="text-sm text-gray-300 group-hover:text-white transition-colors">{{ __('messages.reg_agreement_3') }} *</span>
+                    </label>
+                </div>
+                
+                <div class="pt-4 border-t border-dark-700">
+                    <div class="g-recaptcha" data-theme="dark" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
                 </div>
             </div>
 
