@@ -77,6 +77,7 @@ return [
     'reg_select_category' => 'Select Category',
     'reg_personal_info' => 'Personal Information',
     'reg_full_name' => 'Full Name',
+    'reg_bib_name' => 'Name on BIB',
     'reg_email' => 'Email',
     'reg_phone' => 'Phone',
     'reg_gender' => 'Gender',

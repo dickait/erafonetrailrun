@@ -11,7 +11,7 @@ class Participant extends Model
 
     protected $fillable = [
         'event_id', 'category_id', 'user_id',
-        'full_name', 'email', 'phone', 'gender', 'date_of_birth',
+        'full_name', 'email', 'phone', 'gender', 'date_of_birth', 'bib_name',
         'identity_number', 'nationality', 'country_id', 'province_id', 'city_id',
         'address', 'blood_type', 'emergency_contact_name', 'emergency_contact_phone',
         'jersey_size', 'community', 'medical_conditions',

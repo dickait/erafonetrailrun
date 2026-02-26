@@ -78,9 +78,15 @@
             <!-- Personal Information -->
             <div class="bg-dark-800 rounded-2xl border border-forest-900/30 p-6 space-y-5">
                 <h3 class="font-display font-semibold text-lg text-white">{{ __('messages.reg_personal_info') }}</h3>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_full_name') }} *</label>
-                    <input type="text" name="full_name" value="{{ old('full_name') }}" required class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white placeholder-gray-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors" placeholder="{{ __('messages.reg_full_name') }}">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_full_name') }} *</label>
+                        <input type="text" name="full_name" value="{{ old('full_name') }}" required class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white placeholder-gray-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors" placeholder="{{ __('messages.reg_full_name') }}">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_bib_name') }} (Maks 15) *</label>
+                        <input type="text" name="bib_name" value="{{ old('bib_name') }}" required maxlength="15" class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white placeholder-gray-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors" placeholder="Name on BIB">
+                    </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
@@ -108,8 +114,8 @@
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_identity') }}</label>
-                        <input type="text" name="identity_number" value="{{ old('identity_number') }}" class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white placeholder-gray-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors" placeholder="ID Number">
+                        <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_identity') }} *</label>
+                        <input type="text" name="identity_number" value="{{ old('identity_number') }}" required class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white placeholder-gray-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors" placeholder="KTP / Passport Number">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_nationality') }} *</label>
@@ -151,6 +157,27 @@
             <!-- Additional Info -->
             <div class="bg-dark-800 rounded-2xl border border-forest-900/30 p-6 space-y-5">
                 <h3 class="font-display font-semibold text-lg text-white">{{ __('messages.reg_additional') }}</h3>
+                
+                <div>
+                    <div class="flex justify-between items-end mb-1.5">
+                        <label class="block text-sm font-medium text-gray-300">{{ __('messages.reg_jersey_size') }}</label>
+                        <button type="button" onclick="document.getElementById('sizeChartModal').classList.remove('hidden')" class="text-xs text-forest-400 hover:text-forest-300 underline font-medium">Panduan / Size Chart</button>
+                    </div>
+                    <div class="mb-3 p-4 bg-dark-700 rounded-xl flex items-center gap-4 text-center">
+                        <div class="flex-shrink-0 w-16 h-16 text-forest-500">
+                            <svg viewBox="0 0 24 24" fill="currentColor" class="w-full h-full"><path d="M19.7 7.7L16 4.6C15.8 4.4 15.6 4.3 15.3 4.3H8.7C8.4 4.3 8.2 4.4 8 4.6L4.3 7.7C3.9 8 3.8 8.4 4 8.8L5.4 12c.1.3.4.4.7.4H7v8.3c0 .4.3.7.7.7h8.7c.4 0 .7-.3.7-.7V12.3h.9c.3 0 .6-.2.7-.4L20 8.8C20.2 8.4 20.1 8 19.7 7.7zM15 6.3V8c0 .6-.4 1-1 1H10C9.4 9 9 8.6 9 8V6.3c1-.3 2-1.3 3-1.3S14 6 15 6.3z"/></svg>
+                        </div>
+                        <div class="text-xs text-gray-400 text-left w-full max-w-sm">
+                            <p class="mb-1"><span class="font-bold text-gray-200">A. Lebar Dada:</span> Dari ketiak ke ketiak.</p>
+                            <p><span class="font-bold text-gray-200">B. Panjang:</span> Dari kerah ke bawah.</p>
+                        </div>
+                    </div>
+                    <select name="jersey_size" class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors">
+                        <option value="">{{ __('messages.reg_select') }}</option>
+                        @foreach(['XS','S','M','L','XL','XXL'] as $sz)<option value="{{ $sz }}" {{ old('jersey_size') == $sz ? 'selected' : '' }}>{{ $sz }}</option>@endforeach
+                    </select>
+                </div>
+
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_blood_type') }}</label>
@@ -160,13 +187,11 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_jersey_size') }}</label>
-                        <select name="jersey_size" class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors">
-                            <option value="">{{ __('messages.reg_select') }}</option>
-                            @foreach(['XS','S','M','L','XL','XXL'] as $sz)<option value="{{ $sz }}" {{ old('jersey_size') == $sz ? 'selected' : '' }}>{{ $sz }}</option>@endforeach
-                        </select>
+                        <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_community') }}</label>
+                        <input type="text" name="community" value="{{ old('community') }}" class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white placeholder-gray-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors">
                     </div>
                 </div>
+                
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_emergency_name') }}</label>
@@ -177,10 +202,7 @@
                         <input type="text" name="emergency_contact_phone" value="{{ old('emergency_contact_phone') }}" class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white placeholder-gray-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors">
                     </div>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_community') }}</label>
-                    <input type="text" name="community" value="{{ old('community') }}" class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white placeholder-gray-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors">
-                </div>
+
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-1.5">{{ __('messages.reg_medical') }}</label>
                     <textarea name="medical_conditions" rows="3" class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-xl text-white placeholder-gray-500 focus:border-forest-500 focus:ring-1 focus:ring-forest-500 transition-colors" placeholder="{{ __('messages.reg_medical_placeholder') }}">{{ old('medical_conditions') }}</textarea>
@@ -223,6 +245,72 @@
         </form>
     </div>
 </section>
+
+<!-- Size Chart Modal -->
+<div id="sizeChartModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/80 backdrop-blur-sm p-4">
+    <div class="bg-dark-800 border border-dark-600 rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div class="sticky top-0 bg-dark-800/90 backdrop-blur-md p-6 border-b border-dark-700 flex justify-between items-center z-10">
+            <h3 class="text-xl font-display font-bold text-white">Panduan Ukuran Jersey</h3>
+            <button type="button" onclick="document.getElementById('sizeChartModal').classList.add('hidden')" class="text-gray-400 hover:text-white transition-colors">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="p-6">
+            <!-- Men Size Chart -->
+            <div class="mb-8">
+                <h4 class="text-lg font-bold text-forest-400 mb-4 border-l-4 border-forest-500 pl-3">Laki-laki (Men's Size)</h4>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-gray-300">
+                        <thead class="text-xs text-white uppercase bg-dark-700">
+                            <tr>
+                                <th scope="col" class="px-4 py-3 rounded-tl-lg">Ukuran (Size)</th>
+                                <th scope="col" class="px-4 py-3">Lebar Dada (cm)</th>
+                                <th scope="col" class="px-4 py-3 rounded-tr-lg">Panjang Badan (cm)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-dark-700 hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white">XS</td><td class="px-4 py-3">46</td><td class="px-4 py-3">66</td></tr>
+                            <tr class="border-b border-dark-700 hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white">S</td><td class="px-4 py-3">48</td><td class="px-4 py-3">68</td></tr>
+                            <tr class="border-b border-dark-700 hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white">M</td><td class="px-4 py-3">50</td><td class="px-4 py-3">70</td></tr>
+                            <tr class="border-b border-dark-700 hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white">L</td><td class="px-4 py-3">52</td><td class="px-4 py-3">72</td></tr>
+                            <tr class="border-b border-dark-700 hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white">XL</td><td class="px-4 py-3">54</td><td class="px-4 py-3">74</td></tr>
+                            <tr class="hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white rounded-bl-lg">XXL</td><td class="px-4 py-3">56</td><td class="px-4 py-3 rounded-br-lg">76</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Women Size Chart -->
+            <div>
+                <h4 class="text-lg font-bold text-amber-400 mb-4 border-l-4 border-amber-500 pl-3">Perempuan (Women's Size)</h4>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-gray-300">
+                        <thead class="text-xs text-white uppercase bg-dark-700">
+                            <tr>
+                                <th scope="col" class="px-4 py-3 rounded-tl-lg">Ukuran (Size)</th>
+                                <th scope="col" class="px-4 py-3">Lebar Dada (cm)</th>
+                                <th scope="col" class="px-4 py-3 rounded-tr-lg">Panjang Badan (cm)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-dark-700 hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white">XS</td><td class="px-4 py-3">42</td><td class="px-4 py-3">60</td></tr>
+                            <tr class="border-b border-dark-700 hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white">S</td><td class="px-4 py-3">44</td><td class="px-4 py-3">62</td></tr>
+                            <tr class="border-b border-dark-700 hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white">M</td><td class="px-4 py-3">46</td><td class="px-4 py-3">64</td></tr>
+                            <tr class="border-b border-dark-700 hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white">L</td><td class="px-4 py-3">48</td><td class="px-4 py-3">66</td></tr>
+                            <tr class="border-b border-dark-700 hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white">XL</td><td class="px-4 py-3">50</td><td class="px-4 py-3">68</td></tr>
+                            <tr class="hover:bg-dark-700/50"><td class="px-4 py-3 font-medium text-white rounded-bl-lg">XXL</td><td class="px-4 py-3">52</td><td class="px-4 py-3 rounded-br-lg">70</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-xs text-gray-400 mt-4 text-center">* Toleransi ukuran perbedaan 1-2 cm.</p>
+            </div>
+            
+            <div class="mt-8">
+                <button type="button" onclick="document.getElementById('sizeChartModal').classList.add('hidden')" class="w-full py-3 bg-dark-700 hover:bg-dark-600 text-white font-medium rounded-xl transition-colors">Tutup Panduan</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @push('scripts')
 <script>

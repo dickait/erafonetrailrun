@@ -77,6 +77,7 @@ return [
     'reg_select_category' => 'Pilih Kategori',
     'reg_personal_info' => 'Informasi Pribadi',
     'reg_full_name' => 'Nama Lengkap',
+    'reg_bib_name' => 'Nama di BIB',
     'reg_email' => 'Email',
     'reg_phone' => 'Telepon',
     'reg_gender' => 'Jenis Kelamin',

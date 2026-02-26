@@ -41,11 +41,12 @@ class RegistrationController extends Controller
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'full_name' => 'required|string|max:255',
+            'bib_name' => 'required|string|max:20',
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:20',
             'gender' => 'required|in:male,female',
             'date_of_birth' => 'required|date|before:today',
-            'identity_number' => 'nullable|string|max:30',
+            'identity_number' => 'required|string|max:30',
             'nationality' => 'required|string|max:100',
             'country_id' => 'nullable|exists:countries,id',
             'province_id' => 'nullable|exists:provinces,id',
