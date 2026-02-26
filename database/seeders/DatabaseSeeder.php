@@ -53,6 +53,9 @@ class DatabaseSeeder extends Seeder
             'early_bird_deadline' => '2026-03-31 23:59:59',
             'quota' => 500,
             'distance_km' => 5,
+            'elevation' => 150,
+            'cot' => 3,
+            'effort_km' => 6.5,
             'color' => '#22c55e',
         ]);
 
@@ -66,6 +69,9 @@ class DatabaseSeeder extends Seeder
             'early_bird_deadline' => '2026-03-31 23:59:59',
             'quota' => 300,
             'distance_km' => 10,
+            'elevation' => 450,
+            'cot' => 5,
+            'effort_km' => 14.5,
             'color' => '#f59e0b',
         ]);
 
@@ -79,6 +85,9 @@ class DatabaseSeeder extends Seeder
             'early_bird_deadline' => '2026-03-31 23:59:59',
             'quota' => 200,
             'distance_km' => 21,
+            'elevation' => 1200,
+            'cot' => 8,
+            'effort_km' => 33.0,
             'color' => '#ef4444',
         ]);
     }

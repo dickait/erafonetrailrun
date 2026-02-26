@@ -118,6 +118,9 @@
                 <p class="text-gray-400 text-sm mb-6">{{ $cat->description }}</p>
                 <div class="space-y-3 mb-6">
                     <div class="flex justify-between text-sm"><span class="text-gray-500">{{ __('messages.categories_distance') }}</span><span class="text-white font-medium">{{ $distKm }} km</span></div>
+                    <div class="flex justify-between text-sm"><span class="text-gray-500">{{ __('messages.categories_elevation') }}</span><span class="text-white font-medium">{{ $cat->elevation ?? 0 }} m</span></div>
+                    <div class="flex justify-between text-sm"><span class="text-gray-500">{{ __('messages.categories_cot') }}</span><span class="text-white font-medium">{{ $cat->cot ?? 0 }} {{ app()->getLocale() == 'id' ? 'Jam' : 'Hours' }}</span></div>
+                    <!-- <div class="flex justify-between text-sm"><span class="text-gray-500">{{ __('messages.categories_effort_km') }}</span><span class="text-white font-medium">{{ $cat->effort_km ?? 0 }} eqKM</span></div> -->
                     <div class="flex justify-between text-sm"><span class="text-gray-500">{{ __('messages.categories_price') }}</span><span class="text-white font-medium">Rp {{ number_format($cat->getCurrentPrice(), 0, ',', '.') }}</span></div>
                     @if($cat->isEarlyBird())
                     <div class="flex justify-between text-sm"><span class="{{ $colors[4] }}">{{ __('messages.categories_early_bird') }}</span><span class="{{ $colors[4] }} font-medium">Rp {{ number_format($cat->early_bird_price, 0, ',', '.') }}</span></div>

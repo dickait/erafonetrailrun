@@ -30,13 +30,47 @@
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     @foreach($categories as $cat)
                     <label class="cursor-pointer">
-                        <input type="radio" name="category_id" value="{{ $cat->id }}" class="hidden peer" {{ old('category_id', request('category')) == $cat->id ? 'checked' : '' }}>
+                        <input type="radio" name="category_id" value="{{ $cat->id }}" class="category-radio hidden peer" {{ old('category_id', request('category')) == $cat->id ? 'checked' : '' }}>
                         <div class="border border-dark-600 rounded-xl p-4 text-center transition-all peer-checked:border-forest-500 peer-checked:bg-forest-900/20 hover:border-forest-700">
                             <p class="font-display font-bold text-xl {{ $loop->index == 0 ? 'text-amber-400' : ($loop->index == 1 ? 'text-red-400' : 'text-forest-400') }}">{{ strtoupper(explode(' ', $cat->name)[0]) }}</p>
                             <p class="text-sm text-gray-400">{{ $cat->name }}</p>
                             <p class="text-sm text-forest-400 font-medium">Rp {{ number_format($cat->getCurrentPrice(), 0, ',', '.') }}</p>
                         </div>
                     </label>
+                    @endforeach
+                </div>
+
+                <!-- Dynamic Category Details -->
+                <div id="category-details-container" class="mt-6 border-t border-dark-700 pt-6 hidden">
+                    @foreach($categories as $cat)
+                    @php
+                    $distKm = $cat->distance_km ?? substr($cat->slug, 0, strpos($cat->slug, 'k'));
+                    @endphp
+                    <div id="cat-detail-{{ $cat->id }}" class="category-detail-content hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="space-y-3">
+                                <h4 class="font-display font-bold text-white mb-2">{{ $cat->name }}</h4>
+                                <p class="text-gray-400 text-sm mb-4">{{ $cat->description }}</p>
+                                <div class="flex justify-between text-sm"><span class="text-gray-500">{{ __('messages.categories_distance') }}</span><span class="text-white font-medium">{{ $distKm }} km</span></div>
+                                <div class="flex justify-between text-sm"><span class="text-gray-500">{{ __('messages.categories_elevation') }}</span><span class="text-white font-medium">{{ $cat->elevation ?? 0 }} m</span></div>
+                                <div class="flex justify-between text-sm"><span class="text-gray-500">{{ __('messages.categories_cot') }}</span><span class="text-white font-medium">{{ $cat->cot ?? 0 }} {{ app()->getLocale() == 'id' ? 'Jam' : 'Hours' }}</span></div>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-white mb-3">{{ __('messages.categories_entitlements') }}:</p>
+                                <ul class="text-sm text-gray-400 space-y-2">
+                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-forest-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_jersey') }}</li>
+                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-forest-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_medal') }}</li>
+                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-forest-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_racepack') }}</li>
+                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-forest-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_refreshment') }}</li>
+                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-forest-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_cert') }}</li>
+                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-forest-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_timing') }}</li>
+                                    @if($cat->slug === '21k-ultra-trail')
+                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-earth-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-earth-400 font-medium">{{ __('messages.categories_item_finisher_tee') }}</span></li>
+                                    @endif
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                     @endforeach
                 </div>
             </div>
@@ -212,6 +246,34 @@
             data.forEach(c => { city.innerHTML += `<option value="${c.id}">${c.name}</option>`; });
         }
     });
+
+    const categoryRadios = document.querySelectorAll('.category-radio');
+    const categoryDetailsContainer = document.getElementById('category-details-container');
+    const categoryDetails = document.querySelectorAll('.category-detail-content');
+
+    function updateCategoryDetails() {
+        let isAnyChecked = false;
+        categoryRadios.forEach(radio => {
+            if (radio.checked) {
+                isAnyChecked = true;
+                categoryDetails.forEach(detail => detail.classList.add('hidden'));
+                const detailContent = document.getElementById('cat-detail-' + radio.value);
+                if (detailContent) detailContent.classList.remove('hidden');
+            }
+        });
+        if (isAnyChecked) {
+            categoryDetailsContainer.classList.remove('hidden');
+        } else {
+            categoryDetailsContainer.classList.add('hidden');
+        }
+    }
+
+    categoryRadios.forEach(radio => {
+        radio.addEventListener('change', updateCategoryDetails);
+    });
+
+    // Run on init
+    updateCategoryDetails();
 </script>
 @endpush
 @endsection
