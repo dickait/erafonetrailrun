@@ -7,7 +7,7 @@
 </div>
 
 @if(!$participant)
-<div class="bg-white rounded-2xl border border-surface-200 p-8 text-center shadow-sm">
+<div class="bg-white rounded-2xl border border-surface-300 p-8 text-center shadow-sm">
     <div class="w-16 h-16 mx-auto bg-surface-100 rounded-full flex items-center justify-center mb-4">
         <svg class="w-8 h-8 text-surface-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
     </div>
@@ -17,8 +17,8 @@
 @else
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <div class="md:col-span-2 space-y-6">
-        <div class="bg-white rounded-2xl border border-surface-200 overflow-hidden shadow-sm">
-            <div class="p-6 border-b border-surface-200 flex justify-between items-center">
+        <div class="bg-white rounded-2xl border border-surface-300 overflow-hidden shadow-sm">
+            <div class="p-6 border-b border-surface-300 flex justify-between items-center">
                 <h3 class="font-display font-semibold text-lg text-surface-900">{{ __('messages.part_event_details') }}</h3>
                 <span class="px-3 py-1 text-xs font-semibold rounded-full bg-brand-50 text-brand-500">{{ $participant->category->name }}</span>
             </div>

@@ -2,10 +2,10 @@
 @section('page_title', __('messages.admin_qr_checkin'))
 @section('content')
 <div class="max-w-xl mx-auto">
-    <div class="bg-white border border-surface-200 rounded-xl p-6 mb-6">
+    <div class="bg-white border border-surface-300 rounded-xl p-6 mb-6">
         <h3 class="font-display font-semibold text-surface-900 mb-4">{{ __('messages.admin_scan_title') }}</h3>
         <div class="flex gap-3">
-            <input type="text" id="participant-id" placeholder="{{ __('messages.admin_scan_placeholder') }}" class="flex-1 px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors font-mono text-sm">
+            <input type="text" id="participant-id" placeholder="{{ __('messages.admin_scan_placeholder') }}" class="flex-1 px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors font-mono text-sm">
             <button onclick="doCheckin()" class="px-6 py-3 bg-gradient-to-r from-brand-500 to-brand-600 text-white font-semibold rounded-xl hover:from-brand-600 hover:to-brand-700 transition-all">{{ __('messages.admin_checkin_btn') }}</button>
         </div>
     </div>

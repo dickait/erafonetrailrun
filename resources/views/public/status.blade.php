@@ -9,11 +9,11 @@
             <p class="text-surface-700">{{ __('messages.status_subtitle') }}</p>
         </div>
         <form method="GET" action="{{ route('registration.status') }}" class="flex gap-3 mb-8">
-            <input type="email" name="email" value="{{ request('email') }}" placeholder="{{ __('messages.status_placeholder') }}" class="flex-1 px-4 py-3 bg-white border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+            <input type="email" name="email" value="{{ request('email') }}" placeholder="{{ __('messages.status_placeholder') }}" class="flex-1 px-4 py-3 bg-white border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
             <button type="submit" class="px-6 py-3 bg-gradient-to-r from-brand-500 to-brand-600 text-white font-semibold rounded-xl hover:from-brand-600 hover:to-brand-700 transition-all shadow-md">{{ __('messages.status_check') }}</button>
         </form>
         @if(isset($participant))
-        <div class="bg-white rounded-2xl border border-surface-200 p-6 shadow-sm">
+        <div class="bg-white rounded-2xl border border-surface-300 p-6 shadow-sm">
             <div class="flex items-center gap-3 mb-6">
                 <div class="w-3 h-3 rounded-full {{ $participant->payment_status == 'paid' ? 'bg-emerald-500' : ($participant->payment_status == 'pending' ? 'bg-accent-500' : 'bg-brand-500') }}"></div>
                 <h3 class="font-display font-semibold text-lg text-surface-900">{{ __('messages.status_found') }}</h3>

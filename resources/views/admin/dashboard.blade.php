@@ -17,7 +17,7 @@
     ];
     @endphp
     @foreach($statCards as $card)
-    <div class="bg-white border border-surface-200 rounded-xl p-5">
+    <div class="bg-white border border-surface-300 rounded-xl p-5">
         <div class="flex justify-between items-start mb-3">
             <p class="text-xs text-surface-700 uppercase tracking-wide">{{ $card['label'] }}</p>
             <div class="w-8 h-8 bg-{{ $card['color'] }}-900/30 rounded-lg flex items-center justify-center">
@@ -30,7 +30,7 @@
 </div>
 
 <!-- Category Breakdown -->
-<div class="bg-white border border-surface-200 rounded-xl p-6 mb-8">
+<div class="bg-white border border-surface-300 rounded-xl p-6 mb-8">
     <h3 class="font-display font-semibold text-lg text-surface-900 mb-4">{{ __('messages.admin_category_breakdown') }}</h3>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         @foreach($stats['categories'] as $cat)
@@ -41,7 +41,7 @@
             default => 'bg-brand-500',
         };
         @endphp
-        <div class="bg-surface-50 rounded-xl p-4 border border-surface-200">
+        <div class="bg-surface-50 rounded-xl p-4 border border-surface-300">
             <div class="flex items-center gap-2 mb-3">
                 <span class="w-2.5 h-2.5 rounded-full {{ $dotColor }}"></span>
                 <span class="font-semibold text-surface-900">{{ $cat->name }}</span>
@@ -58,10 +58,10 @@
 </div>
 
 <!-- Quick Actions -->
-<div class="bg-white border border-surface-200 rounded-xl p-6">
+<div class="bg-white border border-surface-300 rounded-xl p-6">
     <h3 class="font-display font-semibold text-lg text-surface-900 mb-4">{{ __('messages.admin_quick_actions') }}</h3>
     <div class="flex flex-wrap gap-3">
-        <a href="{{ route('admin.export-csv') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-surface-50 hover:bg-surface-100 border border-surface-200 rounded-xl text-sm font-medium text-surface-900 transition-colors">
+        <a href="{{ route('admin.export-csv') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-surface-50 hover:bg-surface-100 border border-surface-300 rounded-xl text-sm font-medium text-surface-900 transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             {{ __('messages.admin_export_csv') }}
         </a>

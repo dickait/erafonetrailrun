@@ -13,16 +13,16 @@
         @if(session('status'))
         <div class="mb-4 p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-700 text-sm">{{ session('status') }}</div>
         @endif
-        <form method="POST" action="{{ route('login') }}" class="bg-white rounded-2xl border border-surface-200 p-6 space-y-5 shadow-sm">
+        <form method="POST" action="{{ route('login') }}" class="bg-white rounded-2xl border border-surface-300 p-6 space-y-5 shadow-sm">
             @csrf
             <div>
-                <label for="email" class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.login_email') }}</label>
-                <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="your@email.com">
+                <label for="email" class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.login_email') }}</label>
+                <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username" class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="your@email.com">
                 @error('email')<p class="mt-1.5 text-sm text-brand-500">{{ $message }}</p>@enderror
             </div>
             <div>
-                <label for="password" class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.login_password') }}</label>
-                <input id="password" type="password" name="password" required autocomplete="current-password" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="••••••••">
+                <label for="password" class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.login_password') }}</label>
+                <input id="password" type="password" name="password" required autocomplete="current-password" class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="••••••••">
                 @error('password')<p class="mt-1.5 text-sm text-brand-500">{{ $message }}</p>@enderror
             </div>
             <div class="flex items-center justify-between">

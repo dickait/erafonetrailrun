@@ -6,13 +6,13 @@
 </div>
 
 @if(!$participant)
-<div class="bg-white rounded-2xl border border-surface-200 p-8 text-center text-surface-700 shadow-sm">
+<div class="bg-white rounded-2xl border border-surface-300 p-8 text-center text-surface-700 shadow-sm">
     {{ __('messages.part_no_registration') }}
 </div>
 @else
 <div class="max-w-md mx-auto relative group">
     @if(!$participant->bib_number)
-    <div class="bg-white rounded-2xl border border-surface-200 p-8 text-center shadow-sm">
+    <div class="bg-white rounded-2xl border border-surface-300 p-8 text-center shadow-sm">
         <svg class="w-16 h-16 mx-auto text-accent-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         <h4 class="text-xl font-display font-bold text-surface-900 mb-2">{{ __('messages.part_bib_not_available') }}</h4>
         @if($participant->payment_status !== 'paid')
@@ -50,7 +50,7 @@
         <!-- Footer / QR Placeholder -->
         <div class="bg-surface-100 flex items-center justify-between p-6">
             <div class="flex items-center gap-4">
-                <div class="w-16 h-16 bg-white rounded border border-surface-200 flex items-center justify-center">
+                <div class="w-16 h-16 bg-white rounded border border-surface-300 flex items-center justify-center">
                     <!-- Placeholder QR (akan diganti paket QR asli nanti) -->
                     <svg class="w-10 h-10 text-surface-700" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h4v4H4V4zm6 0h10v4H10V4zM4 10h4v10H4V10zm6 0h4v4h-4v-4zm6 0h4v10h-4V10zm-6 6h4v4h-4v-4z"/></svg>
                 </div>

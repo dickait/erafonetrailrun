@@ -6,14 +6,14 @@
 </div>
 
 @if(!$participant)
-<div class="bg-white rounded-2xl border border-surface-200 p-8 text-center text-surface-700 shadow-sm">
+<div class="bg-white rounded-2xl border border-surface-300 p-8 text-center text-surface-700 shadow-sm">
     {{ __('messages.part_no_registration') }}
 </div>
 @else
 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
     <div>
-        <div class="bg-white rounded-2xl border border-surface-200 overflow-hidden mb-6 shadow-sm">
-            <div class="p-6 border-b border-surface-200 flex justify-between items-center">
+        <div class="bg-white rounded-2xl border border-surface-300 overflow-hidden mb-6 shadow-sm">
+            <div class="p-6 border-b border-surface-300 flex justify-between items-center">
                 <h3 class="font-display font-semibold text-lg text-surface-900">{{ __('messages.part_payment_status') }}</h3>
                 <span class="px-3 py-1 text-xs font-semibold rounded-full {{ $participant->payment_status == 'paid' ? 'bg-emerald-50 text-emerald-600' : ($participant->payment_status == 'pending' ? 'bg-accent-50 text-accent-600' : 'bg-brand-50 text-brand-500') }}">
                     {{ ucfirst($participant->payment_status) }}
@@ -43,7 +43,7 @@
         <h3 class="font-display font-semibold text-lg text-surface-900 mb-4">{{ __('messages.part_payment_history') }}</h3>
         <div class="space-y-4">
             @forelse($participant->payments as $pay)
-            <div class="bg-white rounded-xl border border-surface-200 p-4 flex justify-between items-center group hover:border-brand-200 transition-colors shadow-sm">
+            <div class="bg-white rounded-xl border border-surface-300 p-4 flex justify-between items-center group hover:border-brand-200 transition-colors shadow-sm">
                 <div>
                     <p class="font-medium text-surface-900 mb-1 tracking-wide">Rp {{ number_format($pay->amount, 0, ',', '.') }}</p>
                     <p class="text-xs text-surface-700">{{ $pay->created_at->format('d M Y H:i') }} • {{ $pay->payment_method ?? '-' }}</p>

@@ -67,7 +67,7 @@
                     ];
                     @endphp
                     @foreach($aboutStats as $stat)
-                    <div class="bg-surface-50 border border-surface-200 rounded-xl p-4">
+                    <div class="bg-surface-50 border border-surface-300 rounded-xl p-4">
                         <p class="font-display text-2xl font-bold text-brand-500">{{ $stat['value'] }}</p>
                         <p class="text-sm text-surface-700">{{ $stat['label'] }}</p>
                     </div>
@@ -125,7 +125,7 @@
                     @endif
                 </div>
                 <!-- Entitlements -->
-                <div class="mb-6 pt-4 border-t border-surface-200">
+                <div class="mb-6 pt-4 border-t border-surface-300">
                     <p class="text-sm font-semibold text-surface-900 mb-3">{{ __('messages.categories_entitlements') }}:</p>
                     <ul class="text-sm text-surface-700 space-y-2">
                         <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>{{ __('messages.categories_item_jersey') }}</li>

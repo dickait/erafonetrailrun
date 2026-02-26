@@ -25,13 +25,13 @@
         <form method="POST" action="{{ route('register.store') }}" class="space-y-8">
             @csrf
             <!-- Category Selection -->
-            <div class="bg-white rounded-2xl border border-surface-200 p-6 shadow-sm">
+            <div class="bg-white rounded-2xl border border-surface-300 p-6 shadow-sm">
                 <h3 class="font-display font-semibold text-lg text-surface-900 mb-4">{{ __('messages.reg_select_category') }}</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     @foreach($categories as $cat)
                     <label class="cursor-pointer">
                         <input type="radio" name="category_id" value="{{ $cat->id }}" class="category-radio hidden peer" {{ old('category_id', request('category')) == $cat->id ? 'checked' : '' }}>
-                        <div class="border border-surface-200 rounded-xl p-4 text-center transition-all peer-checked:border-brand-500 peer-checked:bg-brand-50 hover:border-brand-300">
+                        <div class="border border-surface-300 rounded-xl p-4 text-center transition-all peer-checked:border-brand-500 peer-checked:bg-brand-50 hover:border-brand-300">
                             <p class="font-display font-bold text-xl {{ $loop->index == 0 ? 'text-accent-600' : ($loop->index == 1 ? 'text-brand-500' : 'text-emerald-600') }}">{{ strtoupper(explode(' ', $cat->name)[0]) }}</p>
                             <p class="text-sm text-surface-700">{{ $cat->name }}</p>
                             <p class="text-sm text-brand-500 font-medium">Rp {{ number_format($cat->getCurrentPrice(), 0, ',', '.') }}</p>
@@ -41,7 +41,7 @@
                 </div>
 
                 <!-- Dynamic Category Details -->
-                <div id="category-details-container" class="mt-6 border-t border-surface-200 pt-6 hidden">
+                <div id="category-details-container" class="mt-6 border-t border-surface-300 pt-6 hidden">
                     @foreach($categories as $cat)
                     @php
                     $distKm = $cat->distance_km ?? substr($cat->slug, 0, strpos($cat->slug, 'k'));
@@ -76,91 +76,91 @@
             </div>
 
             <!-- Personal Information -->
-            <div class="bg-white rounded-2xl border border-surface-200 p-6 space-y-5 shadow-sm">
+            <div class="bg-white rounded-2xl border border-surface-300 p-6 space-y-5 shadow-sm">
                 <h3 class="font-display font-semibold text-lg text-surface-900">{{ __('messages.reg_personal_info') }}</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_full_name') }} *</label>
-                        <input type="text" name="full_name" value="{{ old('full_name') }}" required class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="{{ __('messages.reg_full_name') }}">
+                        <label class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_full_name') }} *</label>
+                        <input type="text" name="full_name" value="{{ old('full_name') }}" required class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="{{ __('messages.reg_full_name') }}">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_bib_name') }} (Maks 15) *</label>
-                        <input type="text" name="bib_name" value="{{ old('bib_name') }}" required maxlength="15" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="Name on BIB">
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div>
-                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_email') }} *</label>
-                        <input type="email" name="email" value="{{ old('email') }}" required class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="your@email.com">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_phone') }} *</label>
-                        <input type="text" name="phone" value="{{ old('phone') }}" required class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="08xxxxxxxxx">
+                        <label class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_bib_name') }} (Maks 15) *</label>
+                        <input type="text" name="bib_name" value="{{ old('bib_name') }}" required maxlength="15" class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="Name on BIB">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_gender') }} *</label>
-                        <select name="gender" required class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                        <label class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_email') }} *</label>
+                        <input type="email" name="email" value="{{ old('email') }}" required class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="your@email.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_phone') }} *</label>
+                        <input type="text" name="phone" value="{{ old('phone') }}" required class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="08xxxxxxxxx">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_gender') }} *</label>
+                        <select name="gender" required class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                             <option value="">{{ __('messages.reg_gender_select') }}</option>
                             <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>{{ __('messages.reg_gender_male') }}</option>
                             <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>{{ __('messages.reg_gender_female') }}</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_dob') }} *</label>
-                        <input type="date" name="date_of_birth" value="{{ old('date_of_birth') }}" required class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                        <label class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_dob') }} *</label>
+                        <input type="date" name="date_of_birth" value="{{ old('date_of_birth') }}" required class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_identity') }} *</label>
-                        <input type="text" name="identity_number" value="{{ old('identity_number') }}" required class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="KTP / Passport Number">
+                        <label class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_identity') }} *</label>
+                        <input type="text" name="identity_number" value="{{ old('identity_number') }}" required class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="KTP / Passport Number">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_nationality') }} *</label>
-                        <input type="text" name="nationality" value="{{ old('nationality', 'Indonesia') }}" required class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                        <label class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_nationality') }} *</label>
+                        <input type="text" name="nationality" value="{{ old('nationality', 'Indonesia') }}" required class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                     </div>
                 </div>
             </div>
 
             <!-- Location -->
-            <div class="bg-white rounded-2xl border border-surface-200 p-6 space-y-5 shadow-sm">
+            <div class="bg-white rounded-2xl border border-surface-300 p-6 space-y-5 shadow-sm">
                 <h3 class="font-display font-semibold text-lg text-surface-900">{{ __('messages.reg_location') }}</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_country') }}</label>
-                        <select name="country_id" id="country" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                        <label class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_country') }}</label>
+                        <select name="country_id" id="country" class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                             <option value="">{{ __('messages.reg_select_country') }}</option>
                             @foreach($countries as $country)<option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>{{ $country->name }}</option>@endforeach
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_province') }}</label>
-                        <select name="province_id" id="province" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                        <label class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_province') }}</label>
+                        <select name="province_id" id="province" class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                             <option value="">{{ __('messages.reg_select_province') }}</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_city') }}</label>
-                        <select name="city_id" id="city" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                        <label class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_city') }}</label>
+                        <select name="city_id" id="city" class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                             <option value="">{{ __('messages.reg_select_city') }}</option>
                         </select>
                     </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_address') }}</label>
-                    <input type="text" name="address" value="{{ old('address') }}" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                    <label class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_address') }}</label>
+                    <input type="text" name="address" value="{{ old('address') }}" class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                 </div>
             </div>
 
             <!-- Additional Info -->
-            <div class="bg-white rounded-2xl border border-surface-200 p-6 space-y-5 shadow-sm">
+            <div class="bg-white rounded-2xl border border-surface-300 p-6 space-y-5 shadow-sm">
                 <h3 class="font-display font-semibold text-lg text-surface-900">{{ __('messages.reg_additional') }}</h3>
                 
                 <div>
                     <div class="flex justify-between items-end mb-1.5">
-                        <label class="block text-sm font-medium text-surface-700">{{ __('messages.reg_jersey_size') }}</label>
+                        <label class="block text-sm font-medium text-surface-800">{{ __('messages.reg_jersey_size') }}</label>
                         <button type="button" onclick="document.getElementById('sizeChartModal').classList.remove('hidden')" class="text-xs text-brand-500 hover:text-brand-600 underline font-medium">Panduan / Size Chart</button>
                     </div>
                     <div class="mb-3 p-4 bg-surface-50 rounded-xl flex items-center gap-4 text-center">
@@ -172,7 +172,7 @@
                             <p><span class="font-bold text-surface-700">B. Panjang:</span> Dari kerah ke bawah.</p>
                         </div>
                     </div>
-                    <select name="jersey_size" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                    <select name="jersey_size" class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                         <option value="">{{ __('messages.reg_select') }}</option>
                         @foreach(['XS','S','M','L','XL','XXL'] as $sz)<option value="{{ $sz }}" {{ old('jersey_size') == $sz ? 'selected' : '' }}>{{ $sz }}</option>@endforeach
                     </select>
@@ -180,37 +180,37 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_blood_type') }}</label>
-                        <select name="blood_type" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                        <label class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_blood_type') }}</label>
+                        <select name="blood_type" class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                             <option value="">{{ __('messages.reg_select') }}</option>
                             @foreach(['A','B','AB','O'] as $bt)<option value="{{ $bt }}" {{ old('blood_type') == $bt ? 'selected' : '' }}>{{ $bt }}</option>@endforeach
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_community') }}</label>
-                        <input type="text" name="community" value="{{ old('community') }}" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                        <label class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_community') }}</label>
+                        <input type="text" name="community" value="{{ old('community') }}" class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                     </div>
                 </div>
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_emergency_name') }}</label>
-                        <input type="text" name="emergency_contact_name" value="{{ old('emergency_contact_name') }}" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                        <label class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_emergency_name') }}</label>
+                        <input type="text" name="emergency_contact_name" value="{{ old('emergency_contact_name') }}" class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_emergency_phone') }}</label>
-                        <input type="text" name="emergency_contact_phone" value="{{ old('emergency_contact_phone') }}" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                        <label class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_emergency_phone') }}</label>
+                        <input type="text" name="emergency_contact_phone" value="{{ old('emergency_contact_phone') }}" class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-surface-700 mb-1.5">{{ __('messages.reg_medical') }}</label>
-                    <textarea name="medical_conditions" rows="3" class="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="{{ __('messages.reg_medical_placeholder') }}">{{ old('medical_conditions') }}</textarea>
+                    <label class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_medical') }}</label>
+                    <textarea name="medical_conditions" rows="3" class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="{{ __('messages.reg_medical_placeholder') }}">{{ old('medical_conditions') }}</textarea>
                 </div>
             </div>
 
             <!-- Agreements & Recaptcha -->
-            <div class="bg-white rounded-2xl border border-surface-200 p-6 space-y-5 shadow-sm">
+            <div class="bg-white rounded-2xl border border-surface-300 p-6 space-y-5 shadow-sm">
                 <div class="space-y-4">
                     <label class="flex items-start gap-3 cursor-pointer group">
                         <div class="flex-shrink-0 mt-1">
@@ -234,7 +234,7 @@
                     </label>
                 </div>
                 
-                <div class="pt-4 border-t border-surface-200">
+                <div class="pt-4 border-t border-surface-300">
                     <div class="g-recaptcha" data-theme="light" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
                 </div>
             </div>
@@ -248,8 +248,8 @@
 
 <!-- Size Chart Modal -->
 <div id="sizeChartModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/60 backdrop-blur-sm p-4">
-    <div class="bg-white border border-surface-200 rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
-        <div class="sticky top-0 bg-white/90 backdrop-blur-md p-6 border-b border-surface-200 flex justify-between items-center z-10">
+    <div class="bg-white border border-surface-300 rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div class="sticky top-0 bg-white/90 backdrop-blur-md p-6 border-b border-surface-300 flex justify-between items-center z-10">
             <h3 class="text-xl font-display font-bold text-surface-900">Panduan Ukuran Jersey</h3>
             <button type="button" onclick="document.getElementById('sizeChartModal').classList.add('hidden')" class="text-surface-700 hover:text-surface-900 transition-colors">
                 <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>

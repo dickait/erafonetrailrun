@@ -1,9 +1,9 @@
 @extends('layouts.admin')
 @section('page_title', __('messages.admin_payments'))
 @section('content')
-<div class="bg-white border border-surface-200 rounded-xl overflow-x-auto">
+<div class="bg-white border border-surface-300 rounded-xl overflow-x-auto">
     <table class="w-full text-sm">
-        <thead><tr class="border-b border-surface-200 text-left">
+        <thead><tr class="border-b border-surface-300 text-left">
             <th class="px-4 py-3 text-surface-700 font-medium">{{ __('messages.admin_invoice') }}</th>
             <th class="px-4 py-3 text-surface-700 font-medium">{{ __('messages.admin_participant') }}</th>
             <th class="px-4 py-3 text-surface-700 font-medium">{{ __('messages.admin_amount') }}</th>
@@ -13,7 +13,7 @@
         </tr></thead>
         <tbody>
             @forelse($payments as $pay)
-            <tr class="border-b border-surface-200/50 hover:bg-surface-50/30">
+            <tr class="border-b border-surface-300/50 hover:bg-surface-50/30">
                 <td class="px-4 py-3 font-mono text-xs text-surface-700">{{ $pay->mayar_invoice_id ?? '-' }}</td>
                 <td class="px-4 py-3 text-surface-900">{{ $pay->participant->full_name ?? '-' }}</td>
                 <td class="px-4 py-3 text-surface-900 font-medium">Rp {{ number_format($pay->amount, 0, ',', '.') }}</td>
@@ -27,7 +27,7 @@
         </tbody>
     </table>
     @if($payments->hasPages())
-    <div class="p-4 border-t border-surface-200">{{ $payments->links() }}</div>
+    <div class="p-4 border-t border-surface-300">{{ $payments->links() }}</div>
     @endif
 </div>
 @endsection

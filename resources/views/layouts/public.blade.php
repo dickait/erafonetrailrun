@@ -10,7 +10,7 @@
 </head>
 <body class="bg-white text-surface-900 font-sans antialiased">
     <!-- Navigation -->
-    <nav id="main-nav" class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-surface-200 shadow-sm">
+    <nav id="main-nav" class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-surface-300 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16 md:h-20">
                 <a href="{{ route('home') }}" class="flex items-center gap-3 group">
@@ -29,11 +29,11 @@
                 <div class="hidden md:flex items-center gap-4">
                     <!-- Language Switcher -->
                     <div class="relative group">
-                        <button class="flex items-center gap-1.5 text-sm font-medium text-surface-700 hover:text-surface-900 transition-colors px-2 py-1 rounded-lg hover:bg-surface-100">
+                        <button class="flex items-center gap-1.5 text-sm font-medium text-surface-800 hover:text-surface-900 transition-colors px-2 py-1 rounded-lg hover:bg-surface-100">
                             {{ app()->getLocale() === 'id' ? '🇮🇩' : '🇬🇧' }}
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                         </button>
-                        <div class="absolute right-0 top-full mt-1 w-36 bg-white border border-surface-200 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden z-50">
+                        <div class="absolute right-0 top-full mt-1 w-36 bg-white border border-surface-300 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden z-50">
                             <a href="{{ route('lang.switch', 'id') }}" class="flex items-center gap-2 px-4 py-2.5 text-sm {{ app()->getLocale() === 'id' ? 'text-brand-500 bg-brand-50' : 'text-surface-600 hover:bg-surface-100' }} transition-colors">
                                 🇮🇩 Indonesia
                             </a>
@@ -58,7 +58,7 @@
             </div>
         </div>
         <!-- Mobile menu -->
-        <div id="mobile-menu" class="hidden md:hidden border-t border-surface-200 bg-white/95 backdrop-blur-xl">
+        <div id="mobile-menu" class="hidden md:hidden border-t border-surface-300 bg-white/95 backdrop-blur-xl">
             <div class="px-4 py-4 space-y-2">
                 <a href="{{ route('home') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-surface-800 hover:text-brand-500 hover:bg-surface-100 transition-colors">{{ __('messages.nav_home') }}</a>
                 <a href="{{ route('gallery') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-surface-800 hover:text-brand-500 hover:bg-surface-100 transition-colors">{{ __('messages.nav_gallery') }}</a>

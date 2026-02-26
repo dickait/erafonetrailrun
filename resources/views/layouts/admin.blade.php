@@ -63,14 +63,14 @@
         <!-- Main Content -->
         <div class="flex-1 md:ml-56">
             <!-- Mobile header -->
-            <header class="md:hidden sticky top-0 z-40 bg-white/95 backdrop-blur-xl border-b border-surface-200 px-4 py-3 flex justify-between items-center">
+            <header class="md:hidden sticky top-0 z-40 bg-white/95 backdrop-blur-xl border-b border-surface-300 px-4 py-3 flex justify-between items-center">
                 <button onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')" class="p-2 rounded-lg hover:bg-surface-100">
                     <svg class="w-6 h-6 text-surface-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
                 <span class="font-display font-bold text-sm text-surface-900">{{ __('messages.admin_panel') }}</span>
                 <span class="text-sm text-surface-500">{{ auth()->user()->name ?? 'Admin' }}</span>
             </header>
-            <div class="hidden md:flex justify-between items-center px-8 py-4 border-b border-surface-200 bg-white">
+            <div class="hidden md:flex justify-between items-center px-8 py-4 border-b border-surface-300 bg-white">
                 <h1 class="font-display font-bold text-xl text-surface-900">@yield('page_title', __('messages.admin_dashboard'))</h1>
                 <span class="text-sm text-surface-500">{{ auth()->user()->name ?? 'Admin' }}</span>
             </div>

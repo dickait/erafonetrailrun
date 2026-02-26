@@ -10,7 +10,7 @@
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             @for($i = 1; $i <= 8; $i++)
-            <div class="bg-white border border-surface-200 rounded-xl aspect-square flex flex-col items-center justify-center hover:border-brand-300 transition-colors group shadow-sm">
+            <div class="bg-white border border-surface-300 rounded-xl aspect-square flex flex-col items-center justify-center hover:border-brand-300 transition-colors group shadow-sm">
                 <svg class="w-10 h-10 text-surface-300 group-hover:text-brand-400 transition-colors mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                 <span class="text-xs text-surface-700">{{ __('messages.gallery_moment') }} {{ $i }}</span>
             </div>

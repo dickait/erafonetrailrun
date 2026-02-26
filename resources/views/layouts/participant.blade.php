@@ -8,7 +8,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-surface-100 text-surface-900 font-sans antialiased">
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-b border-surface-200 shadow-sm">
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-b border-surface-300 shadow-sm">
         <div class="max-w-5xl mx-auto px-4 sm:px-6">
             <div class="flex justify-between items-center h-16">
                 <a href="{{ route('home') }}" class="flex items-center gap-2">
