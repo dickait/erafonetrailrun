@@ -47,26 +47,48 @@ class WebhookController extends Controller
             return response()->json(['message' => 'Event ignored']);
         }
 
-        // Find payment by Mayar payment ID or paymentLinkId
+        // Find payment by matching IDs from webhook
         $mayarId = $data['id'] ?? null;
+        $productId = $data['productId'] ?? null;
         $paymentLinkId = $data['paymentLinkId'] ?? null;
         $status = $data['status'] ?? null;
 
         $payment = null;
 
-        // Try to find by invoice_id (which stores Mayar's payment ID)
-        if ($mayarId) {
+        // Primary: match by productId (this is the ID returned when we created the payment)
+        if ($productId) {
+            $payment = Payment::where('invoice_id', $productId)->first();
+        }
+
+        // Fallback 1: try by transactionId / id
+        if (!$payment && $mayarId) {
             $payment = Payment::where('invoice_id', $mayarId)->first();
         }
 
-        // Fallback: try paymentLinkId
+        // Fallback 2: try paymentLinkId
         if (!$payment && $paymentLinkId) {
             $payment = Payment::where('invoice_id', $paymentLinkId)->first();
+        }
+
+        // Fallback 3: match by customer email + amount
+        if (!$payment) {
+            $customerEmail = $data['customerEmail'] ?? null;
+            $amount = $data['amount'] ?? null;
+            if ($customerEmail && $amount) {
+                $payment = Payment::where('amount', $amount)
+                    ->where('status', 'pending')
+                    ->whereHas('participant', function ($q) use ($customerEmail) {
+                    $q->where('email', $customerEmail);
+                })
+                    ->latest()
+                    ->first();
+            }
         }
 
         if (!$payment) {
             Log::warning('Mayar webhook: Payment not found', [
                 'mayar_id' => $mayarId,
+                'productId' => $productId,
                 'paymentLinkId' => $paymentLinkId,
             ]);
             return response()->json(['error' => 'Payment not found'], 404);
