@@ -17,28 +17,29 @@ class WebhookController extends Controller
             'body' => $request->all(),
         ]);
 
-        // Verify webhook signature
+        // Verify webhook using x-callback-token header
         $secret = config('services.mayar.webhook_secret');
         if ($secret) {
-            $signature = $request->header('x-callback-signature')
-                ?? $request->header('x-mayar-signature')
-                ?? $request->header('X-Callback-Signature')
-                ?? $request->header('X-Mayar-Signature');
+            $callbackToken = $request->header('x-callback-token');
 
-            $expectedSignature = hash_hmac('sha256', $request->getContent(), $secret);
-
-            if (!hash_equals($expectedSignature, $signature ?? '')) {
-                Log::warning('Mayar webhook signature verification failed', [
-                    'expected' => $expectedSignature,
-                    'received' => $signature,
+            if (!$callbackToken || $callbackToken !== $secret) {
+                Log::warning('Mayar webhook token verification failed', [
+                    'expected' => $secret,
+                    'received' => $callbackToken,
                 ]);
-                return response()->json(['error' => 'Invalid signature'], 403);
+                return response()->json(['error' => 'Invalid token'], 403);
             }
         }
 
         $payload = $request->all();
         $event = $payload['event'] ?? null;
         $data = $payload['data'] ?? [];
+
+        // Ignore test events
+        if ($event === 'testing') {
+            Log::info('Mayar webhook test received successfully');
+            return response()->json(['message' => 'Test webhook received']);
+        }
 
         // Only process payment.received events
         if ($event !== 'payment.received') {
@@ -83,9 +84,7 @@ class WebhookController extends Controller
 
             $payment->update([
                 'status' => $paymentStatus,
-                'payment_method' => $data['paymentMethod'] ?? $data['payment_method'] ?? null,
                 'paid_at' => $paymentStatus === 'paid' ? now() : null,
-                'webhook_payload' => $payload,
             ]);
 
             // Update participant payment status
