@@ -8,16 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('provinces', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('country_id')->constrained('countries')->onDelete('cascade');
-            $table->string('name');
-            $table->timestamps();
-        });
+        $sql = file_get_contents(database_path('indonesia.sql'));
+        \Illuminate\Support\Facades\DB::unprepared($sql);
     }
 
     public function down(): void
     {
+        Schema::dropIfExists('villages');
+        Schema::dropIfExists('districts');
+        Schema::dropIfExists('regencies');
         Schema::dropIfExists('provinces');
     }
 };

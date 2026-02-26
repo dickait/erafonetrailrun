@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class City extends Model
 {
-    protected $fillable = ['province_id', 'name'];
+    protected $table = 'regencies';
+    protected $fillable = ['id', 'province_id', 'name'];
+    protected $keyType = 'string';
+    public $incrementing = false;
+    public $timestamps = false;
 
     public function province()
     {

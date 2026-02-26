@@ -21,8 +21,10 @@ return new class extends Migration
             $table->string('identity_number', 30)->nullable(); // KTP / Passport
             $table->string('nationality')->default('Indonesia');
             $table->foreignId('country_id')->nullable()->constrained('countries')->onDelete('set null');
-            $table->foreignId('province_id')->nullable()->constrained('provinces')->onDelete('set null');
-            $table->foreignId('city_id')->nullable()->constrained('cities')->onDelete('set null');
+            $table->char('province_id', 2)->nullable();
+            $table->foreign('province_id')->references('id')->on('provinces')->onDelete('set null');
+            $table->char('city_id', 4)->nullable();
+            $table->foreign('city_id')->references('id')->on('regencies')->onDelete('set null');
             $table->string('address')->nullable();
             $table->string('blood_type', 3)->nullable();
             $table->string('emergency_contact_name')->nullable();

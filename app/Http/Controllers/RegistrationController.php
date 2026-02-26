@@ -48,7 +48,7 @@ class RegistrationController extends Controller
             'nationality' => 'required|string|max:100',
             'country_id' => 'nullable|exists:countries,id',
             'province_id' => 'nullable|exists:provinces,id',
-            'city_id' => 'nullable|exists:cities,id',
+            'city_id' => 'nullable|exists:regencies,id',
             'address' => 'nullable|string|max:255',
             'blood_type' => 'nullable|string|max:3',
             'emergency_contact_name' => 'nullable|string|max:255',
@@ -120,7 +120,7 @@ class RegistrationController extends Controller
 
     public function getProvinces(Request $request)
     {
-        $provinces = Province::where('country_id', $request->country_id)->orderBy('name')->get();
+        $provinces = Province::orderBy('name')->get();
         return response()->json($provinces);
     }
 

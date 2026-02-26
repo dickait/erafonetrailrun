@@ -28,31 +28,7 @@ class DatabaseSeeder extends Seeder
         Country::create(['name' => 'Malaysia', 'code' => 'MYS']);
         Country::create(['name' => 'Singapore', 'code' => 'SGP']);
 
-        // Create Provinces & Cities for Indonesia
-        $provinces = [
-            'DKI Jakarta' => ['Jakarta Pusat', 'Jakarta Selatan', 'Jakarta Barat', 'Jakarta Utara', 'Jakarta Timur'],
-            'Jawa Barat' => ['Bandung', 'Bogor', 'Depok', 'Bekasi', 'Cirebon'],
-            'Jawa Tengah' => ['Semarang', 'Solo', 'Yogyakarta', 'Magelang'],
-            'Jawa Timur' => ['Surabaya', 'Malang', 'Sidoarjo', 'Batu'],
-            'Bali' => ['Denpasar', 'Badung', 'Gianyar', 'Tabanan'],
-            'Sumatera Utara' => ['Medan', 'Deli Serdang', 'Binjai'],
-            'Sumatera Barat' => ['Padang', 'Bukittinggi', 'Payakumbuh'],
-            'Sulawesi Selatan' => ['Makassar', 'Maros', 'Gowa'],
-        ];
 
-        foreach ($provinces as $provinceName => $cities) {
-            $province = Province::create([
-                'country_id' => $indonesia->id,
-                'name' => $provinceName,
-            ]);
-
-            foreach ($cities as $cityName) {
-                City::create([
-                    'province_id' => $province->id,
-                    'name' => $cityName,
-                ]);
-            }
-        }
 
         // Create Event
         $event = Event::create([
