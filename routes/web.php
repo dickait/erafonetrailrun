@@ -1,0 +1,65 @@
+<?php
+
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Participant\DashboardController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\WebhookController;
+use Illuminate\Support\Facades\Route;
+
+/* |-------------------------------------------------------------------------- | Public Routes |-------------------------------------------------------------------------- */
+Route::get('/', [HomeController::class , 'index'])->name('home');
+Route::get('/gallery', [HomeController::class , 'gallery'])->name('gallery');
+Route::get('/results', [HomeController::class , 'results'])->name('results');
+
+// Registration
+Route::get('/event-register', [RegistrationController::class , 'create'])->name('register.create');
+Route::post('/event-register', [RegistrationController::class , 'store'])->name('register.store')->middleware('throttle:5,1');
+Route::get('/status', [RegistrationController::class , 'checkStatus'])->name('registration.status');
+
+// API for cascading dropdowns
+Route::get('/api/provinces', [RegistrationController::class , 'getProvinces'])->name('api.provinces');
+Route::get('/api/cities', [RegistrationController::class , 'getCities'])->name('api.cities');
+
+// Webhook (CSRF excluded via bootstrap/app.php)
+Route::post('/webhook/mayar', [WebhookController::class , 'handleMayar'])->name('webhook.mayar');
+
+/* |-------------------------------------------------------------------------- | Auth Routes (Breeze) |-------------------------------------------------------------------------- */
+Route::get('/dashboard', function () {
+    $user = auth()->user();
+    if ($user->isAdmin()) {
+        return redirect()->route('admin.dashboard');
+    }
+    return redirect()->route('participant.dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class , 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class , 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class , 'destroy'])->name('profile.destroy');
+});
+
+/* |-------------------------------------------------------------------------- | Participant Routes |-------------------------------------------------------------------------- */
+Route::middleware(['auth', 'participant'])->prefix('participant')->name('participant.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class , 'index'])->name('dashboard');
+    Route::get('/profile', [DashboardController::class , 'profile'])->name('profile');
+    Route::put('/profile', [DashboardController::class , 'updateProfile'])->name('profile.update');
+    Route::get('/payment', [DashboardController::class , 'paymentStatus'])->name('payment');
+    Route::get('/bib', [DashboardController::class , 'bib'])->name('bib');
+});
+
+/* |-------------------------------------------------------------------------- | Admin Routes |-------------------------------------------------------------------------- */
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminController::class , 'dashboard'])->name('dashboard');
+    Route::get('/participants', [AdminController::class , 'participants'])->name('participants');
+    Route::get('/payments', [AdminController::class , 'payments'])->name('payments');
+    Route::get('/export-csv', [AdminController::class , 'exportCsv'])->name('export-csv');
+    Route::post('/generate-bibs', [AdminController::class , 'generateBibs'])->name('generate-bibs');
+    Route::get('/email-blast', [AdminController::class , 'emailBlastForm'])->name('email-blast');
+    Route::post('/email-blast', [AdminController::class , 'sendEmailBlast'])->name('email-blast.send');
+    Route::get('/checkin', [AdminController::class , 'checkinPage'])->name('checkin');
+    Route::post('/checkin', [AdminController::class , 'checkin'])->name('checkin.process');
+});
+
+require __DIR__ . '/auth.php';
