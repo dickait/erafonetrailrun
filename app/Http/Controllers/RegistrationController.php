@@ -104,21 +104,60 @@ class RegistrationController extends Controller
                 'payment_status' => 'pending',
             ]);
 
-            // Create payment record
-            $amount = $category->getCurrentPrice();
-            Payment::create([
-                'participant_id' => $participant->id,
-                'amount' => $amount,
-                'status' => 'pending',
-                'invoice_id' => 'INV-' . strtoupper(Str::random(10)),
-                'payment_link' => '#', // Would be replaced with Mayar link
-            ]);
-
             return $participant;
         });
 
-        // In production, redirect to Mayar payment link
-        // For now, redirect to payment page
+        // Call Mayar API to create payment request
+        $amount = $category->getCurrentPrice();
+        $paymentLink = '#';
+        $invoiceId = 'INV-' . strtoupper(Str::random(10));
+
+        try {
+            $mayarResponse = Http::withToken(config('services.mayar.api_key'))
+                ->post(config('services.mayar.api_url') . '/payment/create', [
+                'name' => $participant->full_name,
+                'email' => $participant->email,
+                'amount' => (int)$amount,
+                'mobile' => $participant->phone,
+                'description' => "Registration {$event->name} - {$category->name}",
+                'redirectUrl' => route('registration.payment', ['email' => $participant->email]),
+            ]);
+
+            if ($mayarResponse->successful()) {
+                $mayarData = $mayarResponse->json();
+                $paymentLink = $mayarData['data']['link'] ?? $mayarData['data']['paymentLink'] ?? '#';
+                $invoiceId = $mayarData['data']['id'] ?? $invoiceId;
+
+                \Illuminate\Support\Facades\Log::info('Mayar payment created', [
+                    'participant_id' => $participant->id,
+                    'invoice_id' => $invoiceId,
+                    'payment_link' => $paymentLink,
+                ]);
+            }
+            else {
+                \Illuminate\Support\Facades\Log::error('Mayar API error', [
+                    'status' => $mayarResponse->status(),
+                    'body' => $mayarResponse->body(),
+                    'participant_id' => $participant->id,
+                ]);
+            }
+        }
+        catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Mayar API exception', [
+                'message' => $e->getMessage(),
+                'participant_id' => $participant->id,
+            ]);
+        }
+
+        // Create payment record with the Mayar link
+        Payment::create([
+            'participant_id' => $participant->id,
+            'amount' => $amount,
+            'status' => 'pending',
+            'invoice_id' => $invoiceId,
+            'payment_link' => $paymentLink,
+        ]);
+
         return redirect()->route('registration.payment', ['email' => $participant->email])
             ->with('success', 'Registration successful! Please complete your payment.');
     }
