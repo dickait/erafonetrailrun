@@ -14,10 +14,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16 md:h-20">
                 <a href="{{ route('home') }}" class="flex items-center gap-3 group">
-                    <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl flex items-center justify-center shadow-lg shadow-brand-500/20 group-hover:shadow-brand-500/40 transition-shadow">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                    </div>
-                    <span class="font-display font-bold text-xl text-surface-900">ERAFONE<span class="text-brand-500">TRAIL</span></span>
+                    <img src="{{ asset('logo.png') }}" class="h-10 md:h-12 w-auto" alt="Erafone Trail Run" />
                 </a>
                 <div class="hidden md:flex items-center gap-8">
                     <a href="{{ route('home') }}" class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_home') }}</a>
@@ -90,10 +87,7 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div class="md:col-span-2">
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl flex items-center justify-center">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                        </div>
-                        <span class="font-display font-bold text-xl text-white">ERAFONE<span class="text-brand-400">TRAIL</span></span>
+                        <img src="{{ asset('logo.png') }}" class="h-10 md:h-12 w-auto" alt="Erafone Trail Run" />
                     </div>
                     <p class="text-surface-400 text-sm max-w-md">{{ __('messages.footer_description') }}</p>
                 </div>

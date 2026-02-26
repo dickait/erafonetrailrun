@@ -12,10 +12,7 @@
         <div class="max-w-5xl mx-auto px-4 sm:px-6">
             <div class="flex justify-between items-center h-16">
                 <a href="{{ route('home') }}" class="flex items-center gap-2">
-                    <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-700 rounded-lg flex items-center justify-center">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                    </div>
-                    <span class="font-display font-bold text-sm text-surface-900">ERAFONE<span class="text-brand-500">TRAIL</span></span>
+                    <img src="{{ asset('logo.png') }}" class="h-8 md:h-10 w-auto" alt="Erafone Trail Run" />
                 </a>
                 <div class="flex items-center gap-1 overflow-x-auto">
                     <a href="{{ route('participant.dashboard') }}" class="px-3 py-2 rounded-lg text-xs sm:text-sm font-medium {{ request()->routeIs('participant.dashboard') ? 'text-brand-500 bg-brand-50' : 'text-surface-700 hover:text-surface-900' }} transition-colors whitespace-nowrap">{{ __('messages.part_dashboard') }}</a>
