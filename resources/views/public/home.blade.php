@@ -39,7 +39,7 @@
         </div>
         @endif
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="{{ route('register.create') }}" class="px-8 py-4 bg-gradient-to-r from-forest-600 to-forest-500 hover:from-forest-500 hover:to-forest-400 text-white font-bold rounded-2xl shadow-xl shadow-forest-500/25 hover:shadow-forest-500/40 transition-all duration-300 transform hover:-translate-y-1 text-lg">
+            <a href="#categories" class="px-8 py-4 bg-gradient-to-r from-forest-600 to-forest-500 hover:from-forest-500 hover:to-forest-400 text-white font-bold rounded-2xl shadow-xl shadow-forest-500/25 hover:shadow-forest-500/40 transition-all duration-300 transform hover:-translate-y-1 text-lg">
                 {{ __('messages.hero_register') }}
             </a>
             <a href="#about" class="px-8 py-4 bg-dark-800/60 border border-forest-800/40 hover:border-forest-600/60 text-white font-semibold rounded-2xl transition-all duration-300 hover:bg-dark-700/60">
@@ -161,6 +161,22 @@
             }
         }, 1000);
     }
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
 </script>
 @endpush
 @endsection
