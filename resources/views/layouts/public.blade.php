@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Erafone Trail Run 2026')</title>
-    <meta name="description" content="@yield('meta_description', 'Join the ultimate trail running adventure - Erafone Trail Run 2026 in Sentul, Bogor')">
+    <title>@yield('title', 'ERA Trail Run 2026')</title>
+    <meta name="description" content="@yield('meta_description', 'ERA Trail Run 2026 at Bogor Nirwana Residence - Trail Run with Smart Experience')">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-white text-surface-900 font-sans antialiased">
@@ -19,6 +19,7 @@
                 <div class="hidden md:flex items-center gap-8">
                     <a href="{{ route('home') }}" class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_home') }}</a>
                     <a href="{{ route('home') }}#categories" class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_categories') }}</a>
+                    <a href="{{ route('race-course') }}" class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_race_course') }}</a>
                     <a href="{{ route('gallery') }}" class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_gallery') }}</a>
                     <a href="{{ route('results') }}" class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_results') }}</a>
                     <a href="{{ route('registration.status') }}" class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_check_status') }}</a>
@@ -42,7 +43,7 @@
                     @auth
                         <a href="{{ route('dashboard') }}" class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_dashboard') }}</a>
                     @else
-                        <a href="{{ route('login') }}" class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_login') }}</a>
+                        <!-- <a href="{{ route('login') }}" class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_login') }}</a> -->
                     @endauth
                     <a href="{{ route('register.create') }}" class="px-5 py-2.5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white text-sm font-semibold rounded-xl shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 transition-all duration-200 transform hover:-translate-y-0.5">
                         {{ __('messages.nav_register') }}
@@ -58,6 +59,7 @@
         <div id="mobile-menu" class="hidden md:hidden border-t border-surface-300 bg-white/95 backdrop-blur-xl">
             <div class="px-4 py-4 space-y-2">
                 <a href="{{ route('home') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-surface-800 hover:text-brand-500 hover:bg-surface-100 transition-colors">{{ __('messages.nav_home') }}</a>
+                <a href="{{ route('race-course') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-surface-800 hover:text-brand-500 hover:bg-surface-100 transition-colors">{{ __('messages.nav_race_course') }}</a>
                 <a href="{{ route('gallery') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-surface-800 hover:text-brand-500 hover:bg-surface-100 transition-colors">{{ __('messages.nav_gallery') }}</a>
                 <a href="{{ route('results') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-surface-800 hover:text-brand-500 hover:bg-surface-100 transition-colors">{{ __('messages.nav_results') }}</a>
                 <a href="{{ route('registration.status') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-surface-800 hover:text-brand-500 hover:bg-surface-100 transition-colors">{{ __('messages.nav_check_status') }}</a>
@@ -96,6 +98,7 @@
                     <ul class="space-y-2">
                         <li><a href="{{ route('home') }}" class="text-sm text-surface-400 hover:text-white transition-colors">{{ __('messages.nav_home') }}</a></li>
                         <li><a href="{{ route('register.create') }}" class="text-sm text-surface-400 hover:text-white transition-colors">{{ __('messages.footer_register') }}</a></li>
+                        <li><a href="{{ route('race-course') }}" class="text-sm text-surface-400 hover:text-white transition-colors">{{ __('messages.footer_race_course') }}</a></li>
                         <li><a href="{{ route('gallery') }}" class="text-sm text-surface-400 hover:text-white transition-colors">{{ __('messages.nav_gallery') }}</a></li>
                         <li><a href="{{ route('results') }}" class="text-sm text-surface-400 hover:text-white transition-colors">{{ __('messages.nav_results') }}</a></li>
                     </ul>
@@ -105,12 +108,12 @@
                     <ul class="space-y-2">
                         <li class="text-sm text-surface-400">info@erafonetrailrun.com</li>
                         <li class="text-sm text-surface-400">+62 812-3456-7890</li>
-                        <li class="text-sm text-surface-400">Sentul, Bogor, Indonesia</li>
+                        <li class="text-sm text-surface-400">Bogor Nirwana Residence, Bogor</li>
                     </ul>
                 </div>
             </div>
             <div class="border-t border-surface-800 mt-8 pt-8 text-center">
-                <p class="text-sm text-surface-500">&copy; {{ date('Y') }} Erafone Trail Run. {{ __('messages.footer_rights') }}</p>
+                <p class="text-sm text-surface-500">&copy; {{ date('Y') }} ERA Trail Run. {{ __('messages.footer_rights') }}</p>
             </div>
         </div>
     </footer>

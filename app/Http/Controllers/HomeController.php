@@ -25,4 +25,11 @@ class HomeController extends Controller
         $event = Event::where('is_active', true)->latest('event_date')->first();
         return view('public.results', compact('event'));
     }
+
+    public function raceCourse()
+    {
+        $event = Event::with('categories')->where('is_active', true)->latest('event_date')->first();
+        $categories = $event ? $event->categories : collect();
+        return view('public.racecourse', compact('event', 'categories'));
+    }
 }

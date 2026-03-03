@@ -22,6 +22,7 @@ Route::get('/lang/{locale}', function (string $locale) {
 Route::get('/', [HomeController::class , 'index'])->name('home');
 Route::get('/gallery', [HomeController::class , 'gallery'])->name('gallery');
 Route::get('/results', [HomeController::class , 'results'])->name('results');
+Route::get('/race-course', [HomeController::class , 'raceCourse'])->name('race-course');
 
 // Registration
 Route::get('/event-register', [RegistrationController::class , 'create'])->name('register.create');
