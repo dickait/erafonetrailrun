@@ -106,9 +106,9 @@
                 '10k-challenge' => ['accent', 'from-accent-500 to-accent-600', 'accent-500', 'accent-100', 'text-accent-600', 'border-accent-200', 'bg-accent-50'],
                 '21k-ultra-trail' => ['brand', 'from-brand-500 to-brand-600', 'brand-500', 'brand-100', 'text-brand-500', 'border-brand-200', 'bg-brand-50'],
                 '5k-fun-run' => ['green', 'from-emerald-500 to-emerald-600', 'emerald-500', 'emerald-100', 'text-emerald-600', 'border-emerald-200', 'bg-emerald-50'],
-                '5k-family-trail-run' => ['green', 'from-emerald-500 to-emerald-600', 'emerald-500', 'emerald-100', 'text-emerald-600', 'border-emerald-200', 'bg-emerald-50'],
-                '10k' => ['accent', 'from-accent-500 to-accent-600', 'accent-500', 'accent-100', 'text-accent-600', 'border-accent-200', 'bg-accent-50'],
-                '15k' => ['brand', 'from-brand-500 to-brand-600', 'brand-500', 'brand-100', 'text-brand-500', 'border-brand-200', 'bg-brand-50'],
+                '5k-family-trail-run' => ['emerald', 'from-emerald-500 to-emerald-600', 'emerald-500', 'emerald-100', 'text-[#22c55e]', 'border-[#22c55e]', 'bg-[#22c55e]/10'],
+                '10k' => ['accent', 'from-amber-500 to-amber-600', 'amber-500', 'amber-100', 'text-[#f59e0b]', 'border-[#f59e0b]', 'bg-[#f59e0b]/10'],
+                '15k' => ['brand', 'from-red-500 to-red-600', 'red-500', 'red-100', 'text-[#ef4444]', 'border-[#ef4444]', 'bg-[#ef4444]/10'],
             ];
             @endphp
             @foreach($categories as $cat)
@@ -122,7 +122,7 @@
                     <span class="font-display text-xl font-bold {{ $colors[4] }}">{{ strtoupper(explode('-', $cat->slug)[0]) }}</span>
                 </div>
                 <h3 class="font-display text-xl font-bold text-surface-900 mb-3">{{ $cat->name }}</h3>
-                <p class="text-surface-700 text-sm mb-6">{{ $cat->description }}</p>
+                <p class="text-surface-700 text-sm mb-6">{{ __('messages.categories_desc_' . $cat->slug) !== 'messages.categories_desc_' . $cat->slug ? __('messages.categories_desc_' . $cat->slug) : $cat->description }}</p>
                 <div class="space-y-3 mb-6">
                     <div class="flex justify-between text-sm"><span class="text-surface-700">{{ __('messages.categories_distance') }}</span><span class="text-surface-900 font-medium">{{ $distKm }} km</span></div>
                     <div class="flex justify-between text-sm"><span class="text-surface-700">{{ __('messages.categories_elevation') }}</span><span class="text-surface-900 font-medium">{{ $cat->elevation ?? 294 }} m</span></div>

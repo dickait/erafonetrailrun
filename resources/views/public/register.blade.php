@@ -28,11 +28,24 @@
             <div class="bg-white rounded-2xl border border-surface-300 p-6 shadow-sm">
                 <h3 class="font-display font-semibold text-lg text-surface-900 mb-4">{{ __('messages.reg_select_category') }}</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    @php
+                    $categoryColors = [
+                        '10k-challenge' => ['text-[#f59e0b]'],
+                        '21k-ultra-trail' => ['text-[#ef4444]'],
+                        '5k-fun-run' => ['text-[#22c55e]'],
+                        '5k-family-trail-run' => ['text-[#22c55e]'],
+                        '10k' => ['text-[#f59e0b]'],
+                        '15k' => ['text-[#ef4444]'],
+                    ];
+                    @endphp
                     @foreach($categories as $cat)
+                    @php
+                    $textColor = $categoryColors[$cat->slug][0] ?? 'text-emerald-500';
+                    @endphp
                     <label class="cursor-pointer">
                         <input type="radio" name="category_id" value="{{ $cat->id }}" class="category-radio hidden peer" {{ old('category_id', request('category')) == $cat->id ? 'checked' : '' }}>
                         <div class="border border-surface-300 rounded-xl p-4 text-center transition-all peer-checked:border-brand-500 peer-checked:bg-brand-50 hover:border-brand-300">
-                            <p class="font-display font-bold text-xl {{ $loop->index == 0 ? 'text-accent-600' : ($loop->index == 1 ? 'text-brand-500' : 'text-emerald-600') }}">{{ strtoupper(explode(' ', $cat->name)[0]) }}</p>
+                            <p class="font-display font-bold text-xl {{ $textColor }}">{{ strtoupper(explode('-', $cat->slug)[0]) }}</p>
                             <p class="text-sm text-surface-700">{{ $cat->name }}</p>
                             <p class="text-sm text-brand-500 font-medium">Rp {{ number_format($cat->getCurrentPrice(), 0, ',', '.') }}</p>
                         </div>
@@ -50,7 +63,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div class="space-y-3">
                                 <h4 class="font-display font-bold text-surface-900 mb-2">{{ $cat->name }}</h4>
-                                <p class="text-surface-700 text-sm mb-4">{{ $cat->description }}</p>
+                                <p class="text-surface-700 text-sm mb-4">{{ __('messages.categories_desc_' . $cat->slug) !== 'messages.categories_desc_' . $cat->slug ? __('messages.categories_desc_' . $cat->slug) : $cat->description }}</p>
                                 <div class="flex justify-between text-sm"><span class="text-surface-700">{{ __('messages.categories_distance') }}</span><span class="text-surface-900 font-medium">{{ $distKm }} km</span></div>
                                 <div class="flex justify-between text-sm"><span class="text-surface-700">{{ __('messages.categories_elevation') }}</span><span class="text-surface-900 font-medium">{{ $cat->elevation ?? 0 }} m</span></div>
                                 <div class="flex justify-between text-sm"><span class="text-surface-700">{{ __('messages.categories_cot') }}</span><span class="text-surface-900 font-medium">{{ $cat->cot ?? 0 }} {{ app()->getLocale() == 'id' ? 'Jam' : 'Hours' }}</span></div>
