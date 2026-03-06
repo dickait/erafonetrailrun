@@ -1,5 +1,5 @@
 @extends('layouts.public')
-@section('title', __('messages.reg_badge') . ' - Erafone Trail Run 2026')
+@section('title', __('messages.reg_badge') . ' - ERA TRAIL RUN 2026')
 @push('scripts')
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 @endpush
@@ -10,7 +10,8 @@
                 <span
                     class="inline-block px-4 py-1.5 bg-brand-50 text-brand-500 text-sm font-semibold rounded-full mb-6 tracking-wide uppercase">{{ __('messages.reg_badge') }}</span>
                 <h1 class="font-display font-bold text-3xl md:text-4xl text-surface-900 mb-2">{{ __('messages.reg_title') }}
-                    {{ $event->name ?? 'Erafone Trail Run 2026' }}</h1>
+                    {{ $event->name ?? 'Erafone Trail Run 2026' }}
+                </h1>
                 <p class="text-surface-700">{{ __('messages.reg_subtitle') }}</p>
             </div>
 
@@ -23,7 +24,8 @@
 
             @if(session('success'))
                 <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-700">
-                    {{ session('success') }}</div>
+                    {{ session('success') }}
+                </div>
             @endif
 
             <form method="POST" action="{{ route('register.store') }}" class="space-y-8">
@@ -31,7 +33,8 @@
                 <!-- Category Selection -->
                 <div class="bg-white rounded-2xl border border-surface-300 p-6 shadow-sm">
                     <h3 class="font-display font-semibold text-lg text-surface-900 mb-4">
-                        {{ __('messages.reg_select_category') }}</h3>
+                        {{ __('messages.reg_select_category') }}
+                    </h3>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         @foreach($categories as $cat)
                             <label class="cursor-pointer">
@@ -41,10 +44,12 @@
                                     class="border border-surface-300 rounded-xl p-4 text-center transition-all peer-checked:border-brand-500 peer-checked:bg-brand-50 hover:border-brand-300">
                                     <p
                                         class="font-display font-bold text-xl {{ $loop->index == 0 ? 'text-accent-600' : ($loop->index == 1 ? 'text-brand-500' : 'text-emerald-600') }}">
-                                        {{ strtoupper(explode(' ', $cat->name)[0]) }}</p>
+                                        {{ strtoupper(explode(' ', $cat->name)[0]) }}
+                                    </p>
                                     <p class="text-sm text-surface-700">{{ $cat->name }}</p>
                                     <p class="text-sm text-brand-500 font-medium">Rp
-                                        {{ number_format($cat->getCurrentPrice(), 0, ',', '.') }}</p>
+                                        {{ number_format($cat->getCurrentPrice(), 0, ',', '.') }}
+                                    </p>
                                 </div>
                             </label>
                         @endforeach
@@ -60,7 +65,8 @@
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div class="space-y-3">
                                         <h4 class="font-display font-bold text-surface-900 mb-2">{{ $cat->name }}</h4>
-                                        <p class="text-surface-700 text-sm mb-4">{{ __('messages.cat_' . $cat->slug . '_desc') }}
+                                        <p class="text-surface-700 text-sm mb-4">
+                                            {{ __('messages.cat_' . $cat->slug . '_desc') }}
                                         </p>
                                         <div class="flex justify-between text-sm"><span
                                                 class="text-surface-700">{{ __('messages.categories_distance') }}</span><span
@@ -79,7 +85,8 @@
                                     </div>
                                     <div>
                                         <p class="text-sm font-semibold text-surface-900 mb-3">
-                                            {{ __('messages.categories_entitlements') }}:</p>
+                                            {{ __('messages.categories_entitlements') }}:
+                                        </p>
                                         <ul class="text-sm text-surface-700 space-y-2">
                                             <li class="flex items-start gap-2"><svg
                                                     class="w-4 h-4 text-brand-500 mt-0.5 flex-shrink-0" fill="none"
@@ -181,9 +188,11 @@
                                 class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                                 <option value="">{{ __('messages.reg_gender_select') }}</option>
                                 <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>
-                                    {{ __('messages.reg_gender_male') }}</option>
+                                    {{ __('messages.reg_gender_male') }}
+                                </option>
                                 <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>
-                                    {{ __('messages.reg_gender_female') }}</option>
+                                    {{ __('messages.reg_gender_female') }}
+                                </option>
                             </select>
                         </div>
                         <div>

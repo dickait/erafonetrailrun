@@ -32,13 +32,13 @@ class DatabaseSeeder extends Seeder
 
         // Create Event
         $event = Event::create([
-            'name' => 'Erafone Trail Run 2026',
-            'slug' => 'erafone-trail-run-2026',
-            'description' => 'Experience the ultimate trail running adventure through the stunning landscapes of Indonesia. Join hundreds of runners in this epic journey through dense tropical forests, volcanic terrains, and breathtaking mountain vistas. Whether you\'re a beginner or an experienced trail runner, Erafone Trail Run 2026 has a category for you.',
-            'location' => 'Gunung Pancar, Sentul, Bogor',
-            'event_date' => '2026-06-15 06:00:00',
+            'name' => 'ERA TRAIL RUN 2026',
+            'slug' => 'era-trail-run-2026',
+            'description' => 'Experience the ultimate trail running adventure through the stunning landscapes of Indonesia. Join hundreds of runners in this epic journey through dense tropical forests, volcanic terrains, and breathtaking mountain vistas. Whether you\'re a beginner or an experienced trail runner, ERA TRAIL RUN 2026 has a category for you.',
+            'location' => 'Bogor Nirwana Residence, Bogor',
+            'event_date' => '2026-06-21 06:00:00',
             'registration_open' => '2026-01-01 00:00:00',
-            'registration_close' => '2026-06-01 23:59:59',
+            'registration_close' => '2026-06-20 23:59:59',
             'is_active' => true,
         ]);
 

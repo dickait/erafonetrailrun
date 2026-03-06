@@ -1,5 +1,5 @@
 @extends('layouts.public')
-@section('title', 'Erafone Trail Run 2026 - Ultimate Trail Running Adventure')
+@section('title', 'ERA TRAIL RUN 2026 - Ultimate Trail Running Adventure')
 @section('content')
     <!-- Hero Section -->
     <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -19,13 +19,14 @@
                 <span class="text-sm font-medium text-white/90">{{ __('messages.hero_badge') }}</span>
             </div>
             <h1 class="font-display font-black text-5xl md:text-7xl lg:text-8xl mb-6 leading-tight">
-                <span class="text-white">ERAFONE</span><br>
+                <span class="text-white">ERA</span><br>
                 <span
                     class="text-transparent bg-clip-text bg-gradient-to-r from-accent-300 via-accent-400 to-accent-200">TRAIL
                     RUN</span>
             </h1>
             <p class="font-display text-3xl md:text-4xl font-bold text-white/60 mb-6">
-                {{ $event->event_date->format('Y') ?? '2026' }}</p>
+                {{ \Carbon\Carbon::parse($event->event_date)->locale(app()->getLocale())->translatedFormat('l, d F Y') }}
+            </p>
             <p class="text-white/80 text-lg max-w-2xl mx-auto mb-10">
                 {{ __('messages.hero_subtitle') }} <span
                     class="text-accent-300 font-semibold">{{ __('messages.hero_location') }}</span>.
@@ -69,7 +70,8 @@
                         class="inline-block px-4 py-1.5 bg-brand-50 text-brand-500 text-sm font-semibold rounded-full mb-6 tracking-wide uppercase">{{ __('messages.about_badge') }}</span>
                     <h2 class="font-display font-bold text-3xl md:text-5xl text-surface-900 mb-6 leading-tight">
                         {{ __('messages.about_title') }} <span
-                            class="text-brand-500">{{ __('messages.about_title_highlight') }}</span></h2>
+                            class="text-brand-500">{{ __('messages.about_title_highlight') }}</span>
+                    </h2>
                     <p class="text-surface-700 leading-relaxed text-lg mb-8">{{ $event->description ?? '' }}</p>
                     <div class="grid grid-cols-2 gap-4">
                         @php
@@ -97,8 +99,9 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
                                     d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <p class="font-display text-xl font-bold text-brand-500">{{ __('messages.hero_location') }}</p>
-                            <p class="text-surface-700">Sentul, Bogor</p>
+                            <p class="font-display text-xl font-bold text-brand-500">
+                                {{ __('messages.part_event_location') }}</p>
+                            <p class="text-surface-700">{{ __('messages.hero_location') }}</p>
                         </div>
                     </div>
                 </div>
@@ -114,7 +117,8 @@
                     class="inline-block px-4 py-1.5 bg-brand-50 text-brand-500 text-sm font-semibold rounded-full mb-6 tracking-wide uppercase">{{ __('messages.categories_badge') }}</span>
                 <h2 class="font-display font-bold text-3xl md:text-5xl text-surface-900 mb-4">
                     {{ __('messages.categories_title') }} <span
-                        class="text-brand-500">{{ __('messages.categories_title_highlight') }}</span></h2>
+                        class="text-brand-500">{{ __('messages.categories_title_highlight') }}</span>
+                </h2>
                 <p class="text-surface-700 text-lg max-w-2xl mx-auto">{{ __('messages.categories_subtitle') }}</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">

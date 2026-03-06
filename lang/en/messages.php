@@ -16,8 +16,8 @@ return [
     // Hero
     'hero_badge' => 'Registration Open',
     'hero_subtitle' => 'Conquer the trails of',
-    'hero_location' => 'Gunung Pancar, Sentul, Bogor',
-    'hero_description' => 'An epic journey through tropical forests and volcanic terrains.',
+    'hero_location' => 'Bogor Nirwana Residence, Bogor',
+    'hero_description' => 'An epic journey through beautiful hills and forests.',
     'hero_register' => 'Register Now →',
     'hero_learn_more' => 'Learn More',
 

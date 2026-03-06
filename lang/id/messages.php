@@ -16,8 +16,8 @@ return [
     // Hero
     'hero_badge' => 'Pendaftaran Dibuka',
     'hero_subtitle' => 'Taklukkan jalur',
-    'hero_location' => 'Gunung Pancar, Sentul, Bogor',
-    'hero_description' => 'Petualangan epik melewati hutan tropis dan medan vulkanik.',
+    'hero_location' => 'Bogor Nirwana Residence, Bogor',
+    'hero_description' => 'Petualangan epik melewati bukit dan hutan yang indah.',
     'hero_register' => 'Daftar Sekarang →',
     'hero_learn_more' => 'Pelajari Lebih Lanjut',
 
