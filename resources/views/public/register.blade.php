@@ -444,6 +444,9 @@
                 </div>
 
                 <div id="btn-submit-container">
+                    <div class="mb-6 flex justify-center">
+                        <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY', '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI') }}"></div>
+                    </div>
                     <button type="submit" id="btn-submit"
                         class="w-full py-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold rounded-2xl shadow-xl shadow-brand-500/25 hover:shadow-brand-500/40 transition-all duration-200 text-lg">
                         {{ __('messages.reg_submit') }}
