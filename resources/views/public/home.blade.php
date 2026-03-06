@@ -24,14 +24,20 @@
                     class="text-transparent bg-clip-text bg-gradient-to-r from-accent-300 via-accent-400 to-accent-200">TRAIL
                     RUN</span>
             </h1>
-            <p class="font-display text-3xl md:text-4xl font-bold text-white/60 mb-6">
+            <p class="text-white/80 text-xl font-semibold max-w-2xl mx-auto mb-3">
+                {{ __('messages.hero_tagline') }}
+            </p>
+            <p class="font-display text-2xl md:text-3xl font-bold text-white/80 mb-6">
+                <span class="text-accent-300">{{ __('messages.hero_location') }}</span><br>
                 {{ \Carbon\Carbon::parse($event->event_date)->locale(app()->getLocale())->translatedFormat('l, d F Y') }}
             </p>
-            <p class="text-white/80 text-lg max-w-2xl mx-auto mb-10">
-                {{ __('messages.hero_subtitle') }} <span
-                    class="text-accent-300 font-semibold">{{ __('messages.hero_location') }}</span>.
-                {{ __('messages.hero_description') }}
-            </p>
+            <!-- <p class="text-white/80 text-lg max-w-2xl mx-auto mb-6">
+                                    {{ __('messages.hero_desc') }}
+                                </p> -->
+            <!-- <p
+                            class="text-white/90 text-lg max-w-2xl mx-auto mb-10 font-bold bg-white/10 inline-block px-4 py-2 rounded-xl backdrop-blur-sm border border-white/10">
+                            {{ __('messages.hero_categories_label') }} 5K &bull; 10K &bull; 15K
+                        </p> -->
             <!-- Countdown -->
             @if($event && $event->event_date->isFuture())
                 <div class="flex justify-center gap-4 md:gap-6 mb-10" id="countdown"
@@ -72,7 +78,7 @@
                         {{ __('messages.about_title') }} <span
                             class="text-brand-500">{{ __('messages.about_title_highlight') }}</span>
                     </h2>
-                    <p class="text-surface-700 leading-relaxed text-lg mb-8">{{ $event->description ?? '' }}</p>
+                    <p class="text-surface-700 leading-relaxed text-lg mb-8">{{ __('messages.about_description') }}</p>
                     <div class="grid grid-cols-2 gap-4">
                         @php
                             $aboutStats = [
@@ -100,7 +106,8 @@
                                     d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <p class="font-display text-xl font-bold text-brand-500">
-                                {{ __('messages.part_event_location') }}</p>
+                                {{ __('messages.part_event_location') }}
+                            </p>
                             <p class="text-surface-700">{{ __('messages.hero_location') }}</p>
                         </div>
                     </div>
