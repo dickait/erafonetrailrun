@@ -44,6 +44,8 @@ return [
     'categories_distance' => 'Distance',
     'categories_elevation' => 'Elevation Gain',
     'categories_cot' => 'Cut-Off Time',
+    'categories_age' => 'Age',
+    'categories_hours' => 'Hours',
     'categories_effort_km' => 'Equivalent Effort',
     'categories_price' => 'Price',
     'categories_early_bird' => '🐦 Early Bird',
@@ -57,6 +59,13 @@ return [
     'categories_item_cert' => 'E-Certificate',
     'categories_item_timing' => 'Timing System',
     'categories_item_finisher_tee' => 'Finisher Tee',
+
+    // Category Info
+    'cat_5k-family-trail_desc' => 'A relaxed category for the whole family, passing through beautiful and beginner-friendly green hills trails.',
+    'cat_10k_desc' => 'Prepare yourself for the 10K challenge across pine forests and an exciting stamina-testing trek.',
+    'cat_15k_desc' => 'The ultimate challenge with a 15K route that tests endurance through significant elevation gains.',
+    'cat_usia' => 'Age',
+    'cat_age' => 'Years Old',
 
     // CTA
     'cta_title' => 'Ready to Conquer the Trail?',

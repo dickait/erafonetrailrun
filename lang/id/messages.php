@@ -44,6 +44,8 @@ return [
     'categories_distance' => 'Jarak',
     'categories_elevation' => 'Kenaikan Elevasi',
     'categories_cot' => 'Batas Waktu',
+    'categories_age' => 'Usia',
+    'categories_hours' => 'Jam',
     'categories_effort_km' => 'Usaha Setara',
     'categories_price' => 'Harga',
     'categories_early_bird' => '🐦 Early Bird',
@@ -57,6 +59,13 @@ return [
     'categories_item_cert' => 'E-Certificate',
     'categories_item_timing' => 'Record Finish Time',
     'categories_item_finisher_tee' => 'Finisher Tee',
+
+    // Category Info
+    'cat_5k-family-trail_desc' => 'Kategori santai untuk keluarga, melewati rute indah dan ramah pemula sepanjang lintasan perbukitan hijau.',
+    'cat_10k_desc' => 'Persiapkan dirimu untuk tantangan 10K melintasi hutan pinus dan trek yang cukup menguras stamina.',
+    'cat_15k_desc' => 'Tantangan ultimat dengan rute 15K yang menguji daya tahan melalui elevasi yang signifikan.',
+    'cat_usia' => 'Usia',
+    'cat_age' => 'Tahun',
 
     // CTA
     'cta_title' => 'Siap Menaklukkan Jalur?',
