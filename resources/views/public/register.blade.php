@@ -259,7 +259,8 @@
                     <div class="bg-white rounded-2xl border border-surface-300 p-6 space-y-5 shadow-sm">
                         <div class="flex justify-between items-center">
                             <h3 class="font-display font-semibold text-lg text-surface-900">
-                                {{ __('messages.reg_location') }}</h3>
+                                {{ __('messages.reg_location') }}
+                            </h3>
                             <button type="button" id="btn-copy-leader-address"
                                 class="hidden text-xs px-3 py-1.5 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">
                                 📋 Sama dengan Team Leader
@@ -422,7 +423,7 @@
                         <h3 class="font-display font-semibold text-lg text-surface-900 mb-4">Review Data Peserta</h3>
                         <div id="review-content" class="space-y-4"></div>
                         <button type="button" id="btn-edit-data"
-                            class="mt-6 px-6 py-2 bg-surface-100 hover:bg-surface-200 text-surface-700 font-medium rounded-xl transition-colors text-sm">
+                            class="mt-6 cursor-pointer px-6 py-3 bg-brand-50 hover:bg-brand-100 text-brand-600 border border-brand-200 font-semibold rounded-xl transition-all shadow-sm hover:shadow text-sm">
                             &larr; Perbaiki Data
                         </button>
                     </div>
@@ -430,11 +431,11 @@
 
                 <div id="btn-next-container" class="hidden flex gap-3">
                     <button type="button" id="btn-prev"
-                        class="hidden flex-1 py-4 bg-surface-100 text-surface-700 font-bold rounded-2xl hover:bg-surface-200 transition-all duration-200 text-lg">
+                        class="hidden cursor-pointer flex-1 py-4 bg-surface-200 text-surface-800 font-bold rounded-2xl hover:bg-surface-300 transition-all duration-200 text-lg shadow-sm hover:shadow-md">
                         &larr; Kembali
                     </button>
                     <button type="button" id="btn-next"
-                        class="flex-[2] py-4 bg-white text-brand-600 border-2 border-brand-500 hover:bg-brand-50 font-bold rounded-2xl transition-all duration-200 text-lg">
+                        class="cursor-pointer flex-1 py-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold rounded-2xl shadow-xl shadow-brand-500/25 hover:shadow-brand-500/40 transition-all duration-200 text-lg">
                         Lanjutkan
                     </button>
                 </div>
@@ -686,13 +687,16 @@
                 const hasData = Object.keys(data).length > 0;
 
                 // Set simple fields first
-                formFieldsContainer.querySelectorAll('input:not([type="hidden"]), select, textarea').forEach(el => {
-                    if (el.name === 'category_id' || el.name === 'family_count') return;
+                formFieldsContainer.querySelectorAll('input, select, textarea').forEach(el => {
+                    if (!el.name || el.name === 'category_id' || el.name === 'family_count') return;
                     if (el.id === 'country' || el.id === 'province' || el.id === 'city') return;
                     if (el.type === 'checkbox' || el.type === 'radio') {
                         el.checked = hasData ? (data[el.name] === el.value) : false;
                     } else {
                         el.value = hasData ? (data[el.name] || '') : '';
+                        if (el.name === 'date_of_birth' && fpDob) {
+                            fpDob.setDate(el.value);
+                        }
                     }
                 });
 
@@ -835,15 +839,8 @@
             // ===== DOB validation helper =====
             function validateDOB(input) {
                 const val = input.value;
-                if (!/^\d{2}\/\d{2}\/\d{4}$/.test(val)) {
-                    input.setCustomValidity('Format harus DD/MM/YYYY');
-                    input.reportValidity();
-                    return false;
-                }
-                const parts = val.split('/');
-                const day = parseInt(parts[0]), month = parseInt(parts[1]), year = parseInt(parts[2]);
-                if (month < 1 || month > 12 || day < 1 || day > 31 || year < 1900 || year > 2026) {
-                    input.setCustomValidity('Tanggal tidak valid');
+                if (!val || val.trim() === '') {
+                    input.setCustomValidity('Tanggal lahir wajib diisi.');
                     input.reportValidity();
                     return false;
                 }
@@ -916,19 +913,19 @@
                 let html = '';
                 participantsData.forEach((p, index) => {
                     html += `<div class="p-4 border border-surface-200 rounded-xl mb-4 bg-surface-50">
-                                    <div class="flex justify-between items-start mb-2">
-                                        <h4 class="font-bold text-brand-600">Peserta ${index + 1} ${index === 0 ? '(Team Leader)' : '(Family Member)'}</h4>
-                                        <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
-                                    </div>
-                                    <div class="grid grid-cols-2 gap-2 text-sm">
-                                        <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
-                                        <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
-                                        <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900">${p.email || '-'}</span></p>
-                                        <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
-                                        <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900">${p.identity_number || '-'}</span></p>
-                                        <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
-                                    </div>
-                                </div>`;
+                                                    <div class="flex justify-between items-start mb-2">
+                                                        <h4 class="font-bold text-brand-600">Peserta ${index + 1} ${index === 0 ? '(Team Leader)' : '(Family Member)'}</h4>
+                                                        <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
+                                                    </div>
+                                                    <div class="grid grid-cols-2 gap-2 text-sm">
+                                                        <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
+                                                        <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
+                                                        <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900">${p.email || '-'}</span></p>
+                                                        <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
+                                                        <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900">${p.identity_number || '-'}</span></p>
+                                                        <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
+                                                    </div>
+                                                </div>`;
 
                     for (let key in p) {
                         let input = document.createElement('input');
