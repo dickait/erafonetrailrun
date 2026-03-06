@@ -9,6 +9,7 @@
     <meta name="description"
         content="@yield('meta_description', 'Join the ultimate trail running adventure - ERA TRAIL RUN 2026 in Bogor Nirwana Residence, Bogor')">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('styles')
 </head>
 
 <body class="bg-white text-surface-900 font-sans antialiased">
