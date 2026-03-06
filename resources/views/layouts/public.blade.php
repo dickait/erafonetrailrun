@@ -125,7 +125,8 @@
                 </div>
                 <div>
                     <h4 class="font-display font-semibold text-sm uppercase tracking-wider text-accent-400 mb-4">
-                        {{ __('messages.footer_quick_links') }}</h4>
+                        {{ __('messages.footer_quick_links') }}
+                    </h4>
                     <ul class="space-y-2">
                         <li><a href="{{ route('home') }}"
                                 class="text-sm text-surface-400 hover:text-white transition-colors">{{ __('messages.nav_home') }}</a>
@@ -143,7 +144,8 @@
                 </div>
                 <div>
                     <h4 class="font-display font-semibold text-sm uppercase tracking-wider text-accent-400 mb-4">
-                        {{ __('messages.footer_contact') }}</h4>
+                        {{ __('messages.footer_contact') }}
+                    </h4>
                     <ul class="space-y-2">
                         <li class="text-sm text-surface-400">info@erafonetrailrun.com</li>
                         <li class="text-sm text-surface-400">+62 812-3456-7890</li>
@@ -153,7 +155,8 @@
             </div>
             <div class="border-t border-surface-800 mt-8 pt-8 text-center">
                 <p class="text-sm text-surface-500">&copy; {{ date('Y') }} ERA TRAIL RUN.
-                    {{ __('messages.footer_rights') }}</p>
+                    {{ __('messages.footer_rights') }}
+                </p>
             </div>
         </div>
     </footer>
