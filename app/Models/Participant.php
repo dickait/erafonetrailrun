@@ -10,12 +10,31 @@ class Participant extends Model
     use HasUuids;
 
     protected $fillable = [
-        'event_id', 'category_id', 'user_id',
-        'full_name', 'email', 'phone', 'gender', 'date_of_birth', 'bib_name',
-        'identity_number', 'nationality', 'country_id', 'province_id', 'city_id',
-        'address', 'blood_type', 'emergency_contact_name', 'emergency_contact_phone',
-        'jersey_size', 'community', 'medical_conditions',
-        'payment_status', 'bib_number', 'checked_in', 'checked_in_at',
+        'event_id',
+        'category_id',
+        'user_id',
+        'full_name',
+        'email',
+        'phone',
+        'gender',
+        'date_of_birth',
+        'bib_name',
+        'identity_number',
+        'nationality',
+        'country_id',
+        'province_id',
+        'city_id',
+        'address',
+        'blood_type',
+        'emergency_contact_name',
+        'emergency_contact_phone',
+        'jersey_size',
+        'community',
+        'medical_conditions',
+        'payment_status',
+        'bib_number',
+        'checked_in',
+        'checked_in_at',
     ];
 
     protected function casts(): array
@@ -75,5 +94,10 @@ class Participant extends Model
     public function hasBib(): bool
     {
         return !empty($this->bib_number);
+    }
+
+    public function familyMembers()
+    {
+        return $this->hasMany(FamilyMember::class, 'participant_id');
     }
 }
