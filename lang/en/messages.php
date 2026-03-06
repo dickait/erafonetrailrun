@@ -30,12 +30,13 @@ return [
     'countdown_minutes' => 'Minutes',
     'countdown_seconds' => 'Seconds',
 
-    // About
     'about_badge' => 'About The Event',
-    'about_title' => 'Run Through The Heart of',
-    'about_title_highlight' => 'Nature',
-    'about_description' => 'Run Smart. Run Trail. Run With Erafone. Explore the trails of Bogor Nirwana Residence in a trail run event that combines nature adventure and wearable technology.',
-    'about_runners' => 'Runners Expected',
+    'about_title' => 'A Trail Running Adventure in',
+    'about_title_highlight' => 'Bogor',
+    'about_description' => 'ERA TRAIL RUN 2026 is a trail running event that is part of the Jelajah Era series, bringing an outdoor sports experience that combines nature adventure, active lifestyle, and technology. Held in Bogor Nirwana Residence, Bogor, participants will run through beautiful hills and forest trails in three race categories: 5K, 10K, and 15K. This event not only offers exciting trail challenges in Bogor\'s nature, but also a lively community experience with various event activities and a finisher medal for participants who successfully complete the race.',
+    'about_highlight_1' => '3 Race Categories',
+    'about_highlight_2' => 'Bogor Nature Trail',
+    'about_highlight_3' => 'Finisher Medal',
     'about_categories' => 'Race Categories',
     'about_max_distance' => 'Max Distance',
     'about_elevation' => 'Elevation Gain',

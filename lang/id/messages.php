@@ -30,12 +30,13 @@ return [
     'countdown_minutes' => 'Menit',
     'countdown_seconds' => 'Detik',
 
-    // About
     'about_badge' => 'Tentang Acara',
-    'about_title' => 'Berlari Menembus Jantung',
-    'about_title_highlight' => 'Alam',
-    'about_description' => 'Run Smart. Run Trail. Run With Erafone. Jelajahi jalur Bogor Nirwana Residence dalam event trail run yang menggabungkan petualangan alam dan teknologi wearable.',
-    'about_runners' => 'Pelari Diharapkan',
+    'about_title' => 'Petualangan Trail Run di',
+    'about_title_highlight' => 'Bogor',
+    'about_description' => 'ERA TRAIL RUN 2026 merupakan event lari trail yang menjadi bagian dari rangkaian Jelajah Era, menghadirkan pengalaman olahraga outdoor yang memadukan petualangan alam, gaya hidup aktif, dan teknologi. Diselenggarakan di Bogor Nirwana Residence, Bogor, peserta akan berlari melewati jalur perbukitan dan hutan yang indah dalam tiga kategori lomba, yaitu 5K, 10K, dan 15K. Event ini tidak hanya menawarkan tantangan trail yang seru di alam Bogor, tetapi juga pengalaman komunitas yang meriah dengan berbagai aktivitas event serta finisher medal bagi peserta yang berhasil menyelesaikan lomba.',
+    'about_highlight_1' => '3 Kategori Lari',
+    'about_highlight_2' => 'Trail Alam Bogor',
+    'about_highlight_3' => 'Finisher Medal',
     'about_categories' => 'Kategori Lomba',
     'about_max_distance' => 'Jarak Maksimal',
     'about_elevation' => 'Ketinggian',
