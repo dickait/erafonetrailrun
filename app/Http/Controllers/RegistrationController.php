@@ -38,6 +38,10 @@ class RegistrationController extends Controller
             return redirect()->route('home')->with('error', 'Registration is currently closed.');
         }
 
+        if ($request->has('participants') && is_array($request->participants) && count($request->participants) > 0) {
+            $request->merge($request->participants[0]);
+        }
+
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'full_name' => 'required|string|max:255',
@@ -97,31 +101,80 @@ class RegistrationController extends Controller
                 ->withErrors(['category_id' => 'This category is full. Please select another category.']);
         }
 
-        $participant = DB::transaction(function () use ($validated, $event, $category) {
+        $participant = DB::transaction(function () use ($validated, $request, $event, $category) {
+            $participantInfo = $validated;
+
+            // If it's family registration, we use the first participant data as the main one 
+            // if form inputs are not accurately mapped
+            if ($request->has('participants') && is_array($request->participants) && count($request->participants) > 0) {
+                $mainData = $request->participants[0];
+                // map needed fields just in case
+                foreach (['full_name', 'email', 'phone', 'gender', 'date_of_birth', 'identity_number', 'blood_type', 'jersey_size', 'bib_name'] as $field) {
+                    if (isset($mainData[$field])) {
+                        $participantInfo[$field] = $mainData[$field];
+                    }
+                }
+            }
+
             $participant = Participant::create([
-                ...$validated,
+                ...$participantInfo,
                 'event_id' => $event->id,
                 'payment_status' => 'pending',
             ]);
+
+            // Create family members
+            if ($request->has('participants') && is_array($request->participants) && count($request->participants) > 1) {
+                // Skip the first one as it's the leader
+                $membersData = array_slice($request->participants, 1);
+                foreach ($membersData as $member) {
+                    $participant->familyMembers()->create([
+                        'full_name' => $member['full_name'] ?? '',
+                        'bib_name' => $member['bib_name'] ?? '',
+                        'email' => $member['email'] ?? null,
+                        'phone' => $member['phone'] ?? null,
+                        'gender' => $member['gender'] ?? 'male',
+                        'date_of_birth' => $member['date_of_birth'] ?? now()->format('Y-m-d'),
+                        'identity_number' => $member['identity_number'] ?? null,
+
+                        'nationality' => $member['nationality'] ?? 'Indonesia',
+                        'country_id' => $member['country_id'] ?? null,
+                        'province_id' => $member['province_id'] ?? null,
+                        'city_id' => $member['city_id'] ?? null,
+                        'address' => $member['address'] ?? null,
+
+                        'blood_type' => $member['blood_type'] ?? null,
+                        'emergency_contact_name' => $member['emergency_contact_name'] ?? null,
+                        'emergency_contact_phone' => $member['emergency_contact_phone'] ?? null,
+                        'jersey_size' => $member['jersey_size'] ?? null,
+                        'community' => $member['community'] ?? null,
+                        'medical_conditions' => $member['medical_conditions'] ?? null,
+                    ]);
+                }
+            }
 
             return $participant;
         });
 
         // Call Mayar API to create payment request
-        $amount = $category->getCurrentPrice();
+        // Calculate amount
+        $multiplier = 1;
+        if ($request->has('participants') && is_array($request->participants) && count($request->participants) > 0) {
+            $multiplier = count($request->participants);
+        }
+        $amount = $category->getCurrentPrice() * $multiplier;
         $paymentLink = '#';
         $invoiceId = 'INV-' . strtoupper(Str::random(10));
 
         try {
             $mayarResponse = Http::withToken(config('services.mayar.api_key'))
                 ->post(config('services.mayar.api_url') . '/payment/create', [
-                'name' => $participant->full_name,
-                'email' => $participant->email,
-                'amount' => (int)$amount,
-                'mobile' => $participant->phone,
-                'description' => "Registration {$event->name} - {$category->name}",
-                'redirectUrl' => route('registration.payment', ['email' => $participant->email]),
-            ]);
+                    'name' => $participant->full_name,
+                    'email' => $participant->email,
+                    'amount' => (int) $amount,
+                    'mobile' => $participant->phone,
+                    'description' => "Registration {$event->name} - {$category->name}",
+                    'redirectUrl' => route('registration.payment', ['email' => $participant->email]),
+                ]);
 
             if ($mayarResponse->successful()) {
                 $mayarData = $mayarResponse->json();
@@ -133,16 +186,14 @@ class RegistrationController extends Controller
                     'invoice_id' => $invoiceId,
                     'payment_link' => $paymentLink,
                 ]);
-            }
-            else {
+            } else {
                 \Illuminate\Support\Facades\Log::error('Mayar API error', [
                     'status' => $mayarResponse->status(),
                     'body' => $mayarResponse->body(),
                     'participant_id' => $participant->id,
                 ]);
             }
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Mayar API exception', [
                 'message' => $e->getMessage(),
                 'participant_id' => $participant->id,
@@ -169,7 +220,7 @@ class RegistrationController extends Controller
         if ($request->has('email')) {
             $event = Event::where('is_active', true)->latest('event_date')->first();
             if ($event) {
-                $participant = Participant::with(['category', 'latestPayment', 'event'])
+                $participant = Participant::with(['category', 'latestPayment', 'event', 'familyMembers'])
                     ->where('event_id', $event->id)
                     ->where('email', $request->email)
                     ->first();
@@ -190,7 +241,7 @@ class RegistrationController extends Controller
         if ($request->has('email')) {
             $event = Event::where('is_active', true)->latest('event_date')->first();
             if ($event) {
-                $participant = Participant::with(['category', 'latestPayment', 'event'])
+                $participant = Participant::with(['category', 'latestPayment', 'event', 'familyMembers'])
                     ->where('event_id', $event->id)
                     ->where('email', $request->email)
                     ->first();
