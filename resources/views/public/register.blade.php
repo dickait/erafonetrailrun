@@ -161,7 +161,8 @@
                 <div id="form-fields-container" class="space-y-8">
                     <!-- Family Indicator (Sticky) -->
                     <div id="participant-indicator"
-                        class="hidden p-4 rounded-xl bg-brand-50 border border-brand-200 text-center sticky top-20 z-30 shadow-md transition-shadow">
+                        class="hidden p-4 rounded-xl bg-brand-50 border border-brand-200 text-center shadow-md transition-shadow relative z-40"
+                        style="position: -webkit-sticky; position: sticky; top: 80px; margin-bottom: 2rem;">
                         <h4 class="font-display font-bold text-brand-600 text-lg">Peserta <span id="ind-current">1</span>
                             dari <span id="ind-total">2</span></h4>
                         <p id="ind-role" class="text-brand-500 font-medium text-sm">Team Leader (Kontak Utama)</p>
@@ -913,19 +914,19 @@
                 let html = '';
                 participantsData.forEach((p, index) => {
                     html += `<div class="p-4 border border-surface-200 rounded-xl mb-4 bg-surface-50">
-                                                    <div class="flex justify-between items-start mb-2">
-                                                        <h4 class="font-bold text-brand-600">Peserta ${index + 1} ${index === 0 ? '(Team Leader)' : '(Family Member)'}</h4>
-                                                        <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
-                                                    </div>
-                                                    <div class="grid grid-cols-2 gap-2 text-sm">
-                                                        <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
-                                                        <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
-                                                        <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900">${p.email || '-'}</span></p>
-                                                        <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
-                                                        <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900">${p.identity_number || '-'}</span></p>
-                                                        <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
-                                                    </div>
-                                                </div>`;
+                                                                            <div class="flex justify-between items-start mb-2">
+                                                                                <h4 class="font-bold text-brand-600">Peserta ${index + 1} ${index === 0 ? '(Team Leader)' : '(Family Member)'}</h4>
+                                                                                <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
+                                                                            </div>
+                                                                            <div class="grid grid-cols-2 gap-2 text-sm">
+                                                                                <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
+                                                                                <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
+                                                                                <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900">${p.email || '-'}</span></p>
+                                                                                <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
+                                                                                <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900">${p.identity_number || '-'}</span></p>
+                                                                                <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
+                                                                            </div>
+                                                                        </div>`;
 
                     for (let key in p) {
                         let input = document.createElement('input');
