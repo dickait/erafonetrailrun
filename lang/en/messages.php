@@ -45,7 +45,7 @@ return [
     'categories_badge' => 'Race Categories',
     'categories_title' => 'Choose Your',
     'categories_title_highlight' => 'Challenge',
-    'categories_subtitle' => 'From scenic fun runs to intense ultra trails - there\'s a category for every runner.',
+    'categories_subtitle' => 'Three trail run categories — 5K Family, 10K, and 15K — across the natural trails of Bogor.',
     'categories_distance' => 'Distance',
     'categories_elevation' => 'Elevation Gain',
     'categories_cot' => 'Cut-Off Time',

@@ -45,7 +45,7 @@ return [
     'categories_badge' => 'Kategori Lomba',
     'categories_title' => 'Pilih',
     'categories_title_highlight' => 'Tantanganmu',
-    'categories_subtitle' => 'Dari fun run yang menyenangkan hingga ultra trail yang menantang - ada kategori untuk setiap pelari.',
+    'categories_subtitle' => 'Tiga kategori trail run — 5K family, 10K, dan 15K — siap menantang setiap pelari di jalur alam Bogor.',
     'categories_distance' => 'Jarak',
     'categories_elevation' => 'Kenaikan Elevasi',
     'categories_cot' => 'Batas Waktu',
@@ -68,7 +68,7 @@ return [
     // Category Info
     'cat_5k-family-trail_desc' => 'Kategori santai untuk keluarga, melewati rute indah dan ramah pemula sepanjang lintasan perbukitan hijau.',
     'cat_10k_desc' => 'Persiapkan dirimu untuk tantangan 10K melintasi hutan pinus dan trek yang cukup menguras stamina.',
-    'cat_15k_desc' => 'Tantangan ultimat dengan rute 15K yang menguji daya tahan melalui elevasi yang signifikan.',
+    'cat_15k_desc' => 'Tantangan utama dengan rute 15K yang menguji daya tahan melalui elevasi yang signifikan.',
     'cat_usia' => 'Usia',
     'cat_age' => 'Tahun',
 

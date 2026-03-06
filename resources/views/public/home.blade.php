@@ -32,12 +32,12 @@
                 {{ \Carbon\Carbon::parse($event->event_date)->locale(app()->getLocale())->translatedFormat('l, d F Y') }}
             </p>
             <!-- <p class="text-white/80 text-lg max-w-2xl mx-auto mb-6">
-                                        {{ __('messages.hero_desc') }}
-                                    </p> -->
+                                                {{ __('messages.hero_desc') }}
+                                            </p> -->
             <!-- <p
-                                class="text-white/90 text-lg max-w-2xl mx-auto mb-10 font-bold bg-white/10 inline-block px-4 py-2 rounded-xl backdrop-blur-sm border border-white/10">
-                                {{ __('messages.hero_categories_label') }} 5K &bull; 10K &bull; 15K
-                            </p> -->
+                                        class="text-white/90 text-lg max-w-2xl mx-auto mb-10 font-bold bg-white/10 inline-block px-4 py-2 rounded-xl backdrop-blur-sm border border-white/10">
+                                        {{ __('messages.hero_categories_label') }} 5K &bull; 10K &bull; 15K
+                                    </p> -->
             <!-- Countdown -->
             @if($event && $event->event_date->isFuture())
                 <div class="flex justify-center gap-4 md:gap-6 mb-10" id="countdown"
@@ -80,23 +80,32 @@
                     </h2>
                     <p class="text-surface-700 leading-relaxed text-lg mb-8">{{ __('messages.about_description') }}</p>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div class="bg-surface-50 border border-surface-300 rounded-xl p-4 flex flex-col items-center justify-center text-center">
+                        <div
+                            class="bg-surface-50 border border-surface-300 rounded-xl p-4 flex flex-col items-center justify-center text-center">
                             <svg class="w-8 h-8 text-brand-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z" />
                             </svg>
-                            <span class="font-display font-bold text-surface-900 leading-tight">{{ __('messages.about_highlight_1') }}</span>
+                            <span
+                                class="font-display font-bold text-surface-900 leading-tight">{{ __('messages.about_highlight_1') }}</span>
                         </div>
-                        <div class="bg-surface-50 border border-surface-300 rounded-xl p-4 flex flex-col items-center justify-center text-center">
+                        <div
+                            class="bg-surface-50 border border-surface-300 rounded-xl p-4 flex flex-col items-center justify-center text-center">
                             <svg class="w-8 h-8 text-brand-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <span class="font-display font-bold text-surface-900 leading-tight">{{ __('messages.about_highlight_2') }}</span>
+                            <span
+                                class="font-display font-bold text-surface-900 leading-tight">{{ __('messages.about_highlight_2') }}</span>
                         </div>
-                        <div class="bg-surface-50 border border-surface-300 rounded-xl p-4 flex flex-col items-center justify-center text-center">
+                        <div
+                            class="bg-surface-50 border border-surface-300 rounded-xl p-4 flex flex-col items-center justify-center text-center">
                             <svg class="w-8 h-8 text-brand-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143z" />
                             </svg>
-                            <span class="font-display font-bold text-surface-900 leading-tight">{{ __('messages.about_highlight_3') }}</span>
+                            <span
+                                class="font-display font-bold text-surface-900 leading-tight">{{ __('messages.about_highlight_3') }}</span>
                         </div>
                     </div>
                 </div>
@@ -165,13 +174,13 @@
                             <div class="flex justify-between text-sm"><span
                                     class="text-surface-700">{{ __('messages.categories_price') }}</span><span
                                     class="text-surface-900 font-medium">Rp
-                                    {{ number_format($cat->getCurrentPrice(), 0, ',', '.') }}</span></div>
-                            @if($cat->isEarlyBird())
-                                <div class="flex justify-between text-sm"><span
-                                        class="{{ $colors[4] }}">{{ __('messages.categories_early_bird') }}</span><span
-                                        class="{{ $colors[4] }} font-medium">Rp
-                                        {{ number_format($cat->early_bird_price, 0, ',', '.') }}</span></div>
-                            @endif
+                                    {{ number_format($cat->price, 0, ',', '.') }}</span></div>
+                            <!-- @if($cat->isEarlyBird())
+                                                <div class="flex justify-between text-sm"><span
+                                                        class="{{ $colors[4] }}">{{ __('messages.categories_early_bird') }}</span><span
+                                                        class="{{ $colors[4] }} font-medium">Rp
+                                                        {{ number_format($cat->early_bird_price, 0, ',', '.') }}</span></div>
+                                            @endif -->
                         </div>
                         <!-- Entitlements -->
                         <div class="mb-6 pt-4 border-t border-surface-300">
