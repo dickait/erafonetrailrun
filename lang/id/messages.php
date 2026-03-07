@@ -156,6 +156,8 @@ return [
     'status_pending' => 'Menunggu',
     'status_paid' => 'Lunas',
     'status_failed' => 'Gagal',
+    'status_blood_type' => 'Golongan Darah',
+    'status_jersey_size' => 'Ukuran Jersey',
 
     // Gallery
     'gallery_badge' => 'Galeri',

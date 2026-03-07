@@ -28,13 +28,18 @@
                                 __('messages.status_category') => $participant->category->name ?? '-',
                                 __('messages.status_event') => $participant->event->name ?? '-',
                                 __('messages.status_registered') => $participant->created_at->format('d M Y'),
+                                __('messages.status_blood_type') => $participant->blood_type ?? '-',
+                                __('messages.status_jersey_size') => $participant->jersey_size ?? '-',
                             ];
 
                             if ($participant->familyMembers && $participant->familyMembers->count() > 0) {
                                 $idx = 1;
                                 foreach ($participant->familyMembers as $member) {
                                     $emailText = $member->email ? ' - ' . $member->email : '';
-                                    $fields["Family Member $idx"] = $member->full_name . $emailText;
+                                    $bloodText = $member->blood_type ? ' - (' . __('messages.status_blood_type') . ': ' . $member->blood_type . ')' : '';
+                                    $jerseyText = $member->jersey_size ? ' - (' . __('messages.status_jersey_size') . ': ' . $member->jersey_size . ')' : '';
+
+                                    $fields["Family Member $idx"] = $member->full_name . $emailText . $bloodText . $jerseyText;
                                     $idx++;
                                 }
                             }

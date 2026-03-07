@@ -7,7 +7,8 @@
                 <span
                     class="inline-block px-4 py-1.5 bg-brand-50 text-brand-500 text-sm font-semibold rounded-full mb-6 tracking-wide uppercase">{{ __('messages.status_badge') }}</span>
                 <h1 class="font-display font-bold text-3xl md:text-4xl text-surface-900 mb-2">
-                    {{ __('messages.status_title') }}</h1>
+                    {{ __('messages.status_title') }}
+                </h1>
                 <p class="text-surface-700">{{ __('messages.status_subtitle') }}</p>
             </div>
             <form method="GET" action="{{ route('registration.status') }}" class="flex gap-3 mb-8">
@@ -34,6 +35,8 @@
                                 __('messages.status_event') => $participant->event->name ?? '-',
                                 __('messages.status_registered') => $participant->created_at->format('d M Y'),
                                 __('messages.status_bib') => $participant->bib_number ?? __('messages.status_bib_pending'),
+                                __('messages.status_blood_type') => $participant->blood_type ?? '-',
+                                __('messages.status_jersey_size') => $participant->jersey_size ?? '-',
                             ];
 
                             if ($participant->familyMembers && $participant->familyMembers->count() > 0) {
@@ -41,7 +44,10 @@
                                 foreach ($participant->familyMembers as $member) {
                                     $emailText = $member->email ? ' - ' . $member->email : '';
                                     $bibText = $member->bib_number ? ' (BIB: ' . $member->bib_number . ')' : '';
-                                    $fields["Family Member $idx"] = $member->full_name . $emailText . $bibText;
+                                    $bloodText = $member->blood_type ? ' - (' . __('messages.status_blood_type') . ': ' . $member->blood_type . ')' : '';
+                                    $jerseyText = $member->jersey_size ? ' - (' . __('messages.status_jersey_size') . ': ' . $member->jersey_size . ')' : '';
+
+                                    $fields["Family Member $idx"] = $member->full_name . $emailText . $bibText . $bloodText . $jerseyText;
                                     $idx++;
                                 }
                             }
@@ -76,10 +82,18 @@
 
                         <div class="flex flex-col sm:flex-row justify-between py-2 gap-2">
                             <span class="text-surface-700 text-sm mt-1 sm:mt-0">{{ __('messages.part_payment_status') }}</span>
-                            <span
-                                class="px-3 py-1 rounded-full text-xs font-semibold self-start sm:self-auto {{ $participant->payment_status == 'paid' ? 'bg-emerald-50 text-emerald-600' : ($participant->payment_status == 'pending' ? 'bg-accent-50 text-accent-600' : 'bg-brand-50 text-brand-500') }}">
-                                {{ $participant->payment_status == 'paid' ? __('messages.status_paid') : ($participant->payment_status == 'pending' ? __('messages.status_pending') : __('messages.status_failed')) }}
-                            </span>
+                            <div class="flex items-center gap-2">
+                                <span
+                                    class="px-3 py-1 rounded-full text-xs font-semibold {{ $participant->payment_status == 'paid' ? 'bg-emerald-50 text-emerald-600' : ($participant->payment_status == 'pending' ? 'bg-accent-50 text-accent-600' : 'bg-brand-50 text-brand-500') }}">
+                                    {{ $participant->payment_status == 'paid' ? __('messages.status_paid') : ($participant->payment_status == 'pending' ? __('messages.status_pending') : __('messages.status_failed')) }}
+                                </span>
+                                @if($participant->payment_status == 'paid' && $participant->latestPayment && $participant->latestPayment->paid_at)
+                                    <span class="text-sm text-surface-600 font-medium">
+                                        {{ $participant->latestPayment->payment_method ?? 'Manual' }} &bull;
+                                        {{ $participant->latestPayment->paid_at->format('d M Y, H:i:s') }} WIB
+                                    </span>
+                                @endif
+                            </div>
                         </div>
                     </div>
                     @if($participant->payment_status == 'pending' && isset($participant->payments) && $participant->payments->first())
@@ -96,7 +110,8 @@
                             d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <h3 class="font-display font-semibold text-lg text-surface-900 mb-2">
-                        {{ __('messages.status_not_found_title') }}</h3>
+                        {{ __('messages.status_not_found_title') }}
+                    </h3>
                     <p class="text-surface-700 text-sm">{{ __('messages.status_not_found_desc') }}</p>
                 </div>
             @endif

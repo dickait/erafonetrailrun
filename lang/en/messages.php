@@ -156,6 +156,8 @@ return [
     'status_pending' => 'Pending',
     'status_paid' => 'Paid',
     'status_failed' => 'Failed',
+    'status_blood_type' => 'Blood Type',
+    'status_jersey_size' => 'Jersey Size',
 
     // Gallery
     'gallery_badge' => 'Gallery',

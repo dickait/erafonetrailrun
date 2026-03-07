@@ -117,8 +117,11 @@ class WebhookController extends Controller
                 };
             }
 
+            $paymentMethod = $data['paymentMethod'] ?? null;
+
             $payment->update([
                 'status' => $paymentStatus,
+                'payment_method' => $paymentMethod,
                 'paid_at' => $paymentStatus === 'paid' ? now() : null,
                 'webhook_payload' => $payload,
             ]);
