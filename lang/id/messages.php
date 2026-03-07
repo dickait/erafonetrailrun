@@ -158,6 +158,7 @@ return [
     'status_failed' => 'Gagal',
     'status_blood_type' => 'Golongan Darah',
     'status_jersey_size' => 'Ukuran Jersey',
+    'status_family_members' => 'Anggota Keluarga',
 
     // Gallery
     'gallery_badge' => 'Galeri',

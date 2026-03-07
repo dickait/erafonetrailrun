@@ -158,6 +158,7 @@ return [
     'status_failed' => 'Failed',
     'status_blood_type' => 'Blood Type',
     'status_jersey_size' => 'Jersey Size',
+    'status_family_members' => 'Family Members',
 
     // Gallery
     'gallery_badge' => 'Gallery',

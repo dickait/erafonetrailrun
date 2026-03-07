@@ -22,29 +22,22 @@
 
                     <div class="space-y-4">
                         @php
+                            $isFamily = $participant->familyMembers && $participant->familyMembers->count() > 0;
+
                             $fields = [
-                                __('messages.status_name') . ($participant->familyMembers && $participant->familyMembers->count() > 0 ? ' (Leader)' : '') => $participant->full_name,
+                                __('messages.status_name') . ($isFamily ? ' (Leader)' : '') => $participant->full_name,
                                 __('messages.status_email') => $participant->email,
                                 __('messages.status_category') => $participant->category->name ?? '-',
                                 __('messages.status_event') => $participant->event->name ?? '-',
                                 __('messages.status_registered') => $participant->created_at->format('d M Y'),
-                                __('messages.status_blood_type') => $participant->blood_type ?? '-',
-                                __('messages.status_jersey_size') => $participant->jersey_size ?? '-',
                             ];
 
-                            if ($participant->familyMembers && $participant->familyMembers->count() > 0) {
-                                $idx = 1;
-                                foreach ($participant->familyMembers as $member) {
-                                    $emailText = $member->email ? ' - ' . $member->email : '';
-                                    $bloodText = $member->blood_type ? ' - (' . __('messages.status_blood_type') . ': ' . $member->blood_type . ')' : '';
-                                    $jerseyText = $member->jersey_size ? ' - (' . __('messages.status_jersey_size') . ': ' . $member->jersey_size . ')' : '';
-
-                                    $fields["Family Member $idx"] = $member->full_name . $emailText . $bloodText . $jerseyText;
-                                    $idx++;
-                                }
+                            if (!$isFamily) {
+                                $fields[__('messages.status_blood_type')] = $participant->blood_type ?? '-';
+                                $fields[__('messages.status_jersey_size')] = $participant->jersey_size ?? '-';
                             }
 
-                            $multiplier = $participant->familyMembers ? ($participant->familyMembers->count() + 1) : 1;
+                            $multiplier = $isFamily ? ($participant->familyMembers->count() + 1) : 1;
                             $amount = $participant->latestPayment ? $participant->latestPayment->amount : ($participant->category ? $participant->category->getCurrentPrice() * $multiplier : 0);
                         @endphp
 
@@ -55,6 +48,49 @@
                                 <span class="text-surface-900 text-sm font-medium sm:text-right">{{ $val }}</span>
                             </div>
                         @endforeach
+
+                        @if($isFamily)
+                            <div class="mt-4 border border-surface-200 rounded-xl overflow-hidden">
+                                <div class="bg-surface-50 px-4 py-3 border-b border-surface-200">
+                                    <h4 class="font-semibold text-surface-900 text-sm">{{ __('messages.status_family_members') }}
+                                    </h4>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-sm text-left">
+                                        <thead class="bg-surface-50 text-surface-600 text-xs uppercase">
+                                            <tr>
+                                                <th class="px-4 py-3 font-medium">{{ __('messages.status_name') }}</th>
+                                                <th class="px-4 py-3 font-medium">Email</th>
+                                                <th class="px-4 py-3 font-medium">{{ __('messages.status_blood_type') }}</th>
+                                                <th class="px-4 py-3 font-medium">{{ __('messages.status_jersey_size') }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-surface-100">
+                                            <tr class="bg-white">
+                                                <td class="px-4 py-3 font-medium text-surface-900 whitespace-nowrap">
+                                                    {{ $participant->full_name }} <span
+                                                        class="text-xs text-brand-600 bg-brand-50 px-2 py-0.5 rounded-full ml-1">Leader</span>
+                                                </td>
+                                                <td class="px-4 py-3 text-surface-600">{{ $participant->email }}</td>
+                                                <td class="px-4 py-3 text-surface-600">{{ $participant->blood_type ?? '-' }}</td>
+                                                <td class="px-4 py-3 text-surface-600">{{ $participant->jersey_size ?? '-' }}</td>
+                                            </tr>
+                                            @foreach($participant->familyMembers as $member)
+                                                <tr class="bg-white">
+                                                    <td class="px-4 py-3 font-medium text-surface-900 whitespace-nowrap">
+                                                        {{ $member->full_name }} <span
+                                                            class="text-xs text-surface-500 bg-surface-100 px-2 py-0.5 rounded-full ml-1">Member</span>
+                                                    </td>
+                                                    <td class="px-4 py-3 text-surface-600">{{ $member->email ?? '-' }}</td>
+                                                    <td class="px-4 py-3 text-surface-600">{{ $member->blood_type ?? '-' }}</td>
+                                                    <td class="px-4 py-3 text-surface-600">{{ $member->jersey_size ?? '-' }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        @endif
 
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between py-2 border-b border-surface-100">
                             <span class="text-surface-700 text-sm font-semibold mb-1 sm:mb-0">Total Payment</span>
