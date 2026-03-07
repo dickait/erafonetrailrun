@@ -4,6 +4,7 @@ return [
     // Navigation
     'nav_home' => 'Beranda',
     'nav_categories' => 'Kategori',
+    'nav_race_course' => 'Rute Lari',
     'nav_gallery' => 'Galeri',
     'nav_results' => 'Hasil',
     'nav_check_status' => 'Cek Status',
@@ -166,6 +167,11 @@ return [
     'gallery_subtitle' => 'Kenang kembali momen-momen dari acara trail running kami',
     'gallery_more' => 'Foto lainnya akan ditambahkan setelah acara. Tunggu ya!',
     'gallery_moment' => 'Momen Trail Running',
+
+    // Race Course
+    'race_course_badge' => 'Rute Lari',
+    'race_course_title' => 'Rute & Ketinggian',
+    'race_course_subtitle' => 'Jelajahi rute detail dan profil elevasi untuk setiap kategori lomba',
 
     // Results
     'results_badge' => 'Hasil',

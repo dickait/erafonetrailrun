@@ -20,6 +20,7 @@ Route::get('/lang/{locale}', function (string $locale) {
 
 /* |-------------------------------------------------------------------------- | Public Routes |-------------------------------------------------------------------------- */
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/race-course', [HomeController::class, 'raceCourse'])->name('race_course');
 Route::get('/gallery', [HomeController::class, 'gallery'])->name('gallery');
 Route::get('/results', [HomeController::class, 'results'])->name('results');
 

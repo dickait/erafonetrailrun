@@ -4,6 +4,7 @@ return [
     // Navigation
     'nav_home' => 'Home',
     'nav_categories' => 'Categories',
+    'nav_race_course' => 'Race Course',
     'nav_gallery' => 'Gallery',
     'nav_results' => 'Results',
     'nav_check_status' => 'Check Status',
@@ -166,6 +167,11 @@ return [
     'gallery_subtitle' => 'Relive the moments from our trail running events',
     'gallery_more' => 'More photos will be added after the event. Stay tuned!',
     'gallery_moment' => 'Trail Running Moment',
+
+    // Race Course
+    'race_course_badge' => 'Race Course',
+    'race_course_title' => 'Route & Elevation',
+    'race_course_subtitle' => 'Explore the detailed breakdown of the routes and elevation profiles for each race category',
 
     // Results
     'results_badge' => 'Results',
