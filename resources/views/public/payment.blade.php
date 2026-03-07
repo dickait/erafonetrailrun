@@ -6,9 +6,9 @@
             <div class="text-center mb-10">
                 <span
                     class="inline-block px-4 py-1.5 bg-brand-50 text-brand-500 text-sm font-semibold rounded-full mb-6 tracking-wide uppercase">{{ __('messages.part_payment_title') }}</span>
-                <h1 class="font-display font-bold text-3xl md:text-4xl text-surface-900 mb-2">Complete Your Payment</h1>
-                <p class="text-surface-700">Please review your registration details and proceed to payment to secure your
-                    spot.</p>
+                <h1 class="font-display font-bold text-3xl md:text-4xl text-surface-900 mb-2">
+                    {{ __('messages.part_payment_complete_title') }}</h1>
+                <p class="text-surface-700">{{ __('messages.part_payment_complete_subtitle') }}</p>
             </div>
 
             @if(isset($participant))
@@ -17,7 +17,8 @@
                         <div
                             class="w-3 h-3 rounded-full {{ $participant->payment_status == 'paid' ? 'bg-emerald-500' : ($participant->payment_status == 'pending' ? 'bg-accent-500' : 'bg-brand-500') }}">
                         </div>
-                        <h3 class="font-display font-semibold text-lg text-surface-900">Registration Details</h3>
+                        <h3 class="font-display font-semibold text-lg text-surface-900">
+                            {{ __('messages.part_payment_reg_details') }}</h3>
                     </div>
 
                     <div class="space-y-4">

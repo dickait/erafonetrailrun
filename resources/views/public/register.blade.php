@@ -165,7 +165,8 @@
                         class="hidden p-4 rounded-xl bg-brand-50 border border-brand-200 text-center shadow-md transition-shadow relative z-40"
                         style="position: -webkit-sticky; position: sticky; top: 80px; margin-bottom: 2rem;">
                         <h4 class="font-display font-bold text-brand-600 text-lg">
-                            {!! str_replace([':current', ':total'], ['1', '2'], __('messages.reg_participant_n')) !!}</h4>
+                            {!! str_replace([':current', ':total'], ['1', '2'], __('messages.reg_participant_n')) !!}
+                        </h4>
                         <p id="ind-role" class="text-brand-500 font-medium text-sm">{{ __('messages.reg_role_leader') }}</p>
                     </div>
 
@@ -423,7 +424,8 @@
                 <div id="review-container" class="hidden space-y-6">
                     <div class="bg-white rounded-2xl border border-surface-300 p-6 shadow-sm">
                         <h3 class="font-display font-semibold text-lg text-surface-900 mb-4">
-                            {{ __('messages.reg_review_title') }}</h3>
+                            {{ __('messages.reg_review_title') }}
+                        </h3>
                         <div id="review-content" class="space-y-4"></div>
                         <button type="button" id="btn-edit-data"
                             class="mt-6 cursor-pointer px-6 py-3 bg-brand-50 hover:bg-brand-100 text-brand-600 border border-brand-200 font-semibold rounded-xl transition-all shadow-sm hover:shadow text-sm">
@@ -445,7 +447,9 @@
 
                 <div id="btn-submit-container">
                     <div class="mb-6 flex justify-center">
-                        <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY', '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI') }}"></div>
+                        <div class="g-recaptcha"
+                            data-sitekey="{{ env('RECAPTCHA_SITE_KEY', '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI') }}">
+                        </div>
                     </div>
                     <button type="submit" id="btn-submit"
                         class="w-full py-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold rounded-2xl shadow-xl shadow-brand-500/25 hover:shadow-brand-500/40 transition-all duration-200 text-lg">
@@ -758,6 +762,12 @@
                     hlpIdentity.classList.add('hidden');
                     btnCopyLeader.classList.add('hidden');
                     if (fpDob) fpDob.set('maxDate', new Date(new Date().setFullYear(new Date().getFullYear() - 18)));
+
+                    // Load saved data
+                    await loadParticipantData(currentParticipantIndex);
+
+                    // Button text
+                    btnNext.innerHTML = '{{ __('messages.reg_btn_review') }}';
                 }
             }
 
@@ -793,17 +803,17 @@
                         isAnyChecked = true;
 
                         isFamily = radio.dataset.slug === '5k-family-trail';
+
+                        btnNextContainer.classList.remove('hidden');
+                        btnSubmitContainer.classList.add('hidden');
+
                         if (isFamily) {
                             familyCountContainer.classList.remove('hidden');
                             participantIndicator.classList.remove('hidden');
-                            btnNextContainer.classList.remove('hidden');
-                            btnSubmitContainer.classList.add('hidden');
                             totalParticipants = parseInt(familyCountSelect.value);
                         } else {
                             familyCountContainer.classList.add('hidden');
                             participantIndicator.classList.add('hidden');
-                            btnNextContainer.classList.add('hidden');
-                            btnSubmitContainer.classList.remove('hidden');
                             totalParticipants = 1;
                             btnCopyLeader.classList.add('hidden');
                         }
@@ -918,20 +928,22 @@
 
                 let html = '';
                 participantsData.forEach((p, index) => {
+                    let title = isFamily ? `Peserta ${index + 1} ${index === 0 ? '(Team Leader)' : '(Family Member)'}` : 'Data Peserta';
                     html += `<div class="p-4 border border-surface-200 rounded-xl mb-4 bg-surface-50">
-                                                                                    <div class="flex justify-between items-start mb-2">
-                                                                                        <h4 class="font-bold text-brand-600">Peserta ${index + 1} ${index === 0 ? '(Team Leader)' : '(Family Member)'}</h4>
-                                                                                        <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
-                                                                                    </div>
-                                                                                    <div class="grid grid-cols-2 gap-2 text-sm">
-                                                                                        <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
-                                                                                        <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
-                                                                                        <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900">${p.email || '-'}</span></p>
-                                                                                        <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
-                                                                                        <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900">${p.identity_number || '-'}</span></p>
-                                                                                        <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
-                                                                                    </div>
-                                                                                </div>`;
+                                        <div class="flex justify-between items-start mb-2">
+                                            <h4 class="font-bold text-brand-600">${title}</h4>
+                                            <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
+                                        </div>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                                            <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
+                                            <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
+                                            <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900 break-all">${p.email || '-'}</span></p>
+                                            <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
+                                            <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900 break-all">${p.identity_number || '-'}</span></p>
+                                            <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
+                                            <p><span class="text-surface-600">{{ __('messages.reg_blood_type') }}:</span> <br><span class="font-medium text-surface-900">${p.blood_type || '-'}</span></p>
+                                        </div>
+                                    </div>`;
 
                     for (let key in p) {
                         let input = document.createElement('input');
