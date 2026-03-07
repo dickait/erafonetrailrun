@@ -243,7 +243,24 @@ class RegistrationController extends Controller
     {
         $participant = null;
 
-        if ($request->has('email')) {
+        if ($request->isMethod('post') && $request->has('email')) {
+            $request->validate([
+                'email' => 'required|email',
+                'g-recaptcha-response' => 'required',
+            ], [
+                'g-recaptcha-response.required' => 'Please verify that you are not a robot.',
+            ]);
+
+            $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                'secret' => config('services.recaptcha.secret_key'),
+                'response' => $request->input('g-recaptcha-response'),
+                'remoteip' => $request->ip()
+            ]);
+
+            if (!$response->json('success')) {
+                return back()->withInput()->withErrors(['g-recaptcha-response' => 'Failed to verify reCAPTCHA. Please try again.']);
+            }
+
             $event = Event::where('is_active', true)->latest('event_date')->first();
             if ($event) {
                 $participant = Participant::with(['category', 'latestPayment', 'event', 'familyMembers'])

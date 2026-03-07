@@ -1,5 +1,8 @@
 @extends('layouts.public')
 @section('title', __('messages.status_title') . ' - Erafone Trail Run 2026')
+@push('scripts')
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+@endpush
 @section('content')
     <section class="pt-28 pb-20 bg-surface-50 min-h-screen">
         <div class="max-w-2xl mx-auto px-4 sm:px-6">
@@ -11,12 +14,29 @@
                 </h1>
                 <p class="text-surface-700">{{ __('messages.status_subtitle') }}</p>
             </div>
-            <form method="GET" action="{{ route('registration.status') }}" class="flex gap-3 mb-8">
-                <input type="email" name="email" value="{{ request('email') }}"
-                    placeholder="{{ __('messages.status_placeholder') }}"
-                    class="flex-1 px-4 py-3 bg-white border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
-                <button type="submit"
-                    class="px-6 py-3 bg-gradient-to-r from-brand-500 to-brand-600 text-white font-semibold rounded-xl hover:from-brand-600 hover:to-brand-700 transition-all shadow-md">{{ __('messages.status_check') }}</button>
+            @if($errors->any())
+                <div class="mb-6 p-4 bg-brand-50 border border-brand-200 rounded-xl">
+                    <ul class="text-sm text-brand-600 space-y-1">
+                        @foreach($errors->all() as $error)
+                            <li>• {{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('registration.status') }}" class="mb-8">
+                @csrf
+                <div class="flex flex-col sm:flex-row gap-3 mb-4">
+                    <input type="email" name="email" value="{{ old('email', request('email')) }}"
+                        placeholder="{{ __('messages.status_placeholder') }}" required
+                        class="flex-1 w-full px-4 py-3 bg-white border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                    <button type="submit"
+                        class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-brand-500 to-brand-600 text-white font-semibold rounded-xl hover:from-brand-600 hover:to-brand-700 transition-all shadow-md whitespace-nowrap">{{ __('messages.status_check') }}</button>
+                </div>
+                <div class="flex justify-center sm:justify-start">
+                    <div class="g-recaptcha"
+                        data-sitekey="{{ env('RECAPTCHA_SITE_KEY', '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI') }}"></div>
+                </div>
             </form>
             @if(isset($participant))
                 <div class="bg-white rounded-2xl border border-surface-300 p-6 shadow-sm">
@@ -138,7 +158,7 @@
                         </div>
                     @endif
                 </div>
-            @elseif(request('email'))
+            @elseif(request()->isMethod('post'))
                 <div class="bg-white rounded-2xl border border-brand-100 p-8 text-center shadow-sm">
                     <svg class="w-16 h-16 mx-auto text-brand-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"

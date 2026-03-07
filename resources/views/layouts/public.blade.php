@@ -58,9 +58,6 @@
                     @auth
                         <a href="{{ route('dashboard') }}"
                             class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_dashboard') }}</a>
-                    @else
-                        <a href="{{ route('login') }}"
-                            class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_login') }}</a>
                     @endauth
                     <a href="{{ route('register.create') }}"
                         class="px-5 py-2.5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white text-sm font-semibold rounded-xl shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 transition-all duration-200 transform hover:-translate-y-0.5">
@@ -90,9 +87,6 @@
                 @auth
                     <a href="{{ route('dashboard') }}"
                         class="block px-4 py-2.5 rounded-lg text-sm font-medium text-surface-800 hover:text-brand-500 hover:bg-surface-100 transition-colors">{{ __('messages.nav_dashboard') }}</a>
-                @else
-                    <a href="{{ route('login') }}"
-                        class="block px-4 py-2.5 rounded-lg text-sm font-medium text-surface-800 hover:text-brand-500 hover:bg-surface-100 transition-colors">{{ __('messages.nav_login') }}</a>
                 @endauth
                 <!-- Mobile Language Switcher -->
                 <div class="flex gap-2 px-4 py-2">

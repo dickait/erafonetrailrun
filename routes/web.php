@@ -19,22 +19,22 @@ Route::get('/lang/{locale}', function (string $locale) {
 })->name('lang.switch');
 
 /* |-------------------------------------------------------------------------- | Public Routes |-------------------------------------------------------------------------- */
-Route::get('/', [HomeController::class , 'index'])->name('home');
-Route::get('/gallery', [HomeController::class , 'gallery'])->name('gallery');
-Route::get('/results', [HomeController::class , 'results'])->name('results');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/gallery', [HomeController::class, 'gallery'])->name('gallery');
+Route::get('/results', [HomeController::class, 'results'])->name('results');
 
 // Registration
-Route::get('/event-register', [RegistrationController::class , 'create'])->name('register.create');
-Route::post('/event-register', [RegistrationController::class , 'store'])->name('register.store')->middleware('throttle:5,1');
-Route::get('/status', [RegistrationController::class , 'checkStatus'])->name('registration.status');
-Route::get('/payment', [RegistrationController::class , 'payment'])->name('registration.payment');
+Route::get('/event-register', [RegistrationController::class, 'create'])->name('register.create');
+Route::post('/event-register', [RegistrationController::class, 'store'])->name('register.store')->middleware('throttle:5,1');
+Route::match(['get', 'post'], '/status', [RegistrationController::class, 'checkStatus'])->name('registration.status');
+Route::get('/payment', [RegistrationController::class, 'payment'])->name('registration.payment');
 
 // API for cascading dropdowns
-Route::get('/api/provinces', [RegistrationController::class , 'getProvinces'])->name('api.provinces');
-Route::get('/api/cities', [RegistrationController::class , 'getCities'])->name('api.cities');
+Route::get('/api/provinces', [RegistrationController::class, 'getProvinces'])->name('api.provinces');
+Route::get('/api/cities', [RegistrationController::class, 'getCities'])->name('api.cities');
 
 // Webhook (CSRF excluded via bootstrap/app.php)
-Route::post('/webhook/mayar', [WebhookController::class , 'handleMayar'])->name('webhook.mayar');
+Route::post('/webhook/mayar', [WebhookController::class, 'handleMayar'])->name('webhook.mayar');
 
 /* |-------------------------------------------------------------------------- | Auth Routes (Breeze) |-------------------------------------------------------------------------- */
 Route::get('/dashboard', function () {
@@ -46,31 +46,31 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class , 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class , 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class , 'destroy'])->name('profile.destroy');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 /* |-------------------------------------------------------------------------- | Participant Routes |-------------------------------------------------------------------------- */
 Route::middleware(['auth', 'participant'])->prefix('participant')->name('participant.')->group(function () {
-    Route::get('/dashboard', [DashboardController::class , 'index'])->name('dashboard');
-    Route::get('/profile', [DashboardController::class , 'profile'])->name('profile');
-    Route::put('/profile', [DashboardController::class , 'updateProfile'])->name('profile.update');
-    Route::get('/payment', [DashboardController::class , 'paymentStatus'])->name('payment');
-    Route::get('/bib', [DashboardController::class , 'bib'])->name('bib');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
+    Route::put('/profile', [DashboardController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/payment', [DashboardController::class, 'paymentStatus'])->name('payment');
+    Route::get('/bib', [DashboardController::class, 'bib'])->name('bib');
 });
 
 /* |-------------------------------------------------------------------------- | Admin Routes |-------------------------------------------------------------------------- */
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [AdminController::class , 'dashboard'])->name('dashboard');
-    Route::get('/participants', [AdminController::class , 'participants'])->name('participants');
-    Route::get('/payments', [AdminController::class , 'payments'])->name('payments');
-    Route::get('/export-csv', [AdminController::class , 'exportCsv'])->name('export-csv');
-    Route::post('/generate-bibs', [AdminController::class , 'generateBibs'])->name('generate-bibs');
-    Route::get('/email-blast', [AdminController::class , 'emailBlastForm'])->name('email-blast');
-    Route::post('/email-blast', [AdminController::class , 'sendEmailBlast'])->name('email-blast.send');
-    Route::get('/checkin', [AdminController::class , 'checkinPage'])->name('checkin');
-    Route::post('/checkin', [AdminController::class , 'checkin'])->name('checkin.process');
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/participants', [AdminController::class, 'participants'])->name('participants');
+    Route::get('/payments', [AdminController::class, 'payments'])->name('payments');
+    Route::get('/export-csv', [AdminController::class, 'exportCsv'])->name('export-csv');
+    Route::post('/generate-bibs', [AdminController::class, 'generateBibs'])->name('generate-bibs');
+    Route::get('/email-blast', [AdminController::class, 'emailBlastForm'])->name('email-blast');
+    Route::post('/email-blast', [AdminController::class, 'sendEmailBlast'])->name('email-blast.send');
+    Route::get('/checkin', [AdminController::class, 'checkinPage'])->name('checkin');
+    Route::post('/checkin', [AdminController::class, 'checkin'])->name('checkin.process');
 });
 
 require __DIR__ . '/auth.php';
