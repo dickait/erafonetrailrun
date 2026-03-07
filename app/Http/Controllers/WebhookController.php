@@ -51,6 +51,7 @@ class WebhookController extends Controller
         $mayarId = $data['id'] ?? null;
         $productId = $data['productId'] ?? null;
         $paymentLinkId = $data['paymentLinkId'] ?? null;
+        $linkId = $data['linkId'] ?? null;
         $status = $data['status'] ?? null;
 
         $payment = null;
@@ -70,7 +71,12 @@ class WebhookController extends Controller
             $payment = Payment::where('invoice_id', $paymentLinkId)->first();
         }
 
-        // Fallback 3: match by customer email + amount
+        // Fallback 3: try linkId
+        if (!$payment && $linkId) {
+            $payment = Payment::where('invoice_id', $linkId)->first();
+        }
+
+        // Fallback 4: match by customer email + amount
         if (!$payment) {
             $customerEmail = $data['customerEmail'] ?? null;
             $amount = $data['amount'] ?? null;
@@ -78,8 +84,8 @@ class WebhookController extends Controller
                 $payment = Payment::where('amount', $amount)
                     ->where('status', 'pending')
                     ->whereHas('participant', function ($q) use ($customerEmail) {
-                    $q->where('email', $customerEmail);
-                })
+                        $q->where('email', $customerEmail);
+                    })
                     ->latest()
                     ->first();
             }
@@ -94,28 +100,36 @@ class WebhookController extends Controller
             return response()->json(['error' => 'Payment not found'], 404);
         }
 
-        DB::transaction(function () use ($payment, $status, $data, $payload) {
+        DB::transaction(function () use ($payment, $event, $status, $data, $payload) {
+            $statusCode = $data['statusCode'] ?? null;
+            $statusStr = $status ?? $statusCode ?? '';
+
             // Map Mayar status to our internal status
-            $paymentStatus = match (strtoupper($status ?? '')) {
+            if ($event === 'payment.received') {
+                $paymentStatus = 'paid';
+            } else {
+                $paymentStatus = match (strtoupper((string) $statusStr)) {
                     'SUCCESS', 'PAID', 'SETTLEMENT' => 'paid',
                     'FAILED', 'DENY', 'CANCEL' => 'failed',
                     'EXPIRED', 'EXPIRE' => 'expired',
                     'REFUND' => 'refunded',
                     default => 'pending',
                 };
+            }
 
             $payment->update([
                 'status' => $paymentStatus,
                 'paid_at' => $paymentStatus === 'paid' ? now() : null,
+                'webhook_payload' => $payload,
             ]);
 
             // Update participant payment status
             $participantStatus = match ($paymentStatus) {
-                    'paid' => 'paid',
-                    'failed' => 'failed',
-                    'refunded' => 'refunded',
-                    default => 'pending',
-                };
+                'paid' => 'paid',
+                'failed' => 'failed',
+                'refunded' => 'refunded',
+                default => 'pending',
+            };
 
             $payment->participant->update([
                 'payment_status' => $participantStatus,

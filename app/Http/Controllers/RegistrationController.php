@@ -47,7 +47,7 @@ class RegistrationController extends Controller
             'full_name' => 'required|string|max:255',
             'bib_name' => 'required|string|max:20',
             'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:20',
+            'phone' => 'required|string|min:10|max:20',
             'gender' => 'required|in:male,female',
             'date_of_birth' => 'required|date|before:today',
             'identity_number' => 'required|string|max:30',
@@ -165,13 +165,18 @@ class RegistrationController extends Controller
         $paymentLink = '#';
         $invoiceId = 'INV-' . strtoupper(Str::random(10));
 
+        $mobile = $participant->phone;
+        if (strlen($mobile) < 10) {
+            $mobile = str_pad($mobile, 10, '0', STR_PAD_RIGHT);
+        }
+
         try {
             $mayarResponse = Http::withToken(config('services.mayar.api_key'))
                 ->post(config('services.mayar.api_url') . '/payment/create', [
                     'name' => $participant->full_name,
                     'email' => $participant->email,
                     'amount' => (int) $amount,
-                    'mobile' => $participant->phone,
+                    'mobile' => $mobile,
                     'description' => "Registration {$event->name} - {$category->name}",
                     'redirectUrl' => route('registration.payment', ['email' => $participant->email]),
                 ]);
