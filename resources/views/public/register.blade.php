@@ -201,6 +201,7 @@
                                 <input type="email" name="email" value="{{ old('email') }}" required
                                     class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
                                     placeholder="your@email.com">
+                                <p class="text-xs text-red-500 mt-1 hidden" id="err-email"></p>
                             </div>
                             <div>
                                 <label
@@ -209,6 +210,7 @@
                                 <input type="text" name="phone" value="{{ old('phone') }}" required
                                     class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
                                     placeholder="08xxxxxxxxx">
+                                <p class="text-xs text-red-500 mt-1 hidden" id="err-phone"></p>
                             </div>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -235,6 +237,7 @@
                                     value="{{ old('date_of_birth') }}" required
                                     class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
                                     placeholder="Pilih Tanggal Lahir">
+                                <p class="text-xs text-red-500 mt-1 hidden" id="err-dob"></p>
                             </div>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -361,16 +364,22 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <div>
                                 <label
-                                    class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_emergency_name') }}</label>
+                                    class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_emergency_name') }}
+                                    *</label>
                                 <input type="text" name="emergency_contact_name" value="{{ old('emergency_contact_name') }}"
+                                    required
                                     class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                                <p class="text-xs text-red-500 mt-1 hidden" id="err-em-name">Nama kontak darurat wajib
+                                    diisi.</p>
                             </div>
                             <div>
                                 <label
-                                    class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_emergency_phone') }}</label>
-                                <input type="text" name="emergency_contact_phone"
+                                    class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_emergency_phone') }}
+                                    *</label>
+                                <input type="text" name="emergency_contact_phone" required
                                     value="{{ old('emergency_contact_phone') }}"
                                     class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                                <p class="text-xs text-red-500 mt-1 hidden" id="err-em-phone"></p>
                             </div>
                         </div>
 
@@ -586,7 +595,7 @@
 
     @push('scripts')
         <script>
-            // ===== Shared fetch helpers =====
+            // ===== Shared fetch helpe             rs =====
             async function fetchProvinces(countryId) {
                 const province = document.getElementById('province');
                 const city = document.getElementById('city');
@@ -930,20 +939,20 @@
                 participantsData.forEach((p, index) => {
                     let title = isFamily ? `Peserta ${index + 1} ${index === 0 ? '(Team Leader)' : '(Family Member)'}` : 'Data Peserta';
                     html += `<div class="p-4 border border-surface-200 rounded-xl mb-4 bg-surface-50">
-                                        <div class="flex justify-between items-start mb-2">
-                                            <h4 class="font-bold text-brand-600">${title}</h4>
-                                            <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
-                                        </div>
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                                            <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
-                                            <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
-                                            <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900 break-all">${p.email || '-'}</span></p>
-                                            <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
-                                            <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900 break-all">${p.identity_number || '-'}</span></p>
-                                            <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
-                                            <p><span class="text-surface-600">{{ __('messages.reg_blood_type') }}:</span> <br><span class="font-medium text-surface-900">${p.blood_type || '-'}</span></p>
-                                        </div>
-                                    </div>`;
+                                                                <div class="flex justify-between items-start mb-2">
+                                                                    <h4 class="font-bold text-brand-600">${title}</h4>
+                                                                    <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
+                                                                </div>
+                                                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                                                                    <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
+                                                                    <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
+                                                                    <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900 break-all">${p.email || '-'}</span></p>
+                                                                    <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
+                                                                    <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900 break-all">${p.identity_number || '-'}</span></p>
+                                                                    <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
+                                                                    <p><span class="text-surface-600">{{ __('messages.reg_blood_type') }}:</span> <br><span class="font-medium text-surface-900">${p.blood_type || '-'}</span></p>
+                                                                </div>
+                                                            </div>`;
 
                     for (let key in p) {
                         let input = document.createElement('input');
