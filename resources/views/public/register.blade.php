@@ -678,312 +678,404 @@
             const btnCopyLeader = document.getElementById('btn-copy-leader-address');
             const mainForm = document.querySelector('form');
 
-            let isFamily = false;
-            let totalParticipants = 1;
-            let currentParticipantIndex = 0;
-            let participantsData = [];
+            // ===== Realtime Validation Fields =====
+            const inEmail = document.querySelector('input[name="email"]');
+            const inPhone = document.querySelector('input[name="phone"]');
+            const inEmName = document.querySelector('input[name="emergency_contact_name"]');
+            const inEmPhone = document.querySelector('input[name="emergency_contact_phone"]');
 
-            // ===== Save current form data to array =====
-            function saveCurrentParticipantData() {
-                let pData = {};
-                formFieldsContainer.querySelectorAll('input, select, textarea').forEach(el => {
-                    if (el.name && el.name !== 'category_id' && el.name !== 'family_count' && !el.name.startsWith('agreement') && el.name !== 'g-recaptcha-response') {
-                        if (el.type === 'checkbox' || el.type === 'radio') {
-                            if (el.checked) pData[el.name] = el.value;
+            const eEmail = document.getElementById('err-email');
+            const ePhone = document.getElementById('err-phone');
+            const eEmName = document.getElementById('err-em-name');
+            const eEmPhone = document.getElementById('err-em-phone');
+
+            function setInvalid(input, errorEl, msg) {
+                if (!input) return;
+                // Menggunakan inline style untuk menjamin warna aktif 
+                        // tanpa bergantung pada hasil kompilasi Tailwind css.
+                        input.style.borderColor = '#ef4444';
+                        input.style.color = '#ef4444';
+
+                        if (errorEl) {
+                            errorEl.textContent = msg;
+                            errorEl.classList.remove('hidden');
+                        }
+                        input.setCustomValidity(msg);
+                    }
+
+                    function setValid(input, errorEl) {
+                        if (!input) return;
+                        input.style.borderColor = '';
+                        input.style.color = '';
+
+                        if (errorEl) {
+                            errorEl.classList.add('hidden');
+                        }
+                        input.setCustomValidity('');
+                    }
+
+                    function checkEmail() {
+                        if (inEmail.value && !inEmail.value.includes('@')) {
+                            setInvalid(inEmail, eEmail, 'Format email tidak valid (harus mengandung @).');
+                        } else if (!inEmail.value) {
+                            setInvalid(inEmail, eEmail, 'Email wajib diisi.');
                         } else {
-                            pData[el.name] = el.value;
+                            setValid(inEmail, eEmail);
                         }
                     }
-                });
-                if (Object.keys(pData).length > 0) {
-                    participantsData[currentParticipantIndex] = pData;
-                }
-            }
 
-            // ===== Load participant data into form =====
-            async function loadParticipantData(index) {
-                const data = participantsData[index] || {};
-                const hasData = Object.keys(data).length > 0;
-
-                // Set simple fields first
-                formFieldsContainer.querySelectorAll('input, select, textarea').forEach(el => {
-                    if (!el.name || el.name === 'category_id' || el.name === 'family_count') return;
-                    if (el.id === 'country' || el.id === 'province' || el.id === 'city') return;
-                    if (el.type === 'checkbox' || el.type === 'radio') {
-                        el.checked = hasData ? (data[el.name] === el.value) : false;
-                    } else {
-                        el.value = hasData ? (data[el.name] || '') : '';
-                        if (el.name === 'date_of_birth' && fpDob) {
-                            fpDob.setDate(el.value);
+                    function checkPhone() {
+                        if (inPhone.value && inPhone.value.replace(/\D/g, '').length <= 9) {
+                            setInvalid(inPhone, ePhone, 'Nomor HP harus lebih dari 9 digit.');
+                        } else if (!inPhone.value) {
+                            setInvalid(inPhone, ePhone, 'Nomor HP wajib diisi.');
+                        } else {
+                            setValid(inPhone, ePhone);
                         }
                     }
-                });
 
-                // Restore cascading dropdowns
-                const countryEl = document.getElementById('country');
-                if (hasData && data.country_id) {
-                    countryEl.value = data.country_id;
-                    await fetchProvinces(data.country_id);
-                    if (data.province_id) {
-                        document.getElementById('province').value = data.province_id;
-                        await fetchCities(data.province_id);
-                        if (data.city_id) {
-                            document.getElementById('city').value = data.city_id;
+                    function checkEmName() {
+                        if (!inEmName.value.trim()) {
+                            setInvalid(inEmName, eEmName, 'Nama kontak darurat wajib diisi.');
+                        } else {
+                            setValid(inEmName, eEmName);
                         }
                     }
-                } else {
-                    countryEl.value = '';
-                    document.getElementById('province').innerHTML = '<option value="">{{ __("messages.reg_select_province") }}</option>';
-                    document.getElementById('city').innerHTML = '<option value="">{{ __("messages.reg_select_city") }}</option>';
-                }
-            }
 
-            // ===== Update UI for current participant =====
-            async function updateUI() {
-                if (isFamily) {
-                    indCurrent.innerText = currentParticipantIndex + 1;
-                    indTotal.innerText = totalParticipants;
-
-                    // Roles & labels
-                    if (currentParticipantIndex === 0) {
-                        indRole.innerText = '{{ __('messages.reg_role_leader') }}';
-                        lblIdentity.innerHTML = '{{ __("messages.reg_identity") }} *';
-                        hlpIdentity.classList.add('hidden');
-                        btnPrev.classList.add('hidden');
-                        btnCopyLeader.classList.add('hidden');
-                        if (fpDob) fpDob.set('maxDate', new Date(new Date().setFullYear(new Date().getFullYear() - 18)));
-                    } else {
-                        indRole.innerText = '{{ __('messages.reg_role_member') }}';
-                        lblIdentity.innerHTML = 'Nomor Identitas (NIK / KIA / Passport) *';
-                        hlpIdentity.classList.remove('hidden');
-                        btnPrev.classList.remove('hidden');
-                        btnCopyLeader.classList.remove('hidden');
-                        if (fpDob) fpDob.set('maxDate', new Date(new Date().setFullYear(new Date().getFullYear() - 7)));
+                    function checkEmPhone() {
+                        if (inEmPhone.value && inEmPhone.value.replace(/\D/g, '').length <= 9) {
+                            setInvalid(inEmPhone, eEmPhone, 'Nomor HP darurat harus lebih dari 9 digit.');
+                        } else if (!inEmPhone.value) {
+                            setInvalid(inEmPhone, eEmPhone, 'Nomor HP darurat wajib diisi.');
+                        } else {
+                            setValid(inEmPhone, eEmPhone);
+                        }
                     }
 
-                    // Load saved data
-                    await loadParticipantData(currentParticipantIndex);
+                    if (inEmail) inEmail.addEventListener('input', checkEmail);
+                    if (inPhone) inPhone.addEventListener('input', checkPhone);
+                    if (inEmName) inEmName.addEventListener('input', checkEmName);
+                    if (inEmPhone) inEmPhone.addEventListener('input', checkEmPhone);
 
-                    // Button text
-                    btnNext.innerHTML = (currentParticipantIndex === totalParticipants - 1) ? '{{ __('messages.reg_btn_review') }}' : '{!! __('messages.reg_btn_next_arrow') !!}';
-                } else {
-                    lblIdentity.innerHTML = '{{ __("messages.reg_identity") }} *';
-                    hlpIdentity.classList.add('hidden');
-                    btnCopyLeader.classList.add('hidden');
-                    if (fpDob) fpDob.set('maxDate', new Date(new Date().setFullYear(new Date().getFullYear() - 18)));
+                    let isFamily = false;
+                    let totalParticipants = 1;
+                    let currentParticipantIndex = 0;
+                    let participantsData = [];
 
-                    // Load saved data
-                    await loadParticipantData(currentParticipantIndex);
+                    // ===== Save current form data to array =====
+                    function saveCurrentParticipantData() {
+                        let pData = {};
+                        formFieldsContainer.querySelectorAll('input, select, textarea').forEach(el => {
+                            if (el.name && el.name !== 'category_id' && el.name !== 'family_count' && !el.name.startsWith('agreement') && el.name !== 'g-recaptcha-response') {
+                                if (el.type === 'checkbox' || el.type === 'radio') {
+                                    if (el.checked) pData[el.name] = el.value;
+                                } else {
+                                    pData[el.name] = el.value;
+                                }
+                            }
+                        });
+                        if (Object.keys(pData).length > 0) {
+                            participantsData[currentParticipantIndex] = pData;
+                        }
+                    }
 
-                    // Button text
-                    btnNext.innerHTML = '{{ __('messages.reg_btn_review') }}';
-                }
-            }
+                    // ===== Load participant data into form =====
+                    async function loadParticipantData(index) {
+                        const data = participantsData[index] || {};
+                        const hasData = Object.keys(data).length > 0;
 
-            // ===== Copy Team Leader address =====
-            btnCopyLeader.addEventListener('click', async function () {
-                const leader = participantsData[0];
-                if (!leader) return;
+                        // Reset validation state
+                        [inEmail, inPhone, inEmName, inEmPhone].forEach(el => setValid(el, null));
+                        if (eEmail) eEmail.classList.add('hidden');
+                        if (ePhone) ePhone.classList.add('hidden');
+                        if (eEmName) eEmName.classList.add('hidden');
+                        if (eEmPhone) eEmPhone.classList.add('hidden');
 
-                // Set country
-                if (leader.country_id) {
-                    document.getElementById('country').value = leader.country_id;
-                    await fetchProvinces(leader.country_id);
-                }
-                // Set province
-                if (leader.province_id) {
-                    document.getElementById('province').value = leader.province_id;
-                    await fetchCities(leader.province_id);
-                }
-                // Set city
-                if (leader.city_id) {
-                    document.getElementById('city').value = leader.city_id;
-                }
-                // Set address
-                const addrEl = formFieldsContainer.querySelector('input[name="address"]');
-                if (addrEl && leader.address) addrEl.value = leader.address;
-            });
+                        // Set simple fields first
+                        formFieldsContainer.querySelectorAll('input, select, textarea').forEach(el => {
+                            if (!el.name || el.name === 'category_id' || el.name === 'family_count') return;
+                            if (el.id === 'country' || el.id === 'province' || el.id === 'city') return;
+                            if (el.type === 'checkbox' || el.type === 'radio') {
+                                el.checked = hasData ? (data[el.name] === el.value) : false;
+                            } else {
+                                el.value = hasData ? (data[el.name] || '') : '';
+                                if (el.name === 'date_of_birth' && fpDob) {
+                                    fpDob.setDate(el.value);
+                                }
+                            }
+                        });
 
-            // ===== Category selection =====
-            function updateCategoryDetails() {
-                let isAnyChecked = false;
-                categoryRadios.forEach(radio => {
-                    if (radio.checked) {
-                        isAnyChecked = true;
+                        // Restore cascading dropdowns
+                        const countryEl = document.getElementById('country');
+                        if (hasData && data.country_id) {
+                            countryEl.value = data.country_id;
+                            await fetchProvinces(data.country_id);
+                            if (data.province_id) {
+                                document.getElementById('province').value = data.province_id;
+                                await fetchCities(data.province_id);
+                                if (data.city_id) {
+                                    document.getElementById('city').value = data.city_id;
+                                }
+                            }
+                        } else {
+                            countryEl.value = '';
+                            document.getElementById('province').innerHTML = '<option value="">{{ __("messages.reg_select_province") }}</option>';
+                            document.getElementById('city').innerHTML = '<option value="">{{ __("messages.reg_select_city") }}</option>';
+                        }
+                    }
 
-                        isFamily = radio.dataset.slug === '5k-family-trail';
-
-                        btnNextContainer.classList.remove('hidden');
-                        btnSubmitContainer.classList.add('hidden');
-
+                    // ===== Update UI for current participant =====
+                    async function updateUI() {
                         if (isFamily) {
-                            familyCountContainer.classList.remove('hidden');
-                            participantIndicator.classList.remove('hidden');
-                            totalParticipants = parseInt(familyCountSelect.value);
-                        } else {
-                            familyCountContainer.classList.add('hidden');
-                            participantIndicator.classList.add('hidden');
-                            totalParticipants = 1;
-                            btnCopyLeader.classList.add('hidden');
-                        }
+                            indCurrent.innerText = currentParticipantIndex + 1;
+                            indTotal.innerText = totalParticipants;
 
-                        currentParticipantIndex = 0;
-                        participantsData = [];
+                            // Roles & labels
+                            if (currentParticipantIndex === 0) {
+                                indRole.innerText = '{{ __('messages.reg_role_leader') }}';
+                                lblIdentity.innerHTML = '{{ __("messages.reg_identity") }} *';
+                                hlpIdentity.classList.add('hidden');
+                                btnPrev.classList.add('hidden');
+                                btnCopyLeader.classList.add('hidden');
+                                if (fpDob) fpDob.set('maxDate', new Date(new Date().setFullYear(new Date().getFullYear() - 18)));
+                            } else {
+                                indRole.innerText = '{{ __('messages.reg_role_member') }}';
+                                lblIdentity.innerHTML = 'Nomor Identitas (NIK / KIA / Passport) *';
+                                hlpIdentity.classList.remove('hidden');
+                                btnPrev.classList.remove('hidden');
+                                btnCopyLeader.classList.remove('hidden');
+                                if (fpDob) fpDob.set('maxDate', new Date(new Date().setFullYear(new Date().getFullYear() - 7)));
+                            }
+
+                            // Load saved data
+                            await loadParticipantData(currentParticipantIndex);
+
+                            // Button text
+                            btnNext.innerHTML = (currentParticipantIndex === totalParticipants - 1) ? '{{ __('messages.reg_btn_review') }}' : '{!! __('messages.reg_btn_next_arrow') !!}';
+                        } else {
+                            lblIdentity.innerHTML = '{{ __("messages.reg_identity") }} *';
+                            hlpIdentity.classList.add('hidden');
+                            btnCopyLeader.classList.add('hidden');
+                            if (fpDob) fpDob.set('maxDate', new Date(new Date().setFullYear(new Date().getFullYear() - 18)));
+
+                            // Load saved data
+                            await loadParticipantData(currentParticipantIndex);
+
+                            // Button text
+                            btnNext.innerHTML = '{{ __('messages.reg_btn_review') }}';
+                        }
+                    }
+
+                    // ===== Copy Team Leader address =====
+                    btnCopyLeader.addEventListener('click', async function () {
+                        const leader = participantsData[0];
+                        if (!leader) return;
+
+                        // Set country
+                        if (leader.country_id) {
+                            document.getElementById('country').value = leader.country_id;
+                            await fetchProvinces(leader.country_id);
+                        }
+                        // Set province
+                        if (leader.province_id) {
+                            document.getElementById('province').value = leader.province_id;
+                            await fetchCities(leader.province_id);
+                        }
+                        // Set city
+                        if (leader.city_id) {
+                            document.getElementById('city').value = leader.city_id;
+                        }
+                        // Set address
+                        const addrEl = formFieldsContainer.querySelector('input[name="address"]');
+                        if (addrEl && leader.address) addrEl.value = leader.address;
+                    });
+
+                    // ===== Category selection =====
+                    function updateCategoryDetails() {
+                        let isAnyChecked = false;
+                        categoryRadios.forEach(radio => {
+                            if (radio.checked) {
+                                isAnyChecked = true;
+
+                                isFamily = radio.dataset.slug === '5k-family-trail';
+
+                                btnNextContainer.classList.remove('hidden');
+                                btnSubmitContainer.classList.add('hidden');
+
+                                if (isFamily) {
+                                    familyCountContainer.classList.remove('hidden');
+                                    participantIndicator.classList.remove('hidden');
+                                    totalParticipants = parseInt(familyCountSelect.value);
+                                } else {
+                                    familyCountContainer.classList.add('hidden');
+                                    participantIndicator.classList.add('hidden');
+                                    totalParticipants = 1;
+                                    btnCopyLeader.classList.add('hidden');
+                                }
+
+                                currentParticipantIndex = 0;
+                                participantsData = [];
+                                updateUI();
+                                formFieldsContainer.classList.remove('hidden');
+                                reviewContainer.classList.add('hidden');
+
+                                categoryDetails.forEach(detail => detail.classList.add('hidden'));
+                                const detailContent = document.getElementById('cat-detail-' + radio.value);
+                                if (detailContent) detailContent.classList.remove('hidden');
+                            }
+                        });
+                        if (isAnyChecked) {
+                            categoryDetailsContainer.classList.remove('hidden');
+                        } else {
+                            categoryDetailsContainer.classList.add('hidden');
+                        }
+                    }
+
+                    // ===== Family count change =====
+                    familyCountSelect.addEventListener('change', function () {
+                        saveCurrentParticipantData();
+                        totalParticipants = parseInt(this.value);
+                        // Trim extra participants if needed
+                        if (participantsData.length > totalParticipants) {
+                            participantsData.length = totalParticipants;
+                        }
+                        if (currentParticipantIndex >= totalParticipants) {
+                            currentParticipantIndex = totalParticipants - 1;
+                        }
                         updateUI();
                         formFieldsContainer.classList.remove('hidden');
                         reviewContainer.classList.add('hidden');
+                    });
 
-                        categoryDetails.forEach(detail => detail.classList.add('hidden'));
-                        const detailContent = document.getElementById('cat-detail-' + radio.value);
-                        if (detailContent) detailContent.classList.remove('hidden');
+                    // ===== DOB validation helper =====
+                    function validateDOB(input) {
+                        const val = input.value;
+                        if (!val || val.trim() === '') {
+                            input.setCustomValidity('Tanggal lahir wajib diisi.');
+                            input.reportValidity();
+                            return false;
+                        }
+                        input.setCustomValidity('');
+                        return true;
                     }
-                });
-                if (isAnyChecked) {
-                    categoryDetailsContainer.classList.remove('hidden');
-                } else {
-                    categoryDetailsContainer.classList.add('hidden');
-                }
-            }
 
-            // ===== Family count change =====
-            familyCountSelect.addEventListener('change', function () {
-                saveCurrentParticipantData();
-                totalParticipants = parseInt(this.value);
-                // Trim extra participants if needed
-                if (participantsData.length > totalParticipants) {
-                    participantsData.length = totalParticipants;
-                }
-                if (currentParticipantIndex >= totalParticipants) {
-                    currentParticipantIndex = totalParticipants - 1;
-                }
-                updateUI();
-                formFieldsContainer.classList.remove('hidden');
-                reviewContainer.classList.add('hidden');
-            });
+                    // ===== Prev button =====
+                    btnPrev.addEventListener('click', async function () {
+                        saveCurrentParticipantData();
+                        if (currentParticipantIndex > 0) {
+                            currentParticipantIndex--;
+                            await updateUI();
+                            window.scrollTo({ top: formFieldsContainer.offsetTop - 100, behavior: 'smooth' });
+                        }
+                    });
 
-            // ===== DOB validation helper =====
-            function validateDOB(input) {
-                const val = input.value;
-                if (!val || val.trim() === '') {
-                    input.setCustomValidity('Tanggal lahir wajib diisi.');
-                    input.reportValidity();
-                    return false;
-                }
-                input.setCustomValidity('');
-                return true;
-            }
+                    // ===== Next / Review button =====
+                    btnNext.addEventListener('click', async function () {
+                        // Run custom realtime validations forcefully to catch empty inputs
+                        if (inEmail) checkEmail();
+                        if (inPhone) checkPhone();
+                        if (inEmName) checkEmName();
+                        if (inEmPhone) checkEmPhone();
 
-            // ===== Prev button =====
-            btnPrev.addEventListener('click', async function () {
-                saveCurrentParticipantData();
-                if (currentParticipantIndex > 0) {
-                    currentParticipantIndex--;
-                    await updateUI();
-                    window.scrollTo({ top: formFieldsContainer.offsetTop - 100, behavior: 'smooth' });
-                }
-            });
+                        // Validate required fields
+                        let inputs = formFieldsContainer.querySelectorAll('input[required], select[required], textarea[required]');
+                        for (let i = 0; i < inputs.length; i++) {
+                            // DOB custom validation
+                            if (inputs[i].name === 'date_of_birth') {
+                                if (!validateDOB(inputs[i])) return;
+                            }
+                            if (!inputs[i].checkValidity()) {
+                                inputs[i].reportValidity();
+                                return;
+                            }
+                        }
 
-            // ===== Next / Review button =====
-            btnNext.addEventListener('click', async function () {
-                // Validate required fields
-                let inputs = formFieldsContainer.querySelectorAll('input[required], select[required], textarea[required]');
-                for (let i = 0; i < inputs.length; i++) {
-                    // DOB custom validation
-                    if (inputs[i].name === 'date_of_birth') {
-                        if (!validateDOB(inputs[i])) return;
+                        saveCurrentParticipantData();
+
+                        if (currentParticipantIndex < totalParticipants - 1) {
+                            currentParticipantIndex++;
+                            await updateUI();
+                            window.scrollTo({ top: formFieldsContainer.offsetTop - 100, behavior: 'smooth' });
+                        } else if (currentParticipantIndex === totalParticipants - 1) {
+                            showReview();
+                            window.scrollTo({ top: reviewContainer.offsetTop - 100, behavior: 'smooth' });
+                        }
+                    });
+
+                    // ===== Edit from Review =====
+                    btnEditData.addEventListener('click', async function () {
+                        formFieldsContainer.classList.remove('hidden');
+                        btnNextContainer.classList.remove('hidden');
+                        reviewContainer.classList.add('hidden');
+                        btnSubmitContainer.classList.add('hidden');
+                        currentParticipantIndex = 0;
+                        await updateUI();
+                    });
+
+                    // ===== Show review =====
+                    function showReview() {
+                        formFieldsContainer.classList.add('hidden');
+                        btnNextContainer.classList.add('hidden');
+                        reviewContainer.classList.remove('hidden');
+                        btnSubmitContainer.classList.remove('hidden');
+
+                        let hiddenContainer = document.getElementById('hidden-participants-container');
+                        if (!hiddenContainer) {
+                            hiddenContainer = document.createElement('div');
+                            hiddenContainer.id = 'hidden-participants-container';
+                            mainForm.appendChild(hiddenContainer);
+                        }
+                        hiddenContainer.innerHTML = '';
+
+                        let html = '';
+                        participantsData.forEach((p, index) => {
+                            let title = isFamily ? `Peserta ${index + 1} ${index === 0 ? '(Team Leader)' : '(Family Member)'}` : 'Data Peserta';
+                            html += `<div class="p-4 border border-surface-200 rounded-xl mb-4 bg-surface-50">
+                                                                                <div class="flex justify-between items-start mb-2">
+                                                                                    <h4 class="font-bold text-brand-600">${title}</h4>
+                                                                                    <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
+                                                                                </div>
+                                                                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                                                                                    <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
+                                                                                    <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
+                                                                                    <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900 break-all">${p.email || '-'}</span></p>
+                                                                                    <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
+                                                                                    <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900 break-all">${p.identity_number || '-'}</span></p>
+                                                                                    <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
+                                                                                    <p><span class="text-surface-600">{{ __('messages.reg_blood_type') }}:</span> <br><span class="font-medium text-surface-900">${p.blood_type || '-'}</span></p>
+                                                                                </div>
+                                                                            </div>`;
+
+                            for (let key in p) {
+                                let input = document.createElement('input');
+                                input.type = 'hidden';
+                                input.name = `participants[${index}][${key}]`;
+                                input.value = p[key];
+                                hiddenContainer.appendChild(input);
+                            }
+                        });
+                        reviewContent.innerHTML = html;
                     }
-                    if (!inputs[i].checkValidity()) {
-                        inputs[i].reportValidity();
-                        return;
+
+                    // ===== Edit specific participant from review =====
+                    async function editParticipant(index) {
+                        formFieldsContainer.classList.remove('hidden');
+                        btnNextContainer.classList.remove('hidden');
+                        reviewContainer.classList.add('hidden');
+                        btnSubmitContainer.classList.add('hidden');
+                        currentParticipantIndex = index;
+                        await updateUI();
+                        window.scrollTo({ top: formFieldsContainer.offsetTop - 100, behavior: 'smooth' });
                     }
-                }
+                    // Expose to onclick
+                    window.editParticipant = editParticipant;
 
-                saveCurrentParticipantData();
+                    // ===== Init =====
+                    categoryRadios.forEach(radio => {
+                        radio.addEventListener('change', updateCategoryDetails);
+                    });
 
-                if (currentParticipantIndex < totalParticipants - 1) {
-                    currentParticipantIndex++;
-                    await updateUI();
-                    window.scrollTo({ top: formFieldsContainer.offsetTop - 100, behavior: 'smooth' });
-                } else if (currentParticipantIndex === totalParticipants - 1) {
-                    showReview();
-                    window.scrollTo({ top: reviewContainer.offsetTop - 100, behavior: 'smooth' });
-                }
-            });
-
-            // ===== Edit from Review =====
-            btnEditData.addEventListener('click', async function () {
-                formFieldsContainer.classList.remove('hidden');
-                btnNextContainer.classList.remove('hidden');
-                reviewContainer.classList.add('hidden');
-                btnSubmitContainer.classList.add('hidden');
-                currentParticipantIndex = 0;
-                await updateUI();
-            });
-
-            // ===== Show review =====
-            function showReview() {
-                formFieldsContainer.classList.add('hidden');
-                btnNextContainer.classList.add('hidden');
-                reviewContainer.classList.remove('hidden');
-                btnSubmitContainer.classList.remove('hidden');
-
-                let hiddenContainer = document.getElementById('hidden-participants-container');
-                if (!hiddenContainer) {
-                    hiddenContainer = document.createElement('div');
-                    hiddenContainer.id = 'hidden-participants-container';
-                    mainForm.appendChild(hiddenContainer);
-                }
-                hiddenContainer.innerHTML = '';
-
-                let html = '';
-                participantsData.forEach((p, index) => {
-                    let title = isFamily ? `Peserta ${index + 1} ${index === 0 ? '(Team Leader)' : '(Family Member)'}` : 'Data Peserta';
-                    html += `<div class="p-4 border border-surface-200 rounded-xl mb-4 bg-surface-50">
-                                                                <div class="flex justify-between items-start mb-2">
-                                                                    <h4 class="font-bold text-brand-600">${title}</h4>
-                                                                    <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
-                                                                </div>
-                                                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                                                                    <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
-                                                                    <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
-                                                                    <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900 break-all">${p.email || '-'}</span></p>
-                                                                    <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
-                                                                    <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900 break-all">${p.identity_number || '-'}</span></p>
-                                                                    <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
-                                                                    <p><span class="text-surface-600">{{ __('messages.reg_blood_type') }}:</span> <br><span class="font-medium text-surface-900">${p.blood_type || '-'}</span></p>
-                                                                </div>
-                                                            </div>`;
-
-                    for (let key in p) {
-                        let input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = `participants[${index}][${key}]`;
-                        input.value = p[key];
-                        hiddenContainer.appendChild(input);
-                    }
-                });
-                reviewContent.innerHTML = html;
-            }
-
-            // ===== Edit specific participant from review =====
-            async function editParticipant(index) {
-                formFieldsContainer.classList.remove('hidden');
-                btnNextContainer.classList.remove('hidden');
-                reviewContainer.classList.add('hidden');
-                btnSubmitContainer.classList.add('hidden');
-                currentParticipantIndex = index;
-                await updateUI();
-                window.scrollTo({ top: formFieldsContainer.offsetTop - 100, behavior: 'smooth' });
-            }
-            // Expose to onclick
-            window.editParticipant = editParticipant;
-
-            // ===== Init =====
-            categoryRadios.forEach(radio => {
-                radio.addEventListener('change', updateCategoryDetails);
-            });
-
-            updateCategoryDetails();
-        </script>
+                    updateCategoryDetails();
+                </script>
     @endpush
 @endsection
