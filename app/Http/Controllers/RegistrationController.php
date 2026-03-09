@@ -45,7 +45,6 @@ class RegistrationController extends Controller
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'full_name' => 'required|string|max:255',
-            'bib_name' => 'required|string|max:20',
             'email' => 'required|email|max:255',
             'phone' => 'required|string|min:10|max:20',
             'gender' => 'required|in:male,female',
@@ -109,7 +108,7 @@ class RegistrationController extends Controller
             if ($request->has('participants') && is_array($request->participants) && count($request->participants) > 0) {
                 $mainData = $request->participants[0];
                 // map needed fields just in case
-                foreach (['full_name', 'email', 'phone', 'gender', 'date_of_birth', 'identity_number', 'blood_type', 'jersey_size', 'bib_name'] as $field) {
+                foreach (['full_name', 'email', 'phone', 'gender', 'date_of_birth', 'identity_number', 'blood_type', 'jersey_size'] as $field) {
                     if (isset($mainData[$field])) {
                         $participantInfo[$field] = $mainData[$field];
                     }
@@ -118,6 +117,7 @@ class RegistrationController extends Controller
 
             $participant = Participant::create([
                 ...$participantInfo,
+                'bib_name' => '',
                 'event_id' => $event->id,
                 'payment_status' => 'pending',
             ]);
@@ -129,7 +129,7 @@ class RegistrationController extends Controller
                 foreach ($membersData as $member) {
                     $participant->familyMembers()->create([
                         'full_name' => $member['full_name'] ?? '',
-                        'bib_name' => $member['bib_name'] ?? '',
+                        'bib_name' => '',
                         'email' => $member['email'] ?? null,
                         'phone' => $member['phone'] ?? null,
                         'gender' => $member['gender'] ?? 'male',

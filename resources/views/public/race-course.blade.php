@@ -45,7 +45,7 @@
                 @foreach($categories as $index => $category)
                     @php
                         $colors = $categoryColors[$category->slug] ?? $categoryColors['5k-family-trail'];
-                        $usia = $category->slug == '5k-family-trail' ? '7+' : '18+';
+                        $usia = $category->slug == '5k-family-trail' ? '10+' : '17+';
                         $imageFolder = str_replace('-trail', '', $category->slug);
                     @endphp
                     <div id="tab-content-{{ $category->slug }}" class="tab-content {{ $index === 0 ? '' : 'hidden' }}">

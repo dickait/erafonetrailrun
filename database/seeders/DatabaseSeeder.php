@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
             'early_bird_deadline' => '2026-03-31 23:59:59',
             'quota' => 500,
             'distance_km' => 6.53,
-            'elevation' => 294,
+            'elevation' => 80,
             'cot' => 1,
             'effort_km' => 6.5,
             'color' => '#22c55e',

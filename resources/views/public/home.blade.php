@@ -32,12 +32,12 @@
                 {{ \Carbon\Carbon::parse($event->event_date)->locale(app()->getLocale())->translatedFormat('l, d F Y') }}
             </p>
             <!-- <p class="text-white/80 text-lg max-w-2xl mx-auto mb-6">
-                                                {{ __('messages.hero_desc') }}
-                                            </p> -->
+                                                    {{ __('messages.hero_desc') }}
+                                                </p> -->
             <!-- <p
-                                        class="text-white/90 text-lg max-w-2xl mx-auto mb-10 font-bold bg-white/10 inline-block px-4 py-2 rounded-xl backdrop-blur-sm border border-white/10">
-                                        {{ __('messages.hero_categories_label') }} 5K &bull; 10K &bull; 15K
-                                    </p> -->
+                                            class="text-white/90 text-lg max-w-2xl mx-auto mb-10 font-bold bg-white/10 inline-block px-4 py-2 rounded-xl backdrop-blur-sm border border-white/10">
+                                            {{ __('messages.hero_categories_label') }} 5K &bull; 10K &bull; 15K
+                                        </p> -->
             <!-- Countdown -->
             @if($event && $event->event_date->isFuture())
                 <div class="flex justify-center gap-4 md:gap-6 mb-10" id="countdown"
@@ -146,7 +146,7 @@
                 @foreach($categories as $cat)
                     @php
                         $colors = $categoryColors[$cat->slug] ?? $categoryColors['5k-family-trail'];
-                        $usia = $cat->slug == '5k-family-trail' ? '7+' : '18+';
+                        $usia = $cat->slug == '5k-family-trail' ? '10+' : '17+';
                     @endphp
                     <div
                         class="bg-white border {{ $colors[5] }} rounded-2xl p-8 hover:border-{{ $colors[2] }}/50 transition-all duration-300 hover:-translate-y-2 group relative overflow-hidden shadow-sm hover:shadow-xl">
@@ -176,11 +176,11 @@
                                     class="text-surface-900 font-medium">Rp
                                     {{ number_format($cat->price, 0, ',', '.') }}</span></div>
                             <!-- @if($cat->isEarlyBird())
-                                                <div class="flex justify-between text-sm"><span
-                                                        class="{{ $colors[4] }}">{{ __('messages.categories_early_bird') }}</span><span
-                                                        class="{{ $colors[4] }} font-medium">Rp
-                                                        {{ number_format($cat->early_bird_price, 0, ',', '.') }}</span></div>
-                                            @endif -->
+                                                        <div class="flex justify-between text-sm"><span
+                                                                class="{{ $colors[4] }}">{{ __('messages.categories_early_bird') }}</span><span
+                                                                class="{{ $colors[4] }} font-medium">Rp
+                                                                {{ number_format($cat->early_bird_price, 0, ',', '.') }}</span></div>
+                                                    @endif -->
                         </div>
                         <!-- Entitlements -->
                         <div class="mb-6 pt-4 border-t border-surface-300">
@@ -207,25 +207,6 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M5 13l4 4L19 7" />
                                     </svg>{{ __('messages.categories_item_refreshment') }}</li>
-                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-500 mt-0.5 flex-shrink-0"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7" />
-                                    </svg>{{ __('messages.categories_item_cert') }}</li>
-                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-500 mt-0.5 flex-shrink-0"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7" />
-                                    </svg>{{ __('messages.categories_item_timing') }}</li>
-                                @if($cat->slug === '15k')
-                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-accent-500 mt-0.5 flex-shrink-0"
-                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M5 13l4 4L19 7" />
-                                        </svg><span
-                                            class="text-accent-600 font-medium">{{ __('messages.categories_item_finisher_tee') }}</span>
-                                    </li>
-                                @endif
                             </ul>
                         </div>
                         <a href="{{ route('register.create', ['category' => $cat->id]) }}"
