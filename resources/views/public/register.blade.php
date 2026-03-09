@@ -198,7 +198,7 @@
                                 </select>
                             </div>
 
-                            <div>
+                            <div id="wrapper-email">
                                 <label
                                     class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_email') }}
                                     *</label>
@@ -208,7 +208,7 @@
                                 <p class="text-xs text-red-500 mt-1 hidden" id="err-email"></p>
                             </div>
 
-                            <div>
+                            <div id="wrapper-phone">
                                 <label class="block text-sm font-medium text-surface-800 mb-1.5">No Whatsapp
                                     *</label>
                                 <input type="text" name="phone" value="{{ old('phone') }}" required
@@ -228,223 +228,226 @@
                                     menggunakan nomor KIA atau identitas lainnya.</p>
                             </div>
 
-                            <div>
+                            <divid="wrapper-nationality">
                                 <label
                                     class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_nationality') }}
                                     *</label>
                                 <input type="text" name="nationality" value="{{ old('nationality', 'Indonesia') }}" required
                                     class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
-                            </div>
                         </div>
+                    </div>
 
-                        <!-- Location -->
-                        <div class="bg-white rounded-2xl border border-surface-300 p-6 space-y-5 shadow-sm">
-                            <div class="flex justify-between items-center">
-                                <h3 class="font-display font-semibold text-lg text-surface-900">
-                                    {{ __('messages.reg_location') }}
-                                </h3>
-                                <button type="button" id="btn-copy-leader-address"
-                                    class="hidden text-xs px-3 py-1.5 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">
-                                    📋 Sama dengan Team Leader
-                                </button>
-                            </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                                <div>
-                                    <label
-                                        class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_country') }}</label>
-                                    <select name="country_id" id="country"
-                                        class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
-                                        <option value="">{{ __('messages.reg_select_country') }}</option>
-                                        @foreach($countries as $country)<option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>{{ $country->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div>
-                                    <label
-                                        class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_province') }}</label>
-                                    <select name="province_id" id="province"
-                                        class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
-                                        <option value="">{{ __('messages.reg_select_province') }}</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label
-                                        class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_city') }}</label>
-                                    <select name="city_id" id="city"
-                                        class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
-                                        <option value="">{{ __('messages.reg_select_city') }}</option>
-                                    </select>
-                                </div>
+                    <!-- Location -->
+                    <div id="section-location"
+                        class="bg-white rounded-2xl border border-surface-300 p-6 space-y-5 shadow-sm">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-display font-semibold text-lg text-surface-900">
+                                {{ __('messages.reg_location') }}
+                            </h3>
+                            <button type="button" id="btn-copy-leader-address"
+                                class="hidden text-xs px-3 py-1.5 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">
+                                📋 Sama dengan Team Leader
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_country') }}</label>
+                                <select name="country_id" id="country"
+                                    class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                                    <option value="">{{ __('messages.reg_select_country') }}</option>
+                                    @foreach($countries as $country)<option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>{{ $country->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div>
                                 <label
-                                    class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_address') }}</label>
-                                <input type="text" name="address" value="{{ old('address') }}"
+                                    class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_province') }}</label>
+                                <select name="province_id" id="province"
+                                    class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                                    <option value="">{{ __('messages.reg_select_province') }}</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_city') }}</label>
+                                <select name="city_id" id="city"
+                                    class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                                    <option value="">{{ __('messages.reg_select_city') }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_address') }}</label>
+                            <input type="text" name="address" value="{{ old('address') }}"
+                                class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                        </div>
+                    </div>
+
+                    <!-- Additional Info -->
+                    <div class="bg-white rounded-2xl border border-surface-300 p-6 space-y-5 shadow-sm">
+                        <h3 class="font-display font-semibold text-lg text-surface-900">
+                            {{ __('messages.reg_additional') }}
+                        </h3>
+
+                        <div>
+                            <div class="flex justify-between items-end mb-1.5">
+                                <label
+                                    class="block text-sm font-medium text-surface-800">{{ __('messages.reg_jersey_size') }}</label>
+                                <button type="button"
+                                    onclick="document.getElementById('sizeChartModal').classList.remove('hidden')"
+                                    class="text-xs text-brand-500 hover:text-brand-600 underline font-medium">Panduan /
+                                    Size
+                                    Chart</button>
+                            </div>
+                            <div class="mb-3 p-4 bg-surface-50 rounded-xl flex items-center gap-4 text-center">
+                                <div class="flex-shrink-0 w-16 h-16 text-brand-400">
+                                    <svg viewBox="0 0 24 24" fill="currentColor" class="w-full h-full">
+                                        <path
+                                            d="M19.7 7.7L16 4.6C15.8 4.4 15.6 4.3 15.3 4.3H8.7C8.4 4.3 8.2 4.4 8 4.6L4.3 7.7C3.9 8 3.8 8.4 4 8.8L5.4 12c.1.3.4.4.7.4H7v8.3c0 .4.3.7.7.7h8.7c.4 0 .7-.3.7-.7V12.3h.9c.3 0 .6-.2.7-.4L20 8.8C20.2 8.4 20.1 8 19.7 7.7zM15 6.3V8c0 .6-.4 1-1 1H10C9.4 9 9 8.6 9 8V6.3c1-.3 2-1.3 3-1.3S14 6 15 6.3z" />
+                                    </svg>
+                                </div>
+                                <div class="text-xs text-surface-700 text-left w-full max-w-sm">
+                                    <p class="mb-1"><span class="font-bold text-surface-700">A. Lebar Dada:</span> Dari
+                                        ketiak
+                                        ke ketiak.</p>
+                                    <p><span class="font-bold text-surface-700">B. Panjang:</span> Dari kerah ke bawah.
+                                    </p>
+                                </div>
+                            </div>
+                            <select name="jersey_size"
+                                class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                                <option value="">{{ __('messages.reg_select') }}</option>
+                                @foreach(['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XS (Anak-anak)', 'S (Anak-anak)', 'M (Anak-anak)', 'L (Anak-anak)', 'XL (Anak-anak)'] as $sz)
+                                    <option value="{{ $sz }}" {{ old('jersey_size') == $sz ? 'selected' : '' }}>{{ $sz }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_blood_type') }}</label>
+                                <select name="blood_type"
+                                    class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                                    <option value="">{{ __('messages.reg_select') }}</option>
+                                    @foreach(['A', 'B', 'AB', 'O'] as $bt)<option value="{{ $bt }}" {{ old('blood_type') == $bt ? 'selected' : '' }}>{{ $bt }}</option>@endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_community') }}</label>
+                                <input type="text" name="community" value="{{ old('community') }}"
                                     class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                             </div>
                         </div>
 
-                        <!-- Additional Info -->
-                        <div class="bg-white rounded-2xl border border-surface-300 p-6 space-y-5 shadow-sm">
-                            <h3 class="font-display font-semibold text-lg text-surface-900">
-                                {{ __('messages.reg_additional') }}
-                            </h3>
-
-                            <div>
-                                <div class="flex justify-between items-end mb-1.5">
-                                    <label
-                                        class="block text-sm font-medium text-surface-800">{{ __('messages.reg_jersey_size') }}</label>
-                                    <button type="button"
-                                        onclick="document.getElementById('sizeChartModal').classList.remove('hidden')"
-                                        class="text-xs text-brand-500 hover:text-brand-600 underline font-medium">Panduan /
-                                        Size
-                                        Chart</button>
-                                </div>
-                                <div class="mb-3 p-4 bg-surface-50 rounded-xl flex items-center gap-4 text-center">
-                                    <div class="flex-shrink-0 w-16 h-16 text-brand-400">
-                                        <svg viewBox="0 0 24 24" fill="currentColor" class="w-full h-full">
-                                            <path
-                                                d="M19.7 7.7L16 4.6C15.8 4.4 15.6 4.3 15.3 4.3H8.7C8.4 4.3 8.2 4.4 8 4.6L4.3 7.7C3.9 8 3.8 8.4 4 8.8L5.4 12c.1.3.4.4.7.4H7v8.3c0 .4.3.7.7.7h8.7c.4 0 .7-.3.7-.7V12.3h.9c.3 0 .6-.2.7-.4L20 8.8C20.2 8.4 20.1 8 19.7 7.7zM15 6.3V8c0 .6-.4 1-1 1H10C9.4 9 9 8.6 9 8V6.3c1-.3 2-1.3 3-1.3S14 6 15 6.3z" />
-                                        </svg>
-                                    </div>
-                                    <div class="text-xs text-surface-700 text-left w-full max-w-sm">
-                                        <p class="mb-1"><span class="font-bold text-surface-700">A. Lebar Dada:</span> Dari
-                                            ketiak
-                                            ke ketiak.</p>
-                                        <p><span class="font-bold text-surface-700">B. Panjang:</span> Dari kerah ke bawah.
-                                        </p>
-                                    </div>
-                                </div>
-                                <select name="jersey_size"
-                                    class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
-                                    <option value="">{{ __('messages.reg_select') }}</option>
-                                    @foreach(['XS', 'S', 'M', 'L', 'XL', 'XXL'] as $sz)<option value="{{ $sz }}" {{ old('jersey_size') == $sz ? 'selected' : '' }}>{{ $sz }}</option>@endforeach
-                                </select>
-                            </div>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                <div>
-                                    <label
-                                        class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_blood_type') }}</label>
-                                    <select name="blood_type"
-                                        class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
-                                        <option value="">{{ __('messages.reg_select') }}</option>
-                                        @foreach(['A', 'B', 'AB', 'O'] as $bt)<option value="{{ $bt }}" {{ old('blood_type') == $bt ? 'selected' : '' }}>{{ $bt }}</option>@endforeach
-                                    </select>
-                                </div>
-                                <div>
-                                    <label
-                                        class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_community') }}</label>
-                                    <input type="text" name="community" value="{{ old('community') }}"
-                                        class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                <div>
-                                    <label
-                                        class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_emergency_name') }}
-                                        *</label>
-                                    <input type="text" name="emergency_contact_name"
-                                        value="{{ old('emergency_contact_name') }}" required
-                                        class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
-                                    <p class="text-xs text-red-500 mt-1 hidden" id="err-em-name">Nama kontak darurat wajib
-                                        diisi.</p>
-                                </div>
-                                <div>
-                                    <label
-                                        class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_emergency_phone') }}
-                                        *</label>
-                                    <input type="text" name="emergency_contact_phone" required
-                                        value="{{ old('emergency_contact_phone') }}"
-                                        class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
-                                    <p class="text-xs text-red-500 mt-1 hidden" id="err-em-phone"></p>
-                                </div>
-                            </div>
-
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5" id="wrapper-emergency">
                             <div>
                                 <label
-                                    class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_medical') }}</label>
-                                <textarea name="medical_conditions" rows="3"
-                                    class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
-                                    placeholder="{{ __('messages.reg_medical_placeholder') }}">{{ old('medical_conditions') }}</textarea>
+                                    class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_emergency_name') }}
+                                    *</label>
+                                <input type="text" name="emergency_contact_name" value="{{ old('emergency_contact_name') }}"
+                                    required
+                                    class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                                <p class="text-xs text-red-500 mt-1 hidden" id="err-em-name">Nama kontak darurat wajib
+                                    diisi.</p>
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_emergency_phone') }}
+                                    *</label>
+                                <input type="text" name="emergency_contact_phone" required
+                                    value="{{ old('emergency_contact_phone') }}"
+                                    class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                                <p class="text-xs text-red-500 mt-1 hidden" id="err-em-phone"></p>
                             </div>
                         </div>
 
-                        <!-- Agreements & Recaptcha -->
-                        <div class="bg-white rounded-2xl border border-surface-300 p-6 space-y-5 shadow-sm">
-                            <div class="space-y-4">
-                                <label class="flex items-start gap-3 cursor-pointer group">
-                                    <div class="flex-shrink-0 mt-1">
-                                        <input type="checkbox" name="agreement_1" required
-                                            class="w-5 h-5 rounded border-surface-300 bg-surface-50 text-brand-500 focus:ring-brand-500 focus:ring-offset-white">
-                                    </div>
-                                    <span
-                                        class="text-sm text-surface-600 group-hover:text-surface-900 transition-colors">{{ __('messages.reg_agreement_1') }}
-                                        *</span>
-                                </label>
-
-                                <label class="flex items-start gap-3 cursor-pointer group">
-                                    <div class="flex-shrink-0 mt-1">
-                                        <input type="checkbox" name="agreement_2" required
-                                            class="w-5 h-5 rounded border-surface-300 bg-surface-50 text-brand-500 focus:ring-brand-500 focus:ring-offset-white">
-                                    </div>
-                                    <span
-                                        class="text-sm text-surface-600 group-hover:text-surface-900 transition-colors">{{ __('messages.reg_agreement_2') }}
-                                        *</span>
-                                </label>
-
-                                <label class="flex items-start gap-3 cursor-pointer group">
-                                    <div class="flex-shrink-0 mt-1">
-                                        <input type="checkbox" name="agreement_3" required
-                                            class="w-5 h-5 rounded border-surface-300 bg-surface-50 text-brand-500 focus:ring-brand-500 focus:ring-offset-white">
-                                    </div>
-                                    <span
-                                        class="text-sm text-surface-600 group-hover:text-surface-900 transition-colors">{{ __('messages.reg_agreement_3') }}
-                                        *</span>
-                                </label>
-                            </div>
-
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_medical') }}</label>
+                            <textarea name="medical_conditions" rows="3"
+                                class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
+                                placeholder="{{ __('messages.reg_medical_placeholder') }}">{{ old('medical_conditions') }}</textarea>
                         </div>
                     </div>
 
-                    <!-- Review Container -->
-                    <div id="review-container" class="hidden space-y-6">
-                        <div class="bg-white rounded-2xl border border-surface-300 p-6 shadow-sm">
-                            <h3 class="font-display font-semibold text-lg text-surface-900 mb-4">
-                                {{ __('messages.reg_review_title') }}
-                            </h3>
-                            <div id="review-content" class="space-y-4"></div>
-                            <button type="button" id="btn-edit-data"
-                                class="mt-6 cursor-pointer px-6 py-3 bg-brand-50 hover:bg-brand-100 text-brand-600 border border-brand-200 font-semibold rounded-xl transition-all shadow-sm hover:shadow text-sm">
-                                {!! __('messages.reg_btn_edit') !!}
-                            </button>
+                    <!-- Agreements & Recaptcha -->
+                    <div class="bg-white rounded-2xl border border-surface-300 p-6 space-y-5 shadow-sm">
+                        <div class="space-y-4">
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <div class="flex-shrink-0 mt-1">
+                                    <input type="checkbox" name="agreement_1" required
+                                        class="w-5 h-5 rounded border-surface-300 bg-surface-50 text-brand-500 focus:ring-brand-500 focus:ring-offset-white">
+                                </div>
+                                <span
+                                    class="text-sm text-surface-600 group-hover:text-surface-900 transition-colors">{{ __('messages.reg_agreement_1') }}
+                                    *</span>
+                            </label>
+
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <div class="flex-shrink-0 mt-1">
+                                    <input type="checkbox" name="agreement_2" required
+                                        class="w-5 h-5 rounded border-surface-300 bg-surface-50 text-brand-500 focus:ring-brand-500 focus:ring-offset-white">
+                                </div>
+                                <span
+                                    class="text-sm text-surface-600 group-hover:text-surface-900 transition-colors">{{ __('messages.reg_agreement_2') }}
+                                    *</span>
+                            </label>
+
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <div class="flex-shrink-0 mt-1">
+                                    <input type="checkbox" name="agreement_3" required
+                                        class="w-5 h-5 rounded border-surface-300 bg-surface-50 text-brand-500 focus:ring-brand-500 focus:ring-offset-white">
+                                </div>
+                                <span
+                                    class="text-sm text-surface-600 group-hover:text-surface-900 transition-colors">{{ __('messages.reg_agreement_3') }}
+                                    *</span>
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Review Container -->
+                <div id="review-container" class="hidden space-y-6">
+                    <div class="bg-white rounded-2xl border border-surface-300 p-6 shadow-sm">
+                        <h3 class="font-display font-semibold text-lg text-surface-900 mb-4">
+                            {{ __('messages.reg_review_title') }}
+                        </h3>
+                        <div id="review-content" class="space-y-4"></div>
+                        <button type="button" id="btn-edit-data"
+                            class="mt-6 cursor-pointer px-6 py-3 bg-brand-50 hover:bg-brand-100 text-brand-600 border border-brand-200 font-semibold rounded-xl transition-all shadow-sm hover:shadow text-sm">
+                            {!! __('messages.reg_btn_edit') !!}
+                        </button>
+                    </div>
+                </div>
+
+                <div id="btn-next-container" class="hidden flex gap-3">
+                    <button type="button" id="btn-prev"
+                        class="hidden cursor-pointer flex-1 py-4 bg-surface-200 text-surface-800 font-bold rounded-2xl hover:bg-surface-300 transition-all duration-200 text-lg shadow-sm hover:shadow-md">
+                        {!! __('messages.reg_btn_prev') !!}
+                    </button>
+                    <button type="button" id="btn-next"
+                        class="cursor-pointer flex-1 py-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold rounded-2xl shadow-xl shadow-brand-500/25 hover:shadow-brand-500/40 transition-all duration-200 text-lg">
+                        {{ __('messages.reg_btn_next') }}
+                    </button>
+                </div>
+
+                <div id="btn-submit-container">
+                    <div class="mb-6 flex justify-center">
+                        <div class="g-recaptcha"
+                            data-sitekey="{{ env('RECAPTCHA_SITE_KEY', '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI') }}">
                         </div>
                     </div>
-
-                    <div id="btn-next-container" class="hidden flex gap-3">
-                        <button type="button" id="btn-prev"
-                            class="hidden cursor-pointer flex-1 py-4 bg-surface-200 text-surface-800 font-bold rounded-2xl hover:bg-surface-300 transition-all duration-200 text-lg shadow-sm hover:shadow-md">
-                            {!! __('messages.reg_btn_prev') !!}
-                        </button>
-                        <button type="button" id="btn-next"
-                            class="cursor-pointer flex-1 py-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold rounded-2xl shadow-xl shadow-brand-500/25 hover:shadow-brand-500/40 transition-all duration-200 text-lg">
-                            {{ __('messages.reg_btn_next') }}
-                        </button>
-                    </div>
-
-                    <div id="btn-submit-container">
-                        <div class="mb-6 flex justify-center">
-                            <div class="g-recaptcha"
-                                data-sitekey="{{ env('RECAPTCHA_SITE_KEY', '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI') }}">
-                            </div>
-                        </div>
-                        <button type="submit" id="btn-submit"
-                            class="w-full py-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold rounded-2xl shadow-xl shadow-brand-500/25 hover:shadow-brand-500/40 transition-all duration-200 text-lg">
-                            {{ __('messages.reg_submit') }}
-                        </button>
-                    </div>
+                    <button type="submit" id="btn-submit"
+                        class="w-full py-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold rounded-2xl shadow-xl shadow-brand-500/25 hover:shadow-brand-500/40 transition-all duration-200 text-lg">
+                        {{ __('messages.reg_submit') }}
+                    </button>
+                </div>
             </form>
         </div>
     </section>
@@ -508,6 +511,51 @@
                                     <td class="px-4 py-3 font-medium text-surface-900 rounded-bl-lg">XXL</td>
                                     <td class="px-4 py-3">56</td>
                                     <td class="px-4 py-3 rounded-br-lg">76</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Kids Size Chart -->
+                <div class="mb-8">
+                    <h4 class="text-lg font-bold text-emerald-500 mb-4 border-l-4 border-emerald-500 pl-3">Kids Unisex Size
+                        Chart (Anak-anak)
+                    </h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-surface-600">
+                            <thead class="text-xs text-surface-900 uppercase bg-surface-100">
+                                <tr>
+                                    <th scope="col" class="px-4 py-3 rounded-tl-lg">Ukuran (Size)</th>
+                                    <th scope="col" class="px-4 py-3">Lebar Dada (cm)</th>
+                                    <th scope="col" class="px-4 py-3 rounded-tr-lg">Panjang Badan (cm)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-surface-100 hover:bg-surface-50">
+                                    <td class="px-4 py-3 font-medium text-surface-900">XS (Anak-anak)</td>
+                                    <td class="px-4 py-3">34</td>
+                                    <td class="px-4 py-3">46</td>
+                                </tr>
+                                <tr class="border-b border-surface-100 hover:bg-surface-50">
+                                    <td class="px-4 py-3 font-medium text-surface-900">S (Anak-anak)</td>
+                                    <td class="px-4 py-3">36</td>
+                                    <td class="px-4 py-3">48</td>
+                                </tr>
+                                <tr class="border-b border-surface-100 hover:bg-surface-50">
+                                    <td class="px-4 py-3 font-medium text-surface-900">M (Anak-anak)</td>
+                                    <td class="px-4 py-3">38</td>
+                                    <td class="px-4 py-3">50</td>
+                                </tr>
+                                <tr class="border-b border-surface-100 hover:bg-surface-50">
+                                    <td class="px-4 py-3 font-medium text-surface-900">L (Anak-anak)</td>
+                                    <td class="px-4 py-3">40</td>
+                                    <td class="px-4 py-3">52</td>
+                                </tr>
+                                <tr class="hover:bg-surface-50">
+                                    <td class="px-4 py-3 font-medium text-surface-900 rounded-bl-lg">XL (Anak-anak)</td>
+                                    <td class="px-4 py-3">42</td>
+                                    <td class="px-4 py-3 rounded-br-lg">54</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -612,7 +660,7 @@
             }
 
             // ===== Flatpickr DOB Init =====
-            let fpDob = flatpickr('#date_of_birth', {
+            let fpDob = flatpickr(document.getElementById('date_of_birth'), {
                 altInput: true,
                 altFormat: "d/m/Y",
                 dateFormat: "Y-m-d",
@@ -621,8 +669,17 @@
                 allowInput: true,
                 onChange: function (selectedDates, dateStr, instance) {
                     calculateAndDisplayAge(dateStr);
+                },
+                onValueUpdate: function (selectedDates, dateStr, instance) {
+                    calculateAndDisplayAge(dateStr);
                 }
             });
+
+            // Re-calculate age if there's old input value on page load
+            const initialDob = document.getElementById('date_of_birth').value;
+            if (initialDob) {
+                calculateAndDisplayAge(initialDob);
+            }
 
             // ===== DOM references =====
             const categoryRadios = document.querySelectorAll('.category-radio');
@@ -801,6 +858,13 @@
                     indCurrent.innerText = currentParticipantIndex + 1;
                     indTotal.innerText = totalParticipants;
 
+                    const wrapperEmail = document.getElementById('wrapper-email');
+                    const wrapperPhone = document.getElementById('wrapper-phone');
+                    const wrapperNationality = document.getElementById('wrapper-nationality');
+                    const sectionLocation = document.getElementById('section-location');
+                    const wrapperEmergency = document.getElementById('wrapper-emergency');
+                    const inNationality = document.querySelector('input[name="nationality"]');
+
                     // Roles & labels
                     if (currentParticipantIndex === 0) {
                         indRole.innerText = '{{ __('messages.reg_role_leader') }}';
@@ -809,6 +873,17 @@
                         btnPrev.classList.add('hidden');
                         btnCopyLeader.classList.add('hidden');
                         if (fpDob) fpDob.set('maxDate', new Date(new Date().setFullYear(new Date().getFullYear() - 17)));
+
+                        if (wrapperEmail) wrapperEmail.classList.remove('hidden');
+                        if (wrapperPhone) wrapperPhone.classList.remove('hidden');
+                        if (wrapperNationality) wrapperNationality.classList.remove('hidden');
+                        if (sectionLocation) sectionLocation.classList.remove('hidden');
+                        if (wrapperEmergency) wrapperEmergency.classList.remove('hidden');
+                        if (inEmail) inEmail.setAttribute('required', 'required');
+                        if (inPhone) inPhone.setAttribute('required', 'required');
+                        if (inNationality) inNationality.setAttribute('required', 'required');
+                        if (inEmName) inEmName.setAttribute('required', 'required');
+                        if (inEmPhone) inEmPhone.setAttribute('required', 'required');
                     } else {
                         indRole.innerText = '{{ __('messages.reg_role_member') }}';
                         lblIdentity.innerHTML = 'Nomor Identitas (NIK / KIA / Passport) *';
@@ -816,6 +891,17 @@
                         btnPrev.classList.remove('hidden');
                         btnCopyLeader.classList.remove('hidden');
                         if (fpDob) fpDob.set('maxDate', new Date(new Date().setFullYear(new Date().getFullYear() - 10)));
+
+                        if (wrapperEmail) wrapperEmail.classList.add('hidden');
+                        if (wrapperPhone) wrapperPhone.classList.add('hidden');
+                        if (wrapperNationality) wrapperNationality.classList.add('hidden');
+                        if (sectionLocation) sectionLocation.classList.add('hidden');
+                        if (wrapperEmergency) wrapperEmergency.classList.add('hidden');
+                        if (inEmail) inEmail.removeAttribute('required');
+                        if (inPhone) inPhone.removeAttribute('required');
+                        if (inNationality) inNationality.removeAttribute('required');
+                        if (inEmName) inEmName.removeAttribute('required');
+                        if (inEmPhone) inEmPhone.removeAttribute('required');
                     }
 
                     // Load saved data
@@ -828,6 +914,24 @@
                     hlpIdentity.classList.add('hidden');
                     btnCopyLeader.classList.add('hidden');
                     if (fpDob) fpDob.set('maxDate', new Date(new Date().setFullYear(new Date().getFullYear() - 17)));
+
+                    const wrapperEmail = document.getElementById('wrapper-email');
+                    const wrapperPhone = document.getElementById('wrapper-phone');
+                    const wrapperNationality = document.getElementById('wrapper-nationality');
+                    const sectionLocation = document.getElementById('section-location');
+                    const wrapperEmergency = document.getElementById('wrapper-emergency');
+                    const inNationality = document.querySelector('input[name="nationality"]');
+
+                    if (wrapperEmail) wrapperEmail.classList.remove('hidden');
+                    if (wrapperPhone) wrapperPhone.classList.remove('hidden');
+                    if (wrapperNationality) wrapperNationality.classList.remove('hidden');
+                    if (sectionLocation) sectionLocation.classList.remove('hidden');
+                    if (wrapperEmergency) wrapperEmergency.classList.remove('hidden');
+                    if (inEmail) inEmail.setAttribute('required', 'required');
+                    if (inPhone) inPhone.setAttribute('required', 'required');
+                    if (inNationality) inNationality.setAttribute('required', 'required');
+                    if (inEmName) inEmName.setAttribute('required', 'required');
+                    if (inEmPhone) inEmPhone.setAttribute('required', 'required');
 
                     // Load saved data
                     await loadParticipantData(currentParticipantIndex);
@@ -942,11 +1046,17 @@
 
             // ===== Next / Review button =====
             btnNext.addEventListener('click', async function () {
-                // Run custom realtime validations forcefully to catch empty inputs
-                if (inEmail) checkEmail();
-                if (inPhone) checkPhone();
-                if (inEmName) checkEmName();
-                if (inEmPhone) checkEmPhone();
+                // Run custom realtime validations forcefully to catch empty inputs but only for required fields
+                if (inEmail && inEmail.hasAttribute('required')) checkEmail();
+                if (inPhone && inPhone.hasAttribute('required')) checkPhone();
+                if (inEmName && inEmName.hasAttribute('required')) checkEmName();
+                if (inEmPhone && inEmPhone.hasAttribute('required')) checkEmPhone();
+
+                // Additional check to prevent moving forward if any error is showing and field is required
+                if (eEmail && !eEmail.classList.contains('hidden') && inEmail && inEmail.hasAttribute('required')) return;
+                if (ePhone && !ePhone.classList.contains('hidden') && inPhone && inPhone.hasAttribute('required')) return;
+                if (eEmName && !eEmName.classList.contains('hidden') && inEmName && inEmName.hasAttribute('required')) return;
+                if (eEmPhone && !eEmPhone.classList.contains('hidden') && inEmPhone && inEmPhone.hasAttribute('required')) return;
 
                 // Validate required fields
                 let inputs = formFieldsContainer.querySelectorAll('input[required], select[required], textarea[required]');
@@ -1002,20 +1112,20 @@
                 participantsData.forEach((p, index) => {
                     let title = isFamily ? `Peserta ${index + 1} ${index === 0 ? '(Team Leader)' : '(Family Member)'}` : 'Data Peserta';
                     html += `<div class="p-4 border border-surface-200 rounded-xl mb-4 bg-surface-50">
-                                                                                                                                <div class="flex justify-between items-start mb-2">
-                                                                                                                                    <h4 class="font-bold text-brand-600">${title}</h4>
-                                                                                                                                    <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
-                                                                                                                                </div>
-                                                                                                                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                                                                                                                                    <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
-                                                                                                                                    <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
-                                                                                                                                    <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900 break-all">${p.email || '-'}</span></p>
-                                                                                                                                    <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
-                                                                                                                                    <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900 break-all">${p.identity_number || '-'}</span></p>
-                                                                                                                                    <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
-                                                                                                                                    <p><span class="text-surface-600">{{ __('messages.reg_blood_type') }}:</span> <br><span class="font-medium text-surface-900">${p.blood_type || '-'}</span></p>
-                                                                                                                                </div>
-                                                                                                                            </div>`;
+                                                                                                                                                                                                    <div class="flex justify-between items-start mb-2">
+                                                                                                                                                                                                        <h4 class="font-bold text-brand-600">${title}</h4>
+                                                                                                                                                                                                        <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
+                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                                                                                                                                                                                                        <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
+                                                                                                                                                                                                        <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
+                                                                                                                                                                                                        <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900 break-all">${p.email || '-'}</span></p>
+                                                                                                                                                                                                        <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
+                                                                                                                                                                                                        <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900 break-all">${p.identity_number || '-'}</span></p>
+                                                                                                                                                                                                        <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
+                                                                                                                                                                                                        <p><span class="text-surface-600">{{ __('messages.reg_blood_type') }}:</span> <br><span class="font-medium text-surface-900">${p.blood_type || '-'}</span></p>
+                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                </div>`;
 
                     for (let key in p) {
                         let input = document.createElement('input');
