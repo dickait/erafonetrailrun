@@ -108,7 +108,7 @@ class RegistrationController extends Controller
             if ($request->has('participants') && is_array($request->participants) && count($request->participants) > 0) {
                 $mainData = $request->participants[0];
                 // map needed fields just in case
-                foreach (['full_name', 'email', 'phone', 'gender', 'date_of_birth', 'identity_number', 'blood_type', 'jersey_size'] as $field) {
+                foreach (['full_name', 'email', 'phone', 'gender', 'date_of_birth', 'age', 'identity_number', 'blood_type', 'jersey_size'] as $field) {
                     if (isset($mainData[$field])) {
                         $participantInfo[$field] = $mainData[$field];
                     }
@@ -117,7 +117,6 @@ class RegistrationController extends Controller
 
             $participant = Participant::create([
                 ...$participantInfo,
-                'bib_name' => '',
                 'event_id' => $event->id,
                 'payment_status' => 'pending',
             ]);
@@ -129,11 +128,11 @@ class RegistrationController extends Controller
                 foreach ($membersData as $member) {
                     $participant->familyMembers()->create([
                         'full_name' => $member['full_name'] ?? '',
-                        'bib_name' => '',
                         'email' => $member['email'] ?? null,
                         'phone' => $member['phone'] ?? null,
                         'gender' => $member['gender'] ?? 'male',
                         'date_of_birth' => $member['date_of_birth'] ?? now()->format('Y-m-d'),
+                        'age' => $member['age'] ?? null,
                         'identity_number' => $member['identity_number'] ?? null,
 
                         'nationality' => $member['nationality'] ?? 'Indonesia',

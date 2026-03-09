@@ -126,7 +126,7 @@ return [
     'reg_select_province' => 'Pilih Provinsi',
     'reg_select_city' => 'Pilih Kota',
     'reg_select' => 'Pilih',
-    'reg_family_count' => 'Jumlah Peserta (2-4 orang) *',
+    'reg_family_count' => 'Jumlah Peserta (2-3 orang) *',
     'reg_family_count_2' => '2 Peserta',
     'reg_family_count_3' => '3 Peserta',
     'reg_family_count_4' => '4 Peserta',

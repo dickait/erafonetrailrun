@@ -126,7 +126,7 @@ return [
     'reg_select_province' => 'Select Province',
     'reg_select_city' => 'Select City',
     'reg_select' => 'Select',
-    'reg_family_count' => 'Number of Participants (2-4 people) *',
+    'reg_family_count' => 'Number of Participants (2-3 people) *',
     'reg_family_count_2' => '2 Participants',
     'reg_family_count_3' => '3 Participants',
     'reg_family_count_4' => '4 Participants',

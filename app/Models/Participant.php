@@ -18,7 +18,7 @@ class Participant extends Model
         'phone',
         'gender',
         'date_of_birth',
-        'bib_name',
+        'age',
         'identity_number',
         'nationality',
         'country_id',
