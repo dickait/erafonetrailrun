@@ -707,7 +707,7 @@
             const indCurrent = document.getElementById('ind-current');
             const indTotal = document.getElementById('ind-total');
             const indRole = document.getElementById('ind-role');
-            const lblIdentityText = document.getElementById('lbl-identity             -text');
+            const lblIdentityText = document.getElementById('lbl-identity-text');
             const hlpIdentity = document.getElementById('hlp-identity');
             const formFieldsContainer = document.getElementById('form-fields-container');
             const reviewContainer = document.getElementById('review-container');
@@ -873,20 +873,30 @@
                 if (eEmName) eEmName.classList.add('hidden');
                 if (eEmPhone) eEmPhone.classList.add('hidden');
 
-                // Set simple fields first
+                // Set / clear simple fields
                 formFieldsContainer.querySelectorAll('input, select, textarea').forEach(el => {
                     if (!el.name || el.name === 'category_id' || el.name === 'family_count') return;
                     if (el.id === 'country' || el.id === 'province' || el.id === 'city') return;
+                    // Skip flatpickr's hidden altInput (handled separately)
+                    if (el.classList.contains('flatpickr-input') && el.type === 'hidden') return;
+
                     if (el.type === 'checkbox' || el.type === 'radio') {
                         el.checked = hasData ? (data[el.name] === el.value) : false;
                     } else {
                         el.value = hasData ? (data[el.name] || '') : '';
-                        if (el.name === 'date_of_birth' && fpDob) {
-                            fpDob.setDate(el.value);
-                            calculateAndDisplayAge(el.value);
-                        }
                     }
                 });
+
+                // Handle flatpickr date_of_birth separately
+                if (fpDob) {
+                    if (hasData && data.date_of_birth) {
+                        fpDob.setDate(data.date_of_birth, false, 'Y-m-d');
+                        calculateAndDisplayAge(data.date_of_birth);
+                    } else {
+                        fpDob.clear();
+                        calculateAndDisplayAge('');
+                    }
+                }
 
                 // Restore cascading dropdowns
                 const countryEl = document.getElementById('country');
@@ -925,7 +935,7 @@
                     // Roles & labels
                     if (currentParticipantIndex === 0) {
                         indRole.innerText = '{{ __('messages.reg_role_leader') }}';
-                        lblIdentityText.innerHTML = '{{ __("messages.reg_identity") }} *';
+                        if (lblIdentityText) lblIdentityText.innerHTML = '{{ __("messages.reg_identity") }} *';
                         hlpIdentity.classList.add('hidden');
                         btnPrev.classList.add('hidden');
                         btnCopyLeader.classList.add('hidden');
@@ -945,7 +955,7 @@
                         if (inRole) inRole.setAttribute('required', 'required');
                     } else {
                         indRole.innerText = '{{ __('messages.reg_role_member') }}';
-                        lblIdentityText.innerHTML = 'Nomor Identitas (NIK / KIA / Passport) *';
+                        if (lblIdentityText) lblIdentityText.innerHTML = 'Nomor Identitas (NIK / KIA / Passport) *';
                         hlpIdentity.classList.remove('hidden');
                         btnPrev.classList.remove('hidden');
                         btnCopyLeader.classList.remove('hidden');
@@ -972,7 +982,7 @@
                     // Button text
                     btnNext.innerHTML = (currentParticipantIndex === totalParticipants - 1) ? '{{ __('messages.reg_btn_review') }}' : '{!! __('messages.reg_btn_next_arrow') !!}';
                 } else {
-                    lblIdentityText.innerHTML = '{{ __("messages.reg_identity") }} *';
+                    if (lblIdentityText) lblIdentityText.innerHTML = '{{ __("messages.reg_identity") }} *';
                     hlpIdentity.classList.add('hidden');
                     btnCopyLeader.classList.add('hidden');
                     if (fpDob) fpDob.set('maxDate', new Date(new Date().setFullYear(new Date().getFullYear() - 17)));
@@ -1191,21 +1201,21 @@
                 participantsData.forEach((p, index) => {
                     let title = isFamily ? `Peserta ${index + 1} ${index === 0 ? '(Team Leader)' : '(Family Member)'}` : 'Data Peserta';
                     html += `<div class="p-4 border border-surface-200 rounded-xl mb-4 bg-surface-50">
-                                                                                                                                                                                                                                                                            <div class="flex justify-between items-start mb-2">
-                                                                                                                                                                                                                                                                                <h4 class="font-bold text-brand-600">${title}</h4>
-                                                                                                                                                                                                                                                                                <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
-                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                                                                                                                                                                                                                                                                                ${isFamily ? `<p><span class="text-surface-600">{{ __('messages.reg_role') }}:</span> <br><span class="font-medium text-surface-900 capitalize">${p.role || '-'}</span></p>` : ''}
-                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
-                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
-                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900 break-all">${p.email || '-'}</span></p>
-                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
-                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900 break-all">${p.identity_number || '-'}</span></p>
-                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
-                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">{{ __('messages.reg_blood_type') }}:</span> <br><span class="font-medium text-surface-900">${p.blood_type || '-'}</span></p>
-                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                        </div>`;
+                                                                                                                                                                                                                                                                                    <div class="flex justify-between items-start mb-2">
+                                                                                                                                                                                                                                                                                        <h4 class="font-bold text-brand-600">${title}</h4>
+                                                                                                                                                                                                                                                                                        <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
+                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                                                                                                                                                                                                                                                                                        ${isFamily ? `<p><span class="text-surface-600">{{ __('messages.reg_role') }}:</span> <br><span class="font-medium text-surface-900 capitalize">${p.role || '-'}</span></p>` : ''}
+                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
+                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
+                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900 break-all">${p.email || '-'}</span></p>
+                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
+                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900 break-all">${p.identity_number || '-'}</span></p>
+                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
+                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">{{ __('messages.reg_blood_type') }}:</span> <br><span class="font-medium text-surface-900">${p.blood_type || '-'}</span></p>
+                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                </div>`;
 
                     for (let key in p) {
                         let input = document.createElement('input');
