@@ -52,10 +52,10 @@
 
                         <!-- Route Image - Full Width -->
                         <div class="mb-16 rounded-3xl overflow-hidden shadow-2xl relative group border border-surface-200">
-                            <div class="aspect-[21/9] bg-surface-100">
+                            <div class="bg-surface-100">
                                 <img src="{{ asset('images/race-course/' . $imageFolder . '/' . $imageFolder . '.webp') }}"
                                     alt="{{ $category->name }} Route Map"
-                                    class="w-full h-full object-cover transform group-hover:scale-[1.02] transition-transform duration-700"
+                                    class="w-full h-auto object-contain transform group-hover:scale-[1.02] transition-transform duration-700"
                                     onerror="this.src='{{ asset('images/placeholders/route.jpg') }}'">
                             </div>
                             <div
