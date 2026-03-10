@@ -13,6 +13,7 @@ class Participant extends Model
         'event_id',
         'category_id',
         'user_id',
+        'role',
         'full_name',
         'email',
         'phone',

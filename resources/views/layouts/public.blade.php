@@ -146,7 +146,7 @@
                         {{ __('messages.footer_contact') }}
                     </h4>
                     <ul class="space-y-2">
-                        <li class="text-sm text-surface-400">info@erafonetrailrun.com</li>
+                        <li class="text-sm text-surface-400">contact@eratrailrun.id</li>
                         <li class="text-sm text-surface-400">+62 812-3456-7890</li>
                         <li class="text-sm text-surface-400">Bogor Nirwana Residence, Bogor, Indonesia</li>
                     </ul>

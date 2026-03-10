@@ -231,9 +231,9 @@
                             </div>
 
                             <div>
-                                <label id="lbl-identity"
-                                    class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_identity') }}
-                                    *</label>
+                                <label id="lbl-identity" class="block text-sm font-medium text-surface-800 mb-1.5"><span
+                                        id="lbl-identity-text">{{ __('messages.reg_identity') }}
+                                        *</span></label>
                                 <input type="text" name="identity_number" value="{{ old('identity_number') }}" required
                                     class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
                                     placeholder="KTP / Passport Number">
@@ -241,14 +241,15 @@
                                     menggunakan nomor KIA atau identitas lainnya.</p>
                             </div>
 
-                            <divid="wrapper-nationality">
+                            <div id="wrapper-nationality">
                                 <label
                                     class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_nationality') }}
                                     *</label>
                                 <input type="text" name="nationality" value="{{ old('nationality', 'Indonesia') }}" required
                                     class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
-                        </div>
-                    </div>
+                            </div>
+                        </div>{{-- END grid --}}
+                    </div>{{-- END Personal Information card --}}
 
                     <!-- Location -->
                     <div id="section-location"
@@ -334,7 +335,8 @@
                                 class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                                 <option value="">{{ __('messages.reg_select') }}</option>
                                 @foreach(['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XS (Anak-anak)', 'S (Anak-anak)', 'M (Anak-anak)', 'L (Anak-anak)', 'XL (Anak-anak)'] as $sz)
-                                    <option value="{{ $sz }}" {{ old('jersey_size') == $sz ? 'selected' : '' }}>{{ $sz }}</option>
+                                    <option value="{{ $sz }}" {{ old('jersey_size') == $sz ? 'selected' : '' }}>{{ $sz }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -705,7 +707,7 @@
             const indCurrent = document.getElementById('ind-current');
             const indTotal = document.getElementById('ind-total');
             const indRole = document.getElementById('ind-role');
-            const lblIdentity = document.getElementById('lbl-identity');
+            const lblIdentityText = document.getElementById('lbl-identity             -text');
             const hlpIdentity = document.getElementById('hlp-identity');
             const formFieldsContainer = document.getElementById('form-fields-container');
             const reviewContainer = document.getElementById('review-container');
@@ -797,6 +799,46 @@
             if (inEmName) inEmName.addEventListener('input', checkEmName);
             if (inEmPhone) inEmPhone.addEventListener('input', checkEmPhone);
 
+            // ===== Role Label Updates =====
+            const inRoleSelect = document.getElementById('role');
+            const lblsToUpdate = [];
+            if (formFieldsContainer && inRoleSelect) {
+                const labels = formFieldsContainer.querySelectorAll('label');
+                labels.forEach(lbl => {
+                    const isCheckbox = lbl.closest('.group');
+                    const isRole = lbl.closest('#wrapper-role');
+                    const isIndicator = lbl.closest('#participant-indicator');
+                    const isLocation = lbl.closest('#section-location');
+                    const isEmergency = lbl.closest('#wrapper-emergency');
+                    const isCommunity = lbl.parentElement.querySelector('input[name="community"]');
+                    if (!isCheckbox && !isRole && !isIndicator && !isLocation && !isEmergency && !isCommunity) {
+                        const span = document.createElement('span');
+                        span.className = 'role-postfix text-brand-600 font-bold ml-1 text-xs px-2 py-0.5 bg-brand-50 rounded-lg hidden';
+                        lbl.appendChild(span);
+                        lblsToUpdate.push(span);
+                    }
+                });
+                inRoleSelect.addEventListener('change', updateRoleLabels);
+            }
+
+            function updateRoleLabels() {
+                if (!inRoleSelect) return;
+                const val = inRoleSelect.value;
+                const selectedText = val && inRoleSelect.options[inRoleSelect.selectedIndex] ? inRoleSelect.options[inRoleSelect.selectedIndex].text : '';
+
+                lblsToUpdate.forEach(span => {
+                    if (val && isFamily) {
+                        span.innerText = selectedText;
+                        span.classList.remove('hidden');
+                        span.classList.add('inline-flex');
+                    } else {
+                        span.innerText = '';
+                        span.classList.add('hidden');
+                        span.classList.remove('inline-flex');
+                    }
+                });
+            }
+
             let isFamily = false;
             let totalParticipants = 1;
             let currentParticipantIndex = 0;
@@ -883,7 +925,7 @@
                     // Roles & labels
                     if (currentParticipantIndex === 0) {
                         indRole.innerText = '{{ __('messages.reg_role_leader') }}';
-                        lblIdentity.innerHTML = '{{ __("messages.reg_identity") }} *';
+                        lblIdentityText.innerHTML = '{{ __("messages.reg_identity") }} *';
                         hlpIdentity.classList.add('hidden');
                         btnPrev.classList.add('hidden');
                         btnCopyLeader.classList.add('hidden');
@@ -903,7 +945,7 @@
                         if (inRole) inRole.setAttribute('required', 'required');
                     } else {
                         indRole.innerText = '{{ __('messages.reg_role_member') }}';
-                        lblIdentity.innerHTML = 'Nomor Identitas (NIK / KIA / Passport) *';
+                        lblIdentityText.innerHTML = 'Nomor Identitas (NIK / KIA / Passport) *';
                         hlpIdentity.classList.remove('hidden');
                         btnPrev.classList.remove('hidden');
                         btnCopyLeader.classList.remove('hidden');
@@ -925,11 +967,12 @@
 
                     // Load saved data
                     await loadParticipantData(currentParticipantIndex);
+                    updateRoleLabels();
 
                     // Button text
                     btnNext.innerHTML = (currentParticipantIndex === totalParticipants - 1) ? '{{ __('messages.reg_btn_review') }}' : '{!! __('messages.reg_btn_next_arrow') !!}';
                 } else {
-                    lblIdentity.innerHTML = '{{ __("messages.reg_identity") }} *';
+                    lblIdentityText.innerHTML = '{{ __("messages.reg_identity") }} *';
                     hlpIdentity.classList.add('hidden');
                     btnCopyLeader.classList.add('hidden');
                     if (fpDob) fpDob.set('maxDate', new Date(new Date().setFullYear(new Date().getFullYear() - 17)));
@@ -958,6 +1001,7 @@
 
                     // Load saved data
                     await loadParticipantData(currentParticipantIndex);
+                    updateRoleLabels();
 
                     // Button text
                     btnNext.innerHTML = '{{ __('messages.reg_btn_review') }}';
@@ -991,6 +1035,9 @@
             // ===== Category selection =====
             function updateCategoryDetails() {
                 let isAnyChecked = false;
+                const wrapperRole = document.getElementById('wrapper-role');
+                const inRole = document.querySelector('select[name="role"]');
+
                 categoryRadios.forEach(radio => {
                     if (radio.checked) {
                         isAnyChecked = true;
@@ -999,6 +1046,13 @@
 
                         btnNextContainer.classList.remove('hidden');
                         btnSubmitContainer.classList.add('hidden');
+
+                        // Show/hide wrapper-role directly based on isFamily
+                        if (wrapperRole) wrapperRole.classList.toggle('hidden', !isFamily);
+                        if (inRole) {
+                            if (isFamily) inRole.setAttribute('required', 'required');
+                            else inRole.removeAttribute('required');
+                        }
 
                         if (isFamily) {
                             familyCountContainer.classList.remove('hidden');
@@ -1026,6 +1080,8 @@
                     categoryDetailsContainer.classList.remove('hidden');
                 } else {
                     categoryDetailsContainer.classList.add('hidden');
+                    // Hide role wrapper if no category selected
+                    if (wrapperRole) wrapperRole.classList.add('hidden');
                 }
             }
 
@@ -1135,21 +1191,21 @@
                 participantsData.forEach((p, index) => {
                     let title = isFamily ? `Peserta ${index + 1} ${index === 0 ? '(Team Leader)' : '(Family Member)'}` : 'Data Peserta';
                     html += `<div class="p-4 border border-surface-200 rounded-xl mb-4 bg-surface-50">
-                                                                                                                                                                                                                    <div class="flex justify-between items-start mb-2">
-                                                                                                                                                                                                                        <h4 class="font-bold text-brand-600">${title}</h4>
-                                                                                                                                                                                                                        <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
-                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                                                                                                                                                                                                                        ${isFamily ? `<p><span class="text-surface-600">{{ __('messages.reg_role') }}:</span> <br><span class="font-medium text-surface-900 capitalize">${p.role || '-'}</span></p>` : ''}
-                                                                                                                                                                                                                        <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
-                                                                                                                                                                                                                        <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
-                                                                                                                                                                                                                        <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900 break-all">${p.email || '-'}</span></p>
-                                                                                                                                                                                                                        <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
-                                                                                                                                                                                                                        <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900 break-all">${p.identity_number || '-'}</span></p>
-                                                                                                                                                                                                                        <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
-                                                                                                                                                                                                                        <p><span class="text-surface-600">{{ __('messages.reg_blood_type') }}:</span> <br><span class="font-medium text-surface-900">${p.blood_type || '-'}</span></p>
-                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                </div>`;
+                                                                                                                                                                                                                                                                            <div class="flex justify-between items-start mb-2">
+                                                                                                                                                                                                                                                                                <h4 class="font-bold text-brand-600">${title}</h4>
+                                                                                                                                                                                                                                                                                <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
+                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                                                                                                                                                                                                                                                                                ${isFamily ? `<p><span class="text-surface-600">{{ __('messages.reg_role') }}:</span> <br><span class="font-medium text-surface-900 capitalize">${p.role || '-'}</span></p>` : ''}
+                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
+                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
+                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900 break-all">${p.email || '-'}</span></p>
+                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
+                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900 break-all">${p.identity_number || '-'}</span></p>
+                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
+                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">{{ __('messages.reg_blood_type') }}:</span> <br><span class="font-medium text-surface-900">${p.blood_type || '-'}</span></p>
+                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                        </div>`;
 
                     for (let key in p) {
                         let input = document.createElement('input');

@@ -145,6 +145,10 @@ return [
     'role_mother' => 'Mother',
     'role_child' => 'Child',
     'role_sibling' => 'Sibling',
+    'role_ayah' => 'Father',
+    'role_ibu' => 'Mother',
+    'role_anak' => 'Child',
+    'role_saudara' => 'Sibling',
 
     // Status
     'status_badge' => 'Status Check',

@@ -70,7 +70,7 @@
                                             <tr class="bg-white">
                                                 <td class="px-4 py-3 font-medium text-surface-900 whitespace-nowrap">
                                                     {{ $participant->full_name }} <span
-                                                        class="text-xs text-brand-600 bg-brand-50 px-2 py-0.5 rounded-full ml-1">Leader</span>
+                                                        class="text-xs text-brand-600 bg-brand-50 px-2 py-0.5 rounded-full ml-1 capitalize">{{ $participant->role ? __('messages.role_' . $participant->role) : 'Leader' }}</span>
                                                 </td>
                                                 <td class="px-4 py-3 text-surface-600">{{ $participant->email }}</td>
                                                 <td class="px-4 py-3 text-surface-600">{{ $participant->blood_type ?? '-' }}</td>
@@ -80,7 +80,7 @@
                                                 <tr class="bg-white">
                                                     <td class="px-4 py-3 font-medium text-surface-900 whitespace-nowrap">
                                                         {{ $member->full_name }} <span
-                                                            class="text-xs text-surface-500 bg-surface-100 px-2 py-0.5 rounded-full ml-1">Member</span>
+                                                            class="text-xs text-surface-500 bg-surface-100 px-2 py-0.5 rounded-full ml-1 capitalize">{{ $member->role ? __('messages.role_' . $member->role) : 'Member' }}</span>
                                                     </td>
                                                     <td class="px-4 py-3 text-surface-600">{{ $member->email ?? '-' }}</td>
                                                     <td class="px-4 py-3 text-surface-600">{{ $member->blood_type ?? '-' }}</td>
