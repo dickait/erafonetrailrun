@@ -177,9 +177,9 @@ return [
     // Gallery
     'gallery_badge' => 'Galeri',
     'gallery_title' => 'Galeri Acara',
-    'gallery_subtitle' => 'Kenang kembali momen-momen dari acara trail running kami',
-    'gallery_more' => 'Foto lainnya akan ditambahkan setelah acara. Tunggu ya!',
-    'gallery_moment' => 'Momen Trail Running',
+    'gallery_subtitle' => 'Galeri akan diperbarui setelah acara selesai. Nantikan ya!',
+    'gallery_coming_soon' => 'Segera Hadir',
+    'gallery_coming_soon_desc' => 'Kami sedang mempersiapkan momen-momen terbaik dari acara ini. Foto dan video akan tersedia di sini setelah acara berakhir. Jangan sampai terlewat!',
 
     // Race Course
     'race_course_badge' => 'Rute Lari',

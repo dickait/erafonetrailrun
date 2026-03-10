@@ -177,9 +177,9 @@ return [
     // Gallery
     'gallery_badge' => 'Gallery',
     'gallery_title' => 'Event Gallery',
-    'gallery_subtitle' => 'Relive the moments from our trail running events',
-    'gallery_more' => 'More photos will be added after the event. Stay tuned!',
-    'gallery_moment' => 'Trail Running Moment',
+    'gallery_subtitle' => 'The gallery will be updated after the event is finished. Stay tuned!',
+    'gallery_coming_soon' => 'Coming Soon',
+    'gallery_coming_soon_desc' => 'We are preparing the best moments from the event. Photos and videos will be available here after the event concludes. Don\'t miss it!',
 
     // Race Course
     'race_course_badge' => 'Race Course',
