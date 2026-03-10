@@ -139,6 +139,12 @@ return [
     'reg_btn_review' => 'Review Data',
     'reg_review_title' => 'Review Participant Data',
     'reg_btn_edit' => '&larr; Edit Data',
+    'reg_role' => 'Role',
+    'reg_select_role' => 'Select Role',
+    'role_father' => 'Father',
+    'role_mother' => 'Mother',
+    'role_child' => 'Child',
+    'role_sibling' => 'Sibling',
 
     // Status
     'status_badge' => 'Status Check',

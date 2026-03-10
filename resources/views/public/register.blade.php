@@ -152,6 +152,19 @@
                         <h3 class="font-display font-semibold text-lg text-surface-900">
                             {{ __('messages.reg_personal_info') }}
                         </h3>
+                        <div id="wrapper-role" class="hidden">
+                            <label class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_role') }}
+                                *</label>
+                            <select name="role" id="role"
+                                class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                                <option value="">{{ __('messages.reg_select_role') }}</option>
+                                <option value="ayah">{{ __('messages.role_father') }}</option>
+                                <option value="ibu">{{ __('messages.role_mother') }}</option>
+                                <option value="anak">{{ __('messages.role_child') }}</option>
+                                <option value="saudara">{{ __('messages.role_sibling') }}</option>
+                            </select>
+                        </div>
+
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <div class="sm:col-span-2">
                                 <label class="block text-sm font-medium text-surface-800 mb-1.5">Name
@@ -864,6 +877,8 @@
                     const sectionLocation = document.getElementById('section-location');
                     const wrapperEmergency = document.getElementById('wrapper-emergency');
                     const inNationality = document.querySelector('input[name="nationality"]');
+                    const wrapperRole = document.getElementById('wrapper-role');
+                    const inRole = document.querySelector('select[name="role"]');
 
                     // Roles & labels
                     if (currentParticipantIndex === 0) {
@@ -879,11 +894,13 @@
                         if (wrapperNationality) wrapperNationality.classList.remove('hidden');
                         if (sectionLocation) sectionLocation.classList.remove('hidden');
                         if (wrapperEmergency) wrapperEmergency.classList.remove('hidden');
+                        if (wrapperRole) wrapperRole.classList.remove('hidden');
                         if (inEmail) inEmail.setAttribute('required', 'required');
                         if (inPhone) inPhone.setAttribute('required', 'required');
                         if (inNationality) inNationality.setAttribute('required', 'required');
                         if (inEmName) inEmName.setAttribute('required', 'required');
                         if (inEmPhone) inEmPhone.setAttribute('required', 'required');
+                        if (inRole) inRole.setAttribute('required', 'required');
                     } else {
                         indRole.innerText = '{{ __('messages.reg_role_member') }}';
                         lblIdentity.innerHTML = 'Nomor Identitas (NIK / KIA / Passport) *';
@@ -897,11 +914,13 @@
                         if (wrapperNationality) wrapperNationality.classList.add('hidden');
                         if (sectionLocation) sectionLocation.classList.add('hidden');
                         if (wrapperEmergency) wrapperEmergency.classList.add('hidden');
+                        if (wrapperRole) wrapperRole.classList.remove('hidden');
                         if (inEmail) inEmail.removeAttribute('required');
                         if (inPhone) inPhone.removeAttribute('required');
                         if (inNationality) inNationality.removeAttribute('required');
                         if (inEmName) inEmName.removeAttribute('required');
                         if (inEmPhone) inEmPhone.removeAttribute('required');
+                        if (inRole) inRole.setAttribute('required', 'required');
                     }
 
                     // Load saved data
@@ -921,17 +940,21 @@
                     const sectionLocation = document.getElementById('section-location');
                     const wrapperEmergency = document.getElementById('wrapper-emergency');
                     const inNationality = document.querySelector('input[name="nationality"]');
+                    const wrapperRole = document.getElementById('wrapper-role');
+                    const inRole = document.querySelector('select[name="role"]');
 
                     if (wrapperEmail) wrapperEmail.classList.remove('hidden');
                     if (wrapperPhone) wrapperPhone.classList.remove('hidden');
                     if (wrapperNationality) wrapperNationality.classList.remove('hidden');
                     if (sectionLocation) sectionLocation.classList.remove('hidden');
                     if (wrapperEmergency) wrapperEmergency.classList.remove('hidden');
+                    if (wrapperRole) wrapperRole.classList.add('hidden');
                     if (inEmail) inEmail.setAttribute('required', 'required');
                     if (inPhone) inPhone.setAttribute('required', 'required');
                     if (inNationality) inNationality.setAttribute('required', 'required');
                     if (inEmName) inEmName.setAttribute('required', 'required');
                     if (inEmPhone) inEmPhone.setAttribute('required', 'required');
+                    if (inRole) inRole.removeAttribute('required');
 
                     // Load saved data
                     await loadParticipantData(currentParticipantIndex);
@@ -1112,20 +1135,21 @@
                 participantsData.forEach((p, index) => {
                     let title = isFamily ? `Peserta ${index + 1} ${index === 0 ? '(Team Leader)' : '(Family Member)'}` : 'Data Peserta';
                     html += `<div class="p-4 border border-surface-200 rounded-xl mb-4 bg-surface-50">
-                                                                                                                                                                                                    <div class="flex justify-between items-start mb-2">
-                                                                                                                                                                                                        <h4 class="font-bold text-brand-600">${title}</h4>
-                                                                                                                                                                                                        <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
-                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                                                                                                                                                                                                        <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
-                                                                                                                                                                                                        <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
-                                                                                                                                                                                                        <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900 break-all">${p.email || '-'}</span></p>
-                                                                                                                                                                                                        <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
-                                                                                                                                                                                                        <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900 break-all">${p.identity_number || '-'}</span></p>
-                                                                                                                                                                                                        <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
-                                                                                                                                                                                                        <p><span class="text-surface-600">{{ __('messages.reg_blood_type') }}:</span> <br><span class="font-medium text-surface-900">${p.blood_type || '-'}</span></p>
-                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                </div>`;
+                                                                                                                                                                                                                    <div class="flex justify-between items-start mb-2">
+                                                                                                                                                                                                                        <h4 class="font-bold text-brand-600">${title}</h4>
+                                                                                                                                                                                                                        <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
+                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                                                                                                                                                                                                                        ${isFamily ? `<p><span class="text-surface-600">{{ __('messages.reg_role') }}:</span> <br><span class="font-medium text-surface-900 capitalize">${p.role || '-'}</span></p>` : ''}
+                                                                                                                                                                                                                        <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
+                                                                                                                                                                                                                        <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
+                                                                                                                                                                                                                        <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900 break-all">${p.email || '-'}</span></p>
+                                                                                                                                                                                                                        <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
+                                                                                                                                                                                                                        <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900 break-all">${p.identity_number || '-'}</span></p>
+                                                                                                                                                                                                                        <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
+                                                                                                                                                                                                                        <p><span class="text-surface-600">{{ __('messages.reg_blood_type') }}:</span> <br><span class="font-medium text-surface-900">${p.blood_type || '-'}</span></p>
+                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                </div>`;
 
                     for (let key in p) {
                         let input = document.createElement('input');

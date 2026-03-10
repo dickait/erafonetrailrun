@@ -139,6 +139,12 @@ return [
     'reg_btn_review' => 'Review Data',
     'reg_review_title' => 'Review Data Peserta',
     'reg_btn_edit' => '&larr; Perbaiki Data',
+    'reg_role' => 'Peran',
+    'reg_select_role' => 'Pilih Peran',
+    'role_father' => 'Ayah',
+    'role_mother' => 'Ibu',
+    'role_child' => 'Anak',
+    'role_sibling' => 'Saudara',
 
     // Status
     'status_badge' => 'Cek Status',
