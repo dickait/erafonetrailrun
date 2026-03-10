@@ -74,4 +74,32 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/checkin', [AdminController::class, 'checkin'])->name('checkin.process');
 });
 
+/*
+|--------------------------------------------------------------------------
+| Route untuk optimize & cache
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/optimize-app', function () {
+    Artisan::call('optimize:clear');
+    Artisan::call('config:cache');
+    Artisan::call('route:cache');
+    Artisan::call('view:cache');
+    return 'Optimize & cache selesai!';
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| Route untuk migrate database
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/migrate-db', function () {
+    Artisan::call('migrate', [
+        '--force' => true
+    ]);
+    return Artisan::output();
+});
+
 require __DIR__ . '/auth.php';
