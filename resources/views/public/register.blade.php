@@ -351,7 +351,7 @@
                                     @foreach(['A', 'B', 'AB', 'O'] as $bt)<option value="{{ $bt }}" {{ old('blood_type') == $bt ? 'selected' : '' }}>{{ $bt }}</option>@endforeach
                                 </select>
                             </div>
-                            <div>
+                            <div id="wrapper-community">
                                 <label
                                     class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_community') }}</label>
                                 <input type="text" name="community" value="{{ old('community') }}"
@@ -928,6 +928,7 @@
                     const wrapperNationality = document.getElementById('wrapper-nationality');
                     const sectionLocation = document.getElementById('section-location');
                     const wrapperEmergency = document.getElementById('wrapper-emergency');
+                    const wrapperCommunity = document.getElementById('wrapper-community');
                     const inNationality = document.querySelector('input[name="nationality"]');
                     const wrapperRole = document.getElementById('wrapper-role');
                     const inRole = document.querySelector('select[name="role"]');
@@ -946,6 +947,7 @@
                         if (wrapperNationality) wrapperNationality.classList.remove('hidden');
                         if (sectionLocation) sectionLocation.classList.remove('hidden');
                         if (wrapperEmergency) wrapperEmergency.classList.remove('hidden');
+                        if (wrapperCommunity) wrapperCommunity.classList.remove('hidden');
                         if (wrapperRole) wrapperRole.classList.remove('hidden');
                         if (inEmail) inEmail.setAttribute('required', 'required');
                         if (inPhone) inPhone.setAttribute('required', 'required');
@@ -963,13 +965,14 @@
 
                         if (wrapperEmail) wrapperEmail.classList.add('hidden');
                         if (wrapperPhone) wrapperPhone.classList.add('hidden');
-                        if (wrapperNationality) wrapperNationality.classList.add('hidden');
+                        if (wrapperNationality) wrapperNationality.classList.remove('hidden');
                         if (sectionLocation) sectionLocation.classList.add('hidden');
                         if (wrapperEmergency) wrapperEmergency.classList.add('hidden');
+                        if (wrapperCommunity) wrapperCommunity.classList.add('hidden');
                         if (wrapperRole) wrapperRole.classList.remove('hidden');
                         if (inEmail) inEmail.removeAttribute('required');
                         if (inPhone) inPhone.removeAttribute('required');
-                        if (inNationality) inNationality.removeAttribute('required');
+                        if (inNationality) inNationality.setAttribute('required', 'required');
                         if (inEmName) inEmName.removeAttribute('required');
                         if (inEmPhone) inEmPhone.removeAttribute('required');
                         if (inRole) inRole.setAttribute('required', 'required');
