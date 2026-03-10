@@ -4,7 +4,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 @endpush
 @push('scripts')
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 @endpush
 @section('content')
@@ -32,7 +31,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('register.store') }}" class="space-y-8">
+            <form method="POST" action="{{ route('register.store') }}" class="space-y-8" novalidate id="registerForm">
                 @csrf
                 <!-- Category Selection -->
                 <div class="bg-white rounded-2xl border border-surface-300 p-6 shadow-sm">
@@ -390,41 +389,6 @@
                         </div>
                     </div>
 
-                    <!-- Agreements & Recaptcha -->
-                    <div class="bg-white rounded-2xl border border-surface-300 p-6 space-y-5 shadow-sm">
-                        <div class="space-y-4">
-                            <label class="flex items-start gap-3 cursor-pointer group">
-                                <div class="flex-shrink-0 mt-1">
-                                    <input type="checkbox" name="agreement_1" required
-                                        class="w-5 h-5 rounded border-surface-300 bg-surface-50 text-brand-500 focus:ring-brand-500 focus:ring-offset-white">
-                                </div>
-                                <span
-                                    class="text-sm text-surface-600 group-hover:text-surface-900 transition-colors">{{ __('messages.reg_agreement_1') }}
-                                    *</span>
-                            </label>
-
-                            <label class="flex items-start gap-3 cursor-pointer group">
-                                <div class="flex-shrink-0 mt-1">
-                                    <input type="checkbox" name="agreement_2" required
-                                        class="w-5 h-5 rounded border-surface-300 bg-surface-50 text-brand-500 focus:ring-brand-500 focus:ring-offset-white">
-                                </div>
-                                <span
-                                    class="text-sm text-surface-600 group-hover:text-surface-900 transition-colors">{{ __('messages.reg_agreement_2') }}
-                                    *</span>
-                            </label>
-
-                            <label class="flex items-start gap-3 cursor-pointer group">
-                                <div class="flex-shrink-0 mt-1">
-                                    <input type="checkbox" name="agreement_3" required
-                                        class="w-5 h-5 rounded border-surface-300 bg-surface-50 text-brand-500 focus:ring-brand-500 focus:ring-offset-white">
-                                </div>
-                                <span
-                                    class="text-sm text-surface-600 group-hover:text-surface-900 transition-colors">{{ __('messages.reg_agreement_3') }}
-                                    *</span>
-                            </label>
-                        </div>
-
-                    </div>
                 </div>
 
                 <!-- Review Container -->
@@ -452,11 +416,57 @@
                     </button>
                 </div>
 
-                <div id="btn-submit-container">
-                    <div class="mb-6 flex justify-center">
-                        <div class="g-recaptcha"
-                            data-sitekey="{{ env('RECAPTCHA_SITE_KEY', '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI') }}">
+                <div id="btn-submit-container" class="hidden space-y-6">
+                    <!-- Agreements -->
+                    <div class="bg-white rounded-2xl border border-surface-300 p-6 space-y-5 shadow-sm">
+                        <div class="space-y-4">
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <div class="flex-shrink-0 mt-1">
+                                    <input type="checkbox" name="agreement_1" required {{ old('agreement_1') ? 'checked' : '' }}
+                                        class="w-5 h-5 rounded border-surface-300 bg-surface-50 text-brand-500 focus:ring-brand-500 focus:ring-offset-white">
+                                </div>
+                                <span
+                                    class="text-sm text-surface-600 group-hover:text-surface-900 transition-colors">{{ __('messages.reg_agreement_1') }}
+                                    *</span>
+                            </label>
+
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <div class="flex-shrink-0 mt-1">
+                                    <input type="checkbox" name="agreement_2" required {{ old('agreement_2') ? 'checked' : '' }}
+                                        class="w-5 h-5 rounded border-surface-300 bg-surface-50 text-brand-500 focus:ring-brand-500 focus:ring-offset-white">
+                                </div>
+                                <span
+                                    class="text-sm text-surface-600 group-hover:text-surface-900 transition-colors">{{ __('messages.reg_agreement_2') }}
+                                    *</span>
+                            </label>
+
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <div class="flex-shrink-0 mt-1">
+                                    <input type="checkbox" name="agreement_3" required {{ old('agreement_3') ? 'checked' : '' }}
+                                        class="w-5 h-5 rounded border-surface-300 bg-surface-50 text-brand-500 focus:ring-brand-500 focus:ring-offset-white">
+                                </div>
+                                <span
+                                    class="text-sm text-surface-600 group-hover:text-surface-900 transition-colors">{{ __('messages.reg_agreement_3') }}
+                                    *</span>
+                            </label>
                         </div>
+                    </div>
+
+                    <div class="mb-6 flex flex-col items-center gap-3">
+                        <div class="captcha-img-container flex items-center gap-2">
+                            {!! captcha_img('flat') !!}
+                            <button type="button"
+                                class="p-2 bg-surface-100 rounded-lg hover:bg-surface-200 transition-colors"
+                                onclick="refreshCaptcha()">
+                                <svg class="w-5 h-5 text-surface-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                            </button>
+                        </div>
+                        <input type="text" name="captcha" placeholder="Enter Captcha Code" required
+                            value="{{ old('captcha') }}"
+                            class="w-full max-w-[200px] px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-center text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                     </div>
                     <button type="submit" id="btn-submit"
                         class="w-full py-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold rounded-2xl shadow-xl shadow-brand-500/25 hover:shadow-brand-500/40 transition-all duration-200 text-lg">
@@ -848,7 +858,7 @@
             function saveCurrentParticipantData() {
                 let pData = {};
                 formFieldsContainer.querySelectorAll('input, select, textarea').forEach(el => {
-                    if (el.name && el.name !== 'category_id' && el.name !== 'family_count' && !el.name.startsWith('agreement') && el.name !== 'g-recaptcha-response') {
+                    if (el.name && el.name !== 'category_id' && el.name !== 'family_count' && !el.name.startsWith('agreement') && el.name !== 'captcha') {
                         if (el.type === 'checkbox' || el.type === 'radio') {
                             if (el.checked) pData[el.name] = el.value;
                         } else {
@@ -1204,21 +1214,21 @@
                 participantsData.forEach((p, index) => {
                     let title = isFamily ? `Peserta ${index + 1} ${index === 0 ? '(Team Leader)' : '(Family Member)'}` : 'Data Peserta';
                     html += `<div class="p-4 border border-surface-200 rounded-xl mb-4 bg-surface-50">
-                                                                                                                                                                                                                                                                                    <div class="flex justify-between items-start mb-2">
-                                                                                                                                                                                                                                                                                        <h4 class="font-bold text-brand-600">${title}</h4>
-                                                                                                                                                                                                                                                                                        <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
-                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                                                                                                                                                                                                                                                                                        ${isFamily ? `<p><span class="text-surface-600">{{ __('messages.reg_role') }}:</span> <br><span class="font-medium text-surface-900 capitalize">${p.role || '-'}</span></p>` : ''}
-                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
-                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
-                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900 break-all">${p.email || '-'}</span></p>
-                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
-                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900 break-all">${p.identity_number || '-'}</span></p>
-                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
-                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">{{ __('messages.reg_blood_type') }}:</span> <br><span class="font-medium text-surface-900">${p.blood_type || '-'}</span></p>
-                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                </div>`;
+                                                                                                                                                                                                                                                                                                                    <div class="flex justify-between items-start mb-2">
+                                                                                                                                                                                                                                                                                                                        <h4 class="font-bold text-brand-600">${title}</h4>
+                                                                                                                                                                                                                                                                                                                        <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
+                                                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                                                                                                                                                                                                                                                                                                                        ${isFamily ? `<p><span class="text-surface-600">{{ __('messages.reg_role') }}:</span> <br><span class="font-medium text-surface-900 capitalize">${p.role || '-'}</span></p>` : ''}
+                                                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900 break-all">${p.email || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900 break-all">${p.identity_number || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">{{ __('messages.reg_blood_type') }}:</span> <br><span class="font-medium text-surface-900">${p.blood_type || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                                </div>`;
 
                     for (let key in p) {
                         let input = document.createElement('input');
@@ -1245,11 +1255,62 @@
             window.editParticipant = editParticipant;
 
             // ===== Init =====
-            categoryRadios.forEach(radio => {
-                radio.addEventListener('change', updateCategoryDetails);
-            });
+            // ===== Init and Restore =====
+            (async function init() {
+                const oldParticipants = {!! json_encode(old('participants', [])) !!};
+                const oldCategoryId = "{{ old('category_id') }}";
 
-            updateCategoryDetails();
+                categoryRadios.forEach(radio => {
+                    radio.addEventListener('change', function () {
+                        // Reset data only if manually changed (not in restoring mode)
+                        if (!this.dataset.restoring) {
+                            participantsData = [];
+                            currentParticipantIndex = 0;
+                        }
+                        updateCategoryDetails();
+                    });
+                });
+
+                if (oldParticipants && oldParticipants.length > 0) {
+                    // Determine category and set it
+                    if (oldCategoryId) {
+                        const targetRadio = document.querySelector(`.category-radio[value="${oldCategoryId}"]`);
+                        if (targetRadio) {
+                            targetRadio.checked = true;
+                            targetRadio.dataset.restoring = "true";
+                            updateCategoryDetails();
+                            delete targetRadio.dataset.restoring;
+                        }
+                    }
+
+                    participantsData = oldParticipants;
+                    totalParticipants = participantsData.length;
+                    if (isFamily && familyCountSelect) {
+                        familyCountSelect.value = totalParticipants;
+                    }
+
+                    // If validation failed or just returning with input, jump to review
+                    @if($errors->any())
+                        showReview();
+                        // Scroll to the error list if present
+                        const errList = document.querySelector('.bg-brand-50.border-brand-200');
+                        if (errList) {
+                            errList.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    @endif
+                                        } else {
+                    updateCategoryDetails();
+                }
+            })();
+
+            function refreshCaptcha() {
+                const img = document.querySelector('.captcha-img-container img');
+                if (img) {
+                    const url = '{{ captcha_src("flat") }}';
+                    img.src = url + '?' + Math.random();
+                }
+            }
+            window.refreshCaptcha = refreshCaptcha;
         </script>
     @endpush
 @endsection

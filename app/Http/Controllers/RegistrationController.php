@@ -58,30 +58,20 @@ class RegistrationController extends Controller
             'blood_type' => 'nullable|string|max:3',
             'emergency_contact_name' => 'nullable|string|max:255',
             'emergency_contact_phone' => 'nullable|string|max:20',
-            'jersey_size' => 'nullable|string|max:5',
+            'jersey_size' => 'nullable|string|max:20',
             'community' => 'nullable|string|max:255',
             'medical_conditions' => 'nullable|string|max:1000',
             'agreement_1' => 'accepted',
             'agreement_2' => 'accepted',
             'agreement_3' => 'accepted',
-            'g-recaptcha-response' => 'required',
+            'captcha' => 'required|captcha',
         ], [
-            'g-recaptcha-response.required' => 'Please verify that you are not a robot.',
+            'captcha.required' => 'Please enter the captcha code.',
+            'captcha.captcha' => 'Invalid captcha code.',
             'agreement_1.accepted' => 'You must accept the terms and conditions.',
             'agreement_2.accepted' => 'You must accept the terms and conditions.',
             'agreement_3.accepted' => 'You must accept the terms and conditions.',
         ]);
-
-        // Verify reCAPTCHA
-        $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-            'secret' => config('services.recaptcha.secret_key'),
-            'response' => $request->input('g-recaptcha-response'),
-            'remoteip' => $request->ip()
-        ]);
-
-        if (!$response->json('success')) {
-            return back()->withInput()->withErrors(['g-recaptcha-response' => 'Failed to verify reCAPTCHA. Please try again.']);
-        }
 
         // Check duplicate registration
         $existing = Participant::where('event_id', $event->id)
@@ -246,20 +236,11 @@ class RegistrationController extends Controller
         if ($request->isMethod('post') && $request->has('email')) {
             $request->validate([
                 'email' => 'required|email',
-                'g-recaptcha-response' => 'required',
+                'captcha' => 'required|captcha',
             ], [
-                'g-recaptcha-response.required' => 'Please verify that you are not a robot.',
+                'captcha.required' => 'Please enter the captcha code.',
+                'captcha.captcha' => 'Invalid captcha code.',
             ]);
-
-            $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-                'secret' => config('services.recaptcha.secret_key'),
-                'response' => $request->input('g-recaptcha-response'),
-                'remoteip' => $request->ip()
-            ]);
-
-            if (!$response->json('success')) {
-                return back()->withInput()->withErrors(['g-recaptcha-response' => 'Failed to verify reCAPTCHA. Please try again.']);
-            }
 
             $event = Event::where('is_active', true)->latest('event_date')->first();
             if ($event) {

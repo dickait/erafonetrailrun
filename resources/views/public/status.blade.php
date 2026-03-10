@@ -1,8 +1,5 @@
 @extends('layouts.public')
 @section('title', __('messages.status_title') . ' - Erafone Trail Run 2026')
-@push('scripts')
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-@endpush
 @section('content')
     <section class="pt-28 pb-20 bg-surface-50 min-h-screen">
         <div class="max-w-2xl mx-auto px-4 sm:px-6">
@@ -33,9 +30,19 @@
                     <button type="submit"
                         class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-brand-500 to-brand-600 text-white font-semibold rounded-xl hover:from-brand-600 hover:to-brand-700 transition-all shadow-md whitespace-nowrap">{{ __('messages.status_check') }}</button>
                 </div>
-                <div class="flex justify-center sm:justify-start">
-                    <div class="g-recaptcha"
-                        data-sitekey="{{ env('RECAPTCHA_SITE_KEY', '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI') }}"></div>
+                <div class="flex flex-col items-center sm:items-start gap-3 mb-6">
+                    <div class="captcha-img-container flex items-center gap-2">
+                        {!! captcha_img('flat') !!}
+                        <button type="button" class="p-2 bg-surface-100 rounded-lg hover:bg-surface-200 transition-colors"
+                            onclick="refreshCaptcha()">
+                            <svg class="w-5 h-5 text-surface-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                        </button>
+                    </div>
+                    <input type="text" name="captcha" placeholder="Enter Captcha Code" required value="{{ old('captcha') }}"
+                        class="w-full max-w-[200px] px-4 py-3 bg-white border border-surface-300 rounded-xl text-center text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                 </div>
             </form>
             @if(isset($participant))
@@ -173,3 +180,15 @@
         </div>
     </section>
 @endsection
+
+@push('scripts')
+    <script>
+        function refreshCaptcha() {
+            const img = document.querySelector('.captcha-img-container img');
+            if (img) {
+                const url = '{{ captcha_src("flat") }}';
+                img.src = url + '?' + Math.random();
+            }
+        }
+    </script>
+@endpush
