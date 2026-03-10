@@ -118,7 +118,7 @@ return [
     'reg_community' => 'Running Community',
     'reg_medical' => 'Medical Conditions',
     'reg_medical_placeholder' => 'Type \'-\' if you do not have any medical conditions or allergies',
-    'reg_agreement_1' => 'I acknowledge that participating in this event carries inherent risks, and I assume full personal responsibility. The organizer is released from any liability or claims.',
+    'reg_agreement_1' => 'Any risks that arise during the event as a result of actions that do not comply with the rules, regulations, or instructions of the organizers shall be my personal responsibility. The organizers are released from any liability or claims arising from such circumstances.',
     'reg_agreement_2' => 'I grant the organizer full rights to use any photos or videos taken during the event for official purposes without any expectation of compensation.',
     'reg_agreement_3' => 'I certify that all the information provided in this registration form is true, accurate, and complete.',
     'reg_submit' => 'Submit Registration',
