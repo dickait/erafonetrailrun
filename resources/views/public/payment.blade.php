@@ -21,7 +21,7 @@
                             class="w-3 h-3 rounded-full {{ $participant->payment_status == 'paid' ? 'bg-emerald-500' : ($participant->payment_status == 'pending' ? 'bg-accent-500' : 'bg-brand-500') }}">
                         </div>
                         <h3 class="font-display font-semibold text-lg text-surface-900">
-                            {{ __('messages.part_payment_reg_details') }}
+                            {{ __('messages.status_found') }}
                         </h3>
                     </div>
 
@@ -36,15 +36,12 @@
                                 __('messages.status_category') => $participant->category->name ?? '-',
                                 __('messages.status_event') => $participant->event->name ?? '-',
                                 __('messages.status_registered') => $participant->created_at->format('d M Y'),
+                                __('messages.status_bib') => $participant->bib_number ?? __('messages.status_bib_pending'),
                             ];
 
                             if (!$isFamily) {
                                 $fields[__('messages.status_blood_type')] = $participant->blood_type ?? '-';
                                 $fields[__('messages.status_jersey_size')] = $participant->jersey_size ?? '-';
-                            }
-
-                            if ($participant->payment_status == 'paid' && $participant->latestPayment && $participant->latestPayment->paid_at) {
-                                $fields[__('messages.status_paid_at')] = $participant->latestPayment->paid_at->format('d M Y, H:i');
                             }
 
                             $latestPayment = $participant->latestPayment;
@@ -134,10 +131,18 @@
 
                         <div class="flex flex-col sm:flex-row justify-between py-2 gap-2">
                             <span class="text-surface-700 text-sm mt-1 sm:mt-0">{{ __('messages.part_payment_status') }}</span>
-                            <span
-                                class="px-3 py-1 rounded-full text-xs font-semibold self-start sm:self-auto {{ $participant->payment_status == 'paid' ? 'bg-emerald-50 text-emerald-600' : ($participant->payment_status == 'pending' ? 'bg-accent-50 text-accent-600' : 'bg-brand-50 text-brand-500') }}">
-                                {{ $participant->payment_status == 'paid' ? __('messages.status_paid') : ($participant->payment_status == 'pending' ? __('messages.status_pending') : __('messages.status_failed')) }}
-                            </span>
+                            <div class="flex items-center gap-2">
+                                <span
+                                    class="px-3 py-1 rounded-full text-xs font-semibold {{ $participant->payment_status == 'paid' ? 'bg-emerald-50 text-emerald-600' : ($participant->payment_status == 'pending' ? 'bg-accent-50 text-accent-600' : 'bg-brand-50 text-brand-500') }}">
+                                    {{ $participant->payment_status == 'paid' ? __('messages.status_paid') : ($participant->payment_status == 'pending' ? __('messages.status_pending') : __('messages.status_failed')) }}
+                                </span>
+                                @if($participant->payment_status == 'paid' && $participant->latestPayment && $participant->latestPayment->paid_at)
+                                    <span class="text-sm text-surface-600 font-medium whitespace-nowrap">
+                                        {{ $participant->latestPayment->payment_method ?? 'Manual' }} &bull;
+                                        {{ $participant->latestPayment->paid_at->format('d M Y, H:i:s') }} WIB
+                                    </span>
+                                @endif
+                            </div>
                         </div>
                     </div>
 

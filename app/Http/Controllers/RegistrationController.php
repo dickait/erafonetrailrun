@@ -133,8 +133,9 @@ class RegistrationController extends Controller
         }
 
         $finalAmount = max(0, $baseAmount - $discountAmount);
+        $isFree = $finalAmount <= 0;
 
-        $participant = DB::transaction(function () use ($validated, $request, $event, $category) {
+        $participant = DB::transaction(function () use ($validated, $request, $event, $category, $isFree, $appliedPromotionId, $discountCodeId) {
             $participantInfo = $validated;
 
             // If it's family registration, we use the first participant data as the main one 
@@ -152,7 +153,7 @@ class RegistrationController extends Controller
             $participant = Participant::create([
                 ...$participantInfo,
                 'event_id' => $event->id,
-                'payment_status' => 'pending',
+                'payment_status' => $isFree ? 'paid' : 'pending',
             ]);
 
             // Create family members
@@ -186,11 +187,53 @@ class RegistrationController extends Controller
                 }
             }
 
+            // If free, handle quota/used_count immediately
+            if ($isFree) {
+                if ($appliedPromotionId) {
+                    $promo = \App\Models\Promotion::find($appliedPromotionId);
+                    if ($promo) {
+                        $promo->increment('used_count');
+                        if ($promo->quota !== null && $promo->quota > 0) {
+                            $promo->decrement('quota');
+                        }
+                    }
+                }
+                if ($discountCodeId) {
+                    $dc = \App\Models\DiscountCode::find($discountCodeId);
+                    if ($dc) {
+                        $dc->increment('used_count');
+                        if ($dc->usage_limit !== null && $dc->usage_limit > 0) {
+                            $dc->decrement('usage_limit');
+                        }
+                    }
+                }
+            }
+
             return $participant;
         });
 
         // Generate human-readable Order ID
         $orderId = Payment::generateOrderId();
+
+        if ($isFree) {
+            Payment::create([
+                'participant_id' => $participant->id,
+                'order_id' => $orderId,
+                'amount' => $baseAmount,
+                'discount_code_id' => $discountCodeId,
+                'promotion_id' => $appliedPromotionId,
+                'discount_amount' => $discountAmount,
+                'final_amount' => $finalAmount,
+                'status' => 'paid',
+                'invoice_id' => 'FREE-' . strtoupper(Str::random(10)),
+                'payment_link' => null,
+                'payment_method' => 'discount_full',
+                'paid_at' => now(),
+            ]);
+
+            return redirect()->route('registration.payment', ['email' => $participant->email])
+                ->with('success', 'Registration successful! Your registration has been confirmed.');
+        }
 
         // Call Mayar API to create payment request
         $paymentLink = '#';

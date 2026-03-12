@@ -139,7 +139,11 @@ class WebhookController extends Controller
                 }
                 
                 if ($payment->discount_code_id) {
-                    $payment->discountCode->increment('used_count');
+                    $dc = $payment->discountCode;
+                    $dc->increment('used_count');
+                    if ($dc->usage_limit !== null && $dc->usage_limit > 0) {
+                        $dc->decrement('usage_limit');
+                    }
                 }
             }
 
