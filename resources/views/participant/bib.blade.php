@@ -1,5 +1,5 @@
 @extends('layouts.participant')
-@section('title', __('messages.part_bib') . ' - Erafone Trail Run')
+@section('title', __('messages.part_bib') . ' - Era Trail Run')
 @section('content')
     <div class="mb-8">
         <h1 class="font-display font-bold text-2xl text-surface-900 mb-2">{{ __('messages.part_bib') }}</h1>

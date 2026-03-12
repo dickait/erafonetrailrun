@@ -14,7 +14,7 @@
         <div class="max-w-5xl mx-auto px-4 sm:px-6">
             <div class="flex justify-between items-center h-16">
                 <a href="{{ route('home') }}" class="flex items-center gap-2">
-                    <img src="{{ asset('erafone-icon-02.webp') }}" class="h-8 md:h-10 w-auto" alt="ERA TRAIL RUN" />
+                    <img src="{{ asset('eratrailrun.webp') }}" class="h-8 md:h-10 w-auto" alt="ERA TRAIL RUN" />
                 </a>
                 <div class="flex items-center gap-1 overflow-x-auto">
                     <a href="{{ route('participant.dashboard') }}"

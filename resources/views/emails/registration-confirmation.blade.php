@@ -13,19 +13,22 @@
             <tr>
                 <td style="color: #6b7280; padding: 8px 0; font-size: 14px;">Category</td>
                 <td style="color: #ffffff; padding: 8px 0; font-size: 14px; text-align: right;">
-                    {{ $participant->category->name ?? '-' }}</td>
+                    {{ $participant->category->name ?? '-' }}
+                </td>
             </tr>
             <tr>
                 <td style="color: #6b7280; padding: 8px 0; font-size: 14px;">Email</td>
                 <td style="color: #ffffff; padding: 8px 0; font-size: 14px; text-align: right;">
-                    {{ $participant->email }}</td>
+                    {{ $participant->email }}
+                </td>
             </tr>
             <tr>
                 <td style="color: #6b7280; padding: 8px 0; font-size: 14px;">Status</td>
                 <td style="color: #fbbf24; padding: 8px 0; font-size: 14px; text-align: right;">
-                    {{ ucfirst($participant->payment_status) }}</td>
+                    {{ ucfirst($participant->payment_status) }}
+                </td>
             </tr>
         </table>
     </div>
-    <p style="color: #6b7280; font-size: 12px; text-align: center; margin: 0;">© {{ date('Y') }} Erafone Trail Run</p>
+    <p style="color: #6b7280; font-size: 12px; text-align: center; margin: 0;">© {{ date('Y') }} Era Trail Run</p>
 </div>

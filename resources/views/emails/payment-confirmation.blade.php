@@ -12,5 +12,5 @@
         <p style="color: #9ca3af; margin: 0;">Your BIB number will be assigned soon. Please check your dashboard for
             updates.</p>
     </div>
-    <p style="color: #6b7280; font-size: 12px; text-align: center; margin: 0;">© {{ date('Y') }} Erafone Trail Run</p>
+    <p style="color: #6b7280; font-size: 12px; text-align: center; margin: 0;">© {{ date('Y') }} Era Trail Run</p>
 </div>

@@ -8,5 +8,5 @@
         <p style="color: #9ca3af; margin: 0 0 16px;">Hi {{ $recipientName }},</p>
         <div style="color: #d1d5db; line-height: 1.6;">{!! nl2br(e($emailBody)) !!}</div>
     </div>
-    <p style="color: #6b7280; font-size: 12px; text-align: center; margin: 0;">© {{ date('Y') }} Erafone Trail Run</p>
+    <p style="color: #6b7280; font-size: 12px; text-align: center; margin: 0;">© {{ date('Y') }} Era Trail Run</p>
 </div>
