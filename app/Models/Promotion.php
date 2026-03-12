@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Promotion extends Model
 {
     protected $fillable = [
-        'name', 'type', 'discount_type', 'discount_value',
+        'name', 'code', 'type', 'discount_type', 'discount_value',
         'start_date', 'end_date', 'quota', 'used_count'
     ];
 
@@ -17,10 +17,6 @@ class Promotion extends Model
         'discount_value' => 'decimal:2',
     ];
 
-    public function discountCodes()
-    {
-        return $this->hasMany(DiscountCode::class);
-    }
 
     public function isValid()
     {

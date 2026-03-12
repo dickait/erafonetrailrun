@@ -100,21 +100,18 @@ class RegistrationController extends Controller
         $baseAmount = $category->getBasePrice($multiplier);
         
         $discountAmount = 0;
-        $discountCodeId = null;
         $appliedPromotionId = null;
 
         // 1. Priority check for Manual Discount Code
         if ($request->filled('discount_code')) {
-            $dc = \App\Models\DiscountCode::where('code', strtoupper($request->discount_code))->first();
-            if ($dc && $dc->isValid()) {
-                $promotion = $dc->promotion;
-                if ($promotion->discount_type == 'fixed') {
-                    $discountAmount = (float) $promotion->discount_value;
+            $promo = \App\Models\Promotion::where('code', strtoupper($request->discount_code))->first();
+            if ($promo && $promo->isValid()) {
+                if ($promo->discount_type == 'fixed') {
+                    $discountAmount = (float) $promo->discount_value;
                 } else {
-                    $discountAmount = $baseAmount * ((float) $promotion->discount_value / 100);
+                    $discountAmount = $baseAmount * ((float) $promo->discount_value / 100);
                 }
-                $discountCodeId = $dc->id;
-                $appliedPromotionId = $promotion->id;
+                $appliedPromotionId = $promo->id;
             } else {
                 return back()->withInput()->withErrors(['discount_code' => 'Invalid or expired discount code.']);
             }
@@ -135,7 +132,7 @@ class RegistrationController extends Controller
         $finalAmount = max(0, $baseAmount - $discountAmount);
         $isFree = $finalAmount <= 0;
 
-        $participant = DB::transaction(function () use ($validated, $request, $event, $category, $isFree, $appliedPromotionId, $discountCodeId) {
+        $participant = DB::transaction(function () use ($validated, $request, $event, $category, $isFree, $appliedPromotionId) {
             $participantInfo = $validated;
 
             // If it's family registration, we use the first participant data as the main one 
@@ -198,15 +195,6 @@ class RegistrationController extends Controller
                         }
                     }
                 }
-                if ($discountCodeId) {
-                    $dc = \App\Models\DiscountCode::find($discountCodeId);
-                    if ($dc) {
-                        $dc->increment('used_count');
-                        if ($dc->usage_limit !== null && $dc->usage_limit > 0) {
-                            $dc->decrement('usage_limit');
-                        }
-                    }
-                }
             }
 
             return $participant;
@@ -220,7 +208,6 @@ class RegistrationController extends Controller
                 'participant_id' => $participant->id,
                 'order_id' => $orderId,
                 'amount' => $baseAmount,
-                'discount_code_id' => $discountCodeId,
                 'promotion_id' => $appliedPromotionId,
                 'discount_amount' => $discountAmount,
                 'final_amount' => $finalAmount,
@@ -286,7 +273,6 @@ class RegistrationController extends Controller
             'participant_id' => $participant->id,
             'order_id' => $orderId,
             'amount' => $baseAmount,
-            'discount_code_id' => $discountCodeId,
             'promotion_id' => $appliedPromotionId,
             'discount_amount' => $discountAmount,
             'final_amount' => $finalAmount,
@@ -311,13 +297,13 @@ class RegistrationController extends Controller
 
             if ($event && $request->email) {
                 $email = trim($request->email);
-                $participant = Participant::with(['category', 'latestPayment.promotion', 'latestPayment.discountCode', 'event', 'familyMembers'])
+                $participant = Participant::with(['category', 'latestPayment.promotion', 'event', 'familyMembers'])
                     ->where('event_id', $event->id)
                     ->where('email', $email)
                     ->first();
 
                 if (!$participant) {
-                    $participant = Participant::with(['category', 'latestPayment.promotion', 'latestPayment.discountCode', 'event', 'familyMembers'])
+                    $participant = Participant::with(['category', 'latestPayment.promotion', 'event', 'familyMembers'])
                         ->where('email', $email)
                         ->latest()
                         ->first();
@@ -353,7 +339,7 @@ class RegistrationController extends Controller
             }
 
             if ($event) {
-                $participant = Participant::with(['category', 'latestPayment.promotion', 'latestPayment.discountCode', 'event', 'familyMembers'])
+                $participant = Participant::with(['category', 'latestPayment.promotion', 'event', 'familyMembers'])
                     ->where('event_id', $event->id)
                     ->where('email', $request->email)
                     ->first();

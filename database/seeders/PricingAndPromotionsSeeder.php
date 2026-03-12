@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\CategoryPrice;
 use App\Models\Promotion;
-use App\Models\DiscountCode;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Schema;
 
@@ -16,7 +15,6 @@ class PricingAndPromotionsSeeder extends Seeder
         // Clear existing data to avoid duplicates if rerun
         Schema::disableForeignKeyConstraints();
         CategoryPrice::query()->delete();
-        DiscountCode::query()->delete();
         Promotion::query()->delete();
         Schema::enableForeignKeyConstraints();
 
@@ -37,60 +35,43 @@ class PricingAndPromotionsSeeder extends Seeder
             CategoryPrice::create(['category_id' => $cat15k->id, 'pax' => 1, 'price' => 400000]);
         }
 
-        // Promotions
-        $earlyBird = Promotion::create([
+        // Promotions & Discount Codes (Unified in Promotion table)
+        Promotion::create([
             'name' => 'Early Bird',
+            'code' => 'EARLYBIRD50',
             'type' => 'earlybird',
             'discount_type' => 'fixed',
             'discount_value' => 50000,
             'start_date' => now(),
             'end_date' => now()->addDays(3),
+            'quota' => 1000,
         ]);
 
-        $community = Promotion::create([
+        Promotion::create([
             'name' => 'Komunitas',
+            'code' => 'KOMUNITAS50',
             'type' => 'discount_code',
             'discount_type' => 'fixed',
             'discount_value' => 50000,
+            'quota' => 500,
         ]);
 
-        $staff = Promotion::create([
+        Promotion::create([
             'name' => 'Staff Erafone',
-            'type' => 'discount_code',
-            'discount_type' => 'percent',
-            'discount_value' => 100,
-        ]);
-
-        $influencer = Promotion::create([
-            'name' => 'Influencer',
-            'type' => 'discount_code',
-            'discount_type' => 'percent',
-            'discount_value' => 100,
-        ]);
-
-        // Default Discount Codes
-        DiscountCode::create([
-            'code' => 'EARLYBIRD50',
-            'promotion_id' => $earlyBird->id,
-            'usage_limit' => 1000,
-        ]);
-
-        DiscountCode::create([
-            'code' => 'KOMUNITAS50',
-            'promotion_id' => $community->id,
-            'usage_limit' => 500,
-        ]);
-
-        DiscountCode::create([
             'code' => 'STAFF100',
-            'promotion_id' => $staff->id,
-            'usage_limit' => 100,
+            'type' => 'discount_code',
+            'discount_type' => 'percent',
+            'discount_value' => 100,
+            'quota' => 100,
         ]);
 
-        DiscountCode::create([
+        Promotion::create([
+            'name' => 'Influencer',
             'code' => 'INFLUENCER100',
-            'promotion_id' => $influencer->id,
-            'usage_limit' => 50,
+            'type' => 'discount_code',
+            'discount_type' => 'percent',
+            'discount_value' => 100,
+            'quota' => 50,
         ]);
     }
 }

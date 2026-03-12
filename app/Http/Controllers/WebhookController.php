@@ -137,14 +137,6 @@ class WebhookController extends Controller
                         $promo->decrement('quota');
                     }
                 }
-                
-                if ($payment->discount_code_id) {
-                    $dc = $payment->discountCode;
-                    $dc->increment('used_count');
-                    if ($dc->usage_limit !== null && $dc->usage_limit > 0) {
-                        $dc->decrement('usage_limit');
-                    }
-                }
             }
 
             // Update participant payment status
