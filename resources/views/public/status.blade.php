@@ -74,7 +74,7 @@
 
                             $latestPayment = $participant->latestPayment;
                             $multiplier = $isFamily ? ($participant->familyMembers->count() + 1) : 1;
-                            
+
                             $baseAmount = $latestPayment ? $latestPayment->amount : ($participant->category ? $participant->category->getBasePrice($multiplier) : 0);
                             $discountAmount = $latestPayment ? $latestPayment->discount_amount : 0;
                             $finalAmount = $latestPayment ? ($latestPayment->final_amount ?? ($baseAmount - $discountAmount)) : ($baseAmount - $discountAmount);
@@ -134,19 +134,25 @@
                         <div class="mt-4 border-t border-surface-200 pt-4 space-y-2">
                             <div class="flex justify-between text-sm">
                                 <span class="text-surface-600">Registration Fee</span>
-                                <span class="text-surface-900 font-medium">Rp {{ number_format($baseAmount, 0, ',', '.') }}</span>
+                                <span class="text-surface-900 font-medium">
+                                    @if($discountAmount > 0)<strike class="opacity-50">@endif
+                                    Rp {{ number_format($baseAmount, 0, ',', '.') }}
+                                    @if($discountAmount > 0)</strike>@endif
+                                </span>
                             </div>
-                            
+
                             @if($discountAmount > 0)
                                 <div class="flex justify-between text-sm text-emerald-600">
-                                    <span>Discount ({{ $latestPayment->discountCode->code ?? $latestPayment->promotion->name ?? 'PROMO' }})</span>
+                                    <span>Discount
+                                        ({{ $latestPayment->discountCode->code ?? $latestPayment->promotion->name ?? 'PROMO' }})</span>
                                     <span class="font-medium">- Rp {{ number_format($discountAmount, 0, ',', '.') }}</span>
                                 </div>
                             @endif
 
                             <div class="flex justify-between items-center py-2 border-t border-surface-100 mt-2">
                                 <span class="text-surface-900 font-bold">Total Payment</span>
-                                <span class="text-brand-600 text-xl font-bold">Rp {{ number_format($finalAmount, 0, ',', '.') }}</span>
+                                <span class="text-brand-600 text-xl font-bold">Rp
+                                    {{ number_format($finalAmount, 0, ',', '.') }}</span>
                             </div>
                         </div>
 

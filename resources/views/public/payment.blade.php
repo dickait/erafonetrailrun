@@ -7,7 +7,8 @@
                 <span
                     class="inline-block px-4 py-1.5 bg-brand-50 text-brand-500 text-sm font-semibold rounded-full mb-6 tracking-wide uppercase">{{ __('messages.part_payment_title') }}</span>
                 <h1 class="font-display font-bold text-3xl md:text-4xl text-surface-900 mb-2">
-                    {{ __('messages.part_payment_complete_title') }}</h1>
+                    {{ __('messages.part_payment_complete_title') }}
+                </h1>
                 <p class="text-surface-700">{{ __('messages.part_payment_complete_subtitle') }}</p>
             </div>
 
@@ -18,7 +19,8 @@
                             class="w-3 h-3 rounded-full {{ $participant->payment_status == 'paid' ? 'bg-emerald-500' : ($participant->payment_status == 'pending' ? 'bg-accent-500' : 'bg-brand-500') }}">
                         </div>
                         <h3 class="font-display font-semibold text-lg text-surface-900">
-                            {{ __('messages.part_payment_reg_details') }}</h3>
+                            {{ __('messages.part_payment_reg_details') }}
+                        </h3>
                     </div>
 
                     <div class="space-y-4">
@@ -41,7 +43,7 @@
 
                             $latestPayment = $participant->latestPayment;
                             $multiplier = $isFamily ? ($participant->familyMembers->count() + 1) : 1;
-                            
+
                             $baseAmount = $latestPayment ? $latestPayment->amount : ($participant->category ? $participant->category->getBasePrice($multiplier) : 0);
                             $discountAmount = $latestPayment ? $latestPayment->discount_amount : 0;
                             $finalAmount = $latestPayment ? ($latestPayment->final_amount ?? ($baseAmount - $discountAmount)) : ($baseAmount - $discountAmount);
@@ -101,19 +103,25 @@
                         <div class="mt-4 border-t border-surface-200 pt-4 space-y-2">
                             <div class="flex justify-between text-sm">
                                 <span class="text-surface-600">Registration Fee</span>
-                                <span class="text-surface-900 font-medium">Rp {{ number_format($baseAmount, 0, ',', '.') }}</span>
+                                <span class="text-surface-900 font-medium">
+                                    @if($discountAmount > 0)<strike class="opacity-50">@endif
+                                    Rp {{ number_format($baseAmount, 0, ',', '.') }}
+                                    @if($discountAmount > 0)</strike>@endif
+                                </span>
                             </div>
-                            
+
                             @if($discountAmount > 0)
                                 <div class="flex justify-between text-sm text-emerald-600">
-                                    <span>Discount ({{ $latestPayment->discountCode->code ?? $latestPayment->promotion->name ?? 'PROMO' }})</span>
+                                    <span>Discount
+                                        ({{ $latestPayment->discountCode->code ?? $latestPayment->promotion->name ?? 'PROMO' }})</span>
                                     <span class="font-medium">- Rp {{ number_format($discountAmount, 0, ',', '.') }}</span>
                                 </div>
                             @endif
 
                             <div class="flex justify-between items-center py-2 border-t border-surface-100 mt-2">
                                 <span class="text-surface-900 font-bold">Total Payment</span>
-                                <span class="text-brand-600 text-xl font-bold">Rp {{ number_format($finalAmount, 0, ',', '.') }}</span>
+                                <span class="text-brand-600 text-xl font-bold">Rp
+                                    {{ number_format($finalAmount, 0, ',', '.') }}</span>
                             </div>
                         </div>
 

@@ -50,13 +50,35 @@
                                         {{ strtoupper(explode(' ', $cat->name)[0]) }}
                                     </p>
                                     <p class="text-sm text-surface-700">{{ $cat->name }}</p>
-                                    <p class="text-sm text-brand-500 font-medium">
-                                        @if($cat->prices->count() > 1)
-                                            Rp {{ number_format($cat->prices->min('price'), 0, ',', '.') }} - {{ number_format($cat->prices->max('price'), 0, ',', '.') }}
+                                    <div class="text-[10px] text-brand-500 font-bold mt-1 leading-tight">
+                                        @if($cat->slug == '5k-family-fun-trail')
+                                            @foreach($cat->prices->sortBy('pax') as $cp)
+                                                @php $hasPromo = $cat->isEarlyBirdActive(); @endphp
+                                                <div class="{{ $hasPromo ? 'opacity-50 text-[8px]' : '' }}">
+                                                    @if($hasPromo)<strike>@endif
+                                                        {{ $cp->pax }} Pax: Rp {{ number_format($cp->price, 0, ',', '.') }}
+                                                        @if($hasPromo)</strike>@endif
+                                                </div>
+                                                @if($hasPromo)
+                                                    <div class="text-[10px] text-brand-600 font-black">{{ $cp->pax }} Pax: Rp
+                                                        {{ number_format($cat->getCurrentPrice($cp->pax), 0, ',', '.') }}
+                                                    </div>
+                                                @endif
+                                            @endforeach
                                         @else
-                                            Rp {{ number_format($cat->getCurrentPrice(), 0, ',', '.') }}
+                                            @php $hasPromo = $cat->isEarlyBirdActive(); @endphp
+                                            <p class="text-sm {{ $hasPromo ? 'opacity-50 text-xs' : '' }}">
+                                                @if($hasPromo)<strike>@endif
+                                                    Rp {{ number_format($cat->getBasePrice(), 0, ',', '.') }}
+                                                    @if($hasPromo)</strike>@endif
+                                            </p>
+                                            @if($hasPromo)
+                                                <p class="text-sm text-brand-600 font-black">Rp
+                                                    {{ number_format($cat->getCurrentPrice(), 0, ',', '.') }}
+                                                </p>
+                                            @endif
                                         @endif
-                                    </p>
+                                    </div>
                                 </div>
                             </label>
                         @endforeach
@@ -89,8 +111,6 @@
                                                 class="text-surface-700">{{ __('messages.categories_age') }}</span><span
                                                 class="text-surface-900 font-medium">{{ $usia }}
                                                 {{ __('messages.cat_age') }}</span></div>
-                                    </div>
-                                    <div>
                                         @if($cat->slug != '5k-family-fun-trail')
                                             <div class="flex justify-between text-sm mb-2"><span
                                                     class="text-surface-700">{{ __('messages.cat_category') }}</span><span
@@ -104,6 +124,72 @@
                                                     class="text-surface-900 font-medium text-right">{{ __('messages.cat_podium') }}<br>{{ __('messages.cat_podium_open_master') }}</span>
                                             </div>
                                         @endif
+                                    </div>
+                                    <div>
+                                        <div class="mt-2 mb-2">
+                                            @php
+                                                $earlyBird = $cat->getActivePromotion('earlybird');
+                                                $discount = $earlyBird ? (float) $earlyBird->discount_value : 0;
+                                            @endphp
+
+                                            <div class="space-y-1 mb-3">
+                                                <span
+                                                    class="text-surface-700 text-xs font-semibold block mb-1 uppercase tracking-wider">{{ __('messages.categories_price') }}</span>
+                                                @if($cat->slug == '5k-family-fun-trail')
+                                                    @foreach($cat->prices->sortBy('pax') as $cp)
+                                                        <div class="flex justify-between text-sm">
+                                                            <span class="text-surface-600">{{ $cp->pax }} Pax</span>
+                                                            <span class="text-surface-900 font-bold">
+                                                                @if($earlyBird)<strike class="opacity-50">@endif
+                                                                    Rp {{ number_format($cp->price, 0, ',', '.') }}
+                                                                    @if($earlyBird)</strike>@endif
+                                                            </span>
+                                                        </div>
+                                                    @endforeach
+                                                @else
+                                                    <div class="flex justify-between text-sm">
+                                                        <span class="text-surface-600">Reguler</span>
+                                                        <span class="text-surface-900 font-bold">
+                                                            @if($earlyBird)<strike class="opacity-50">@endif
+                                                                Rp {{ number_format($cat->getBasePrice(), 0, ',', '.') }}
+                                                                @if($earlyBird)</strike>@endif
+                                                        </span>
+                                                    </div>
+                                                @endif
+                                            </div>
+
+                                            @if($earlyBird)
+                                                <div class="bg-brand-50 p-3 rounded-xl border border-brand-100">
+                                                    <div class="flex justify-between items-center mb-1">
+                                                        <span class="text-brand-600 font-bold text-xs flex items-center gap-1">
+                                                            Early Bird Discount
+                                                        </span>
+                                                        <span class="text-brand-600 font-bold text-sm">- Rp
+                                                            {{ number_format($discount, 0, ',', '.') }}</span>
+                                                    </div>
+                                                    <div
+                                                        class="flex justify-between items-center pt-2 mt-2 border-t border-brand-200">
+                                                        <span class="text-brand-900 font-bold text-sm">Harga Sekarang:</span>
+                                                        <div class="text-right">
+                                                            @if($cat->slug == '5k-family-fun-trail')
+                                                                @foreach($cat->prices->sortBy('pax') as $cp)
+                                                                    <div class="text-brand-600 font-black text-sm">Rp
+                                                                        {{ number_format($cp->price - $discount, 0, ',', '.') }}
+                                                                        ({{ $cp->pax }} Pax)
+                                                                    </div>
+                                                                @endforeach
+                                                            @else
+                                                                <span class="text-brand-600 font-black text-base">Rp
+                                                                    {{ number_format($cat->getBasePrice() - $discount, 0, ',', '.') }}</span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                    <p class="text-[10px] text-brand-400 italic mt-2">Berakhir:
+                                                        {{ $earlyBird->end_date ? $earlyBird->end_date->format('d M Y') : '-' }}
+                                                    </p>
+                                                </div>
+                                            @endif
+                                        </div>
                                         <p class="text-sm font-semibold text-surface-900 mb-3">
                                             {{ __('messages.categories_entitlements') }}:
                                         </p>
@@ -157,8 +243,12 @@
                             class="block text-sm font-medium text-surface-800 mb-2">{{ __('messages.reg_family_count') }}</label>
                         <select id="family_count" name="family_count"
                             class="w-full sm:w-1/2 px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
-                            <option value="2" {{ old('family_count') == '2' ? 'selected' : '' }}>{{ __('messages.reg_family_count_2') }}</option>
-                            <option value="3" {{ old('family_count') == '3' ? 'selected' : '' }}>{{ __('messages.reg_family_count_3') }}</option>
+                            <option value="2" {{ old('family_count') == '2' ? 'selected' : '' }}>
+                                {{ __('messages.reg_family_count_2') }}
+                            </option>
+                            <option value="3" {{ old('family_count') == '3' ? 'selected' : '' }}>
+                                {{ __('messages.reg_family_count_3') }}
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -427,7 +517,7 @@
                             {{ __('messages.reg_review_title') }}
                         </h3>
                         <div id="review-content" class="space-y-4"></div>
-                        
+
                         <!-- Discount Code Field -->
                         <div class="mt-6 pt-6 border-t border-surface-200">
                             <label class="block text-sm font-medium text-surface-800 mb-1.5">Kode Diskon (Opsional)</label>
@@ -436,7 +526,8 @@
                                     class="flex-1 px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors uppercase"
                                     placeholder="Masukkan kode diskon jika ada">
                             </div>
-                            <p class="mt-1 text-xs text-surface-500 italic">Diskon akan diterapkan pada langkah pembayaran selanjutnya.</p>
+                            <p class="mt-1 text-xs text-surface-500 italic">Diskon akan diterapkan pada langkah pembayaran
+                                selanjutnya.</p>
                             @error('discount_code')
                                 <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                             @enderror
@@ -1258,21 +1349,21 @@
                 participantsData.forEach((p, index) => {
                     let title = isFamily ? `Peserta ${index + 1} ${index === 0 ? '(Team Leader)' : '(Family Member)'}` : 'Data Peserta';
                     html += `<div class="p-4 border border-surface-200 rounded-xl mb-4 bg-surface-50">
-                                                                                                                                                                                                                                                                                                                                                            <div class="flex justify-between items-start mb-2">
-                                                                                                                                                                                                                                                                                                                                                                <h4 class="font-bold text-brand-600">${title}</h4>
-                                                                                                                                                                                                                                                                                                                                                                <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
-                                                                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                                                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                                                                                                                                                                                                                                                                                                                                                                ${isFamily ? `<p><span class="text-surface-600">{{ __('messages.reg_role') }}:</span> <br><span class="font-medium text-surface-900 capitalize">${p.role || '-'}</span></p>` : ''}
-                                                                                                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
-                                                                                                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
-                                                                                                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900 break-all">${p.email || '-'}</span></p>
-                                                                                                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
-                                                                                                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900 break-all">${p.identity_number || '-'}</span></p>
-                                                                                                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
-                                                                                                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">{{ __('messages.reg_blood_type') }}:</span> <br><span class="font-medium text-surface-900">${p.blood_type || '-'}</span></p>
-                                                                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                                                                        </div>`;
+                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="flex justify-between items-start mb-2">
+                                                                                                                                                                                                                                                                                                                                                                                                                                    <h4 class="font-bold text-brand-600">${title}</h4>
+                                                                                                                                                                                                                                                                                                                                                                                                                                    <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                                                                                                                                                                                                                                                                                                                                                                                                                                    ${isFamily ? `<p><span class="text-surface-600">{{ __('messages.reg_role') }}:</span> <br><span class="font-medium text-surface-900 capitalize">${p.role || '-'}</span></p>` : ''}
+                                                                                                                                                                                                                                                                                                                                                                                                                                    <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                    <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                    <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900 break-all">${p.email || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                    <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                    <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900 break-all">${p.identity_number || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                    <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                    <p><span class="text-surface-600">{{ __('messages.reg_blood_type') }}:</span> <br><span class="font-medium text-surface-900">${p.blood_type || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                            </div>`;
 
                     for (let key in p) {
                         let input = document.createElement('input');
@@ -1342,7 +1433,7 @@
                             errList.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         }
                     @endif
-                                                                                } else {
+                                                                                                                                                    } else {
                     updateCategoryDetails();
                 }
             })();
