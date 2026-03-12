@@ -14,7 +14,7 @@
         <div class="max-w-5xl mx-auto px-4 sm:px-6">
             <div class="flex justify-between items-center h-16">
                 <a href="{{ route('home') }}" class="flex items-center gap-2">
-                    <img src="{{ asset('logo.png') }}" class="h-8 md:h-10 w-auto" alt="ERA TRAIL RUN" />
+                    <img src="{{ asset('erafone-icon-02.webp') }}" class="h-8 md:h-10 w-auto" alt="ERA TRAIL RUN" />
                 </a>
                 <div class="flex items-center gap-1 overflow-x-auto">
                     <a href="{{ route('participant.dashboard') }}"
@@ -41,7 +41,8 @@
     <main class="pt-24 pb-12 px-4 sm:px-6 max-w-5xl mx-auto">
         @if(session('success'))
             <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-700 text-sm">
-                {{ session('success') }}</div>
+                {{ session('success') }}
+            </div>
         @endif
         @yield('content')
     </main>

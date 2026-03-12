@@ -245,12 +245,13 @@ class RegistrationController extends Controller
             if ($mayarResponse->successful()) {
                 $mayarData = $mayarResponse->json();
                 $paymentLink = $mayarData['data']['link'] ?? $mayarData['data']['paymentLink'] ?? '#';
-                $invoiceId = $mayarData['data']['id'] ?? $invoiceId;
+                $gatewayId = $mayarData['data']['id'] ?? null;
 
                 \Illuminate\Support\Facades\Log::info('Mayar payment created', [
                     'participant_id' => $participant->id,
                     'order_id' => $orderId,
                     'invoice_id' => $invoiceId,
+                    'gateway_id' => $gatewayId,
                     'payment_link' => $paymentLink,
                     'amount' => $finalAmount
                 ]);
@@ -274,10 +275,11 @@ class RegistrationController extends Controller
             'order_id' => $orderId,
             'amount' => $baseAmount,
             'promotion_id' => $appliedPromotionId,
-            'discount_amount' => $discountAmount,
+            'discount_amount' => $discount_amount ?? 0,
             'final_amount' => $finalAmount,
             'status' => 'pending',
             'invoice_id' => $invoiceId,
+            'gateway_id' => $gatewayId ?? null,
             'payment_link' => $paymentLink,
         ]);
 

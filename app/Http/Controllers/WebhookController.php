@@ -48,7 +48,8 @@ class WebhookController extends Controller
         }
 
         // Find payment by matching IDs from webhook
-        $mayarId = $data['id'] ?? null;
+        $mayarId = $data['id'] ?? $data['transactionId'] ?? null;
+        $transactionId = $data['transactionId'] ?? null;
         $productId = $data['productId'] ?? null;
         $paymentLinkId = $data['paymentLinkId'] ?? null;
         $linkId = $data['linkId'] ?? null;
@@ -56,27 +57,47 @@ class WebhookController extends Controller
 
         $payment = null;
 
-        // Primary: match by productId (this is the ID returned when we created the payment)
+        // 1. Match by productId
         if ($productId) {
-            $payment = Payment::where('invoice_id', $productId)->first();
+            $payment = Payment::where('gateway_id', $productId)->orWhere('invoice_id', $productId)->first();
+            if ($payment) Log::info('Webhook match found: productId', ['id' => $productId]);
         }
 
-        // Fallback 1: try by transactionId / id
+        // 2. Match by mayarId
         if (!$payment && $mayarId) {
-            $payment = Payment::where('invoice_id', $mayarId)->first();
+            $payment = Payment::where('gateway_id', $mayarId)->orWhere('invoice_id', $mayarId)->first();
+            if ($payment) Log::info('Webhook match found: mayarId', ['id' => $mayarId]);
         }
 
-        // Fallback 2: try paymentLinkId
+        // 3. Match by transactionId explicitly
+        if (!$payment && $transactionId) {
+            $payment = Payment::where('gateway_id', $transactionId)->orWhere('invoice_id', $transactionId)->first();
+            if ($payment) Log::info('Webhook match found: transactionId', ['id' => $transactionId]);
+        }
+
+        // 4. Fallback: Parse Order ID from description
+        if (!$payment) {
+            $desc = $data['productDescription'] ?? $data['description'] ?? '';
+            Log::info('Webhook parsing description', ['desc' => $desc]);
+            if (preg_match('/Order\s+#(ETR26-[0-9A-Z-]+)/i', $desc, $matches)) {
+                $orderId = $matches[1];
+                Log::info('Webhook matched Order ID from regex', ['orderId' => $orderId]);
+                $payment = Payment::where('order_id', $orderId)->first();
+                if ($payment) Log::info('Webhook match found: Order ID from description');
+            }
+        }
+
+        // 5. Fallback: try by other IDs in the payload
         if (!$payment && $paymentLinkId) {
             $payment = Payment::where('invoice_id', $paymentLinkId)->first();
+            if ($payment) Log::info('Webhook match found: paymentLinkId');
         }
-
-        // Fallback 3: try linkId
         if (!$payment && $linkId) {
             $payment = Payment::where('invoice_id', $linkId)->first();
+            if ($payment) Log::info('Webhook match found: linkId');
         }
 
-        // Fallback 4: match by customer email + amount
+        // 6. Last resort: match by customer email + amount
         if (!$payment) {
             $customerEmail = $data['customerEmail'] ?? null;
             $amount = $data['amount'] ?? null;
@@ -88,19 +109,24 @@ class WebhookController extends Controller
                     })
                     ->latest()
                     ->first();
+                if ($payment) Log::info('Webhook match found: Email + Amount');
             }
         }
 
         if (!$payment) {
-            Log::warning('Mayar webhook: Payment not found', [
-                'mayar_id' => $mayarId,
+            Log::warning('Mayar webhook: Payment not found with any strategy', [
+                'mayarId' => $mayarId,
+                'transactionId' => $transactionId,
                 'productId' => $productId,
-                'paymentLinkId' => $paymentLinkId,
+                'description' => $data['productDescription'] ?? $data['description'] ?? 'N/A',
+                'customerEmail' => $data['customerEmail'] ?? 'N/A'
             ]);
             return response()->json(['error' => 'Payment not found'], 404);
         }
 
-        DB::transaction(function () use ($payment, $event, $status, $data, $payload) {
+        Log::info('Mayar webhook: Payment found', ['payment_id' => $payment->id, 'order_id' => $payment->order_id]);
+
+        DB::transaction(function () use ($payment, $event, $status, $data, $payload, $mayarId) {
             $statusCode = $data['statusCode'] ?? null;
             $statusStr = $status ?? $statusCode ?? '';
 
