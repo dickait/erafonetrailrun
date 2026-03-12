@@ -452,7 +452,7 @@
                             <select name="jersey_size"
                                 class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                                 <option value="">{{ __('messages.reg_select') }}</option>
-                                @foreach(['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XS (Anak-anak)', 'S (Anak-anak)', 'M (Anak-anak)', 'L (Anak-anak)', 'XL (Anak-anak)'] as $sz)
+                                @foreach(['XS', 'S', 'M', 'L', 'XL', 'XXL'] as $sz)
                                     <option value="{{ $sz }}" {{ old('jersey_size') == $sz ? 'selected' : '' }}>{{ $sz }}
                                     </option>
                                 @endforeach
@@ -677,50 +677,6 @@
                     </div>
                 </div>
 
-                <!-- Kids Size Chart -->
-                <div class="mb-8">
-                    <h4 class="text-lg font-bold text-emerald-500 mb-4 border-l-4 border-emerald-500 pl-3">Kids Unisex Size
-                        Chart (Anak-anak)
-                    </h4>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm text-left text-surface-600">
-                            <thead class="text-xs text-surface-900 uppercase bg-surface-100">
-                                <tr>
-                                    <th scope="col" class="px-4 py-3 rounded-tl-lg">Ukuran (Size)</th>
-                                    <th scope="col" class="px-4 py-3">Lebar Dada (cm)</th>
-                                    <th scope="col" class="px-4 py-3 rounded-tr-lg">Panjang Badan (cm)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="border-b border-surface-100 hover:bg-surface-50">
-                                    <td class="px-4 py-3 font-medium text-surface-900">XS (Anak-anak)</td>
-                                    <td class="px-4 py-3">34</td>
-                                    <td class="px-4 py-3">46</td>
-                                </tr>
-                                <tr class="border-b border-surface-100 hover:bg-surface-50">
-                                    <td class="px-4 py-3 font-medium text-surface-900">S (Anak-anak)</td>
-                                    <td class="px-4 py-3">36</td>
-                                    <td class="px-4 py-3">48</td>
-                                </tr>
-                                <tr class="border-b border-surface-100 hover:bg-surface-50">
-                                    <td class="px-4 py-3 font-medium text-surface-900">M (Anak-anak)</td>
-                                    <td class="px-4 py-3">38</td>
-                                    <td class="px-4 py-3">50</td>
-                                </tr>
-                                <tr class="border-b border-surface-100 hover:bg-surface-50">
-                                    <td class="px-4 py-3 font-medium text-surface-900">L (Anak-anak)</td>
-                                    <td class="px-4 py-3">40</td>
-                                    <td class="px-4 py-3">52</td>
-                                </tr>
-                                <tr class="hover:bg-surface-50">
-                                    <td class="px-4 py-3 font-medium text-surface-900 rounded-bl-lg">XL (Anak-anak)</td>
-                                    <td class="px-4 py-3">42</td>
-                                    <td class="px-4 py-3 rounded-br-lg">54</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
 
                 <p class="text-xs text-surface-700 mt-4 text-center">* Toleransi ukuran perbedaan 1-2 cm.</p>
 
