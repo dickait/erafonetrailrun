@@ -265,11 +265,23 @@ class RegistrationController extends Controller
 
         if ($request->has('email')) {
             $event = Event::where('is_active', true)->latest('event_date')->first();
-            if ($event) {
+            if (!$event) {
+                $event = Event::latest('event_date')->first();
+            }
+
+            if ($event && $request->email) {
+                $email = trim($request->email);
                 $participant = Participant::with(['category', 'latestPayment.promotion', 'latestPayment.discountCode', 'event', 'familyMembers'])
                     ->where('event_id', $event->id)
-                    ->where('email', $request->email)
+                    ->where('email', $email)
                     ->first();
+
+                if (!$participant) {
+                    $participant = Participant::with(['category', 'latestPayment.promotion', 'latestPayment.discountCode', 'event', 'familyMembers'])
+                        ->where('email', $email)
+                        ->latest()
+                        ->first();
+                }
             }
         }
 
@@ -284,16 +296,22 @@ class RegistrationController extends Controller
     {
         $participant = null;
 
-        if ($request->isMethod('post') && $request->has('email')) {
-            $request->validate([
-                'email' => 'required|email',
-                'captcha' => 'required|captcha',
-            ], [
-                'captcha.required' => 'Please enter the captcha code.',
-                'captcha.captcha' => 'Invalid captcha code.',
-            ]);
+        if ($request->has('email')) {
+            if ($request->isMethod('post')) {
+                $request->validate([
+                    'email' => 'required|email',
+                    'captcha' => 'required|captcha',
+                ], [
+                    'captcha.required' => 'Please enter the captcha code.',
+                    'captcha.captcha' => 'Invalid captcha code.',
+                ]);
+            }
 
             $event = Event::where('is_active', true)->latest('event_date')->first();
+            if (!$event) {
+                $event = Event::latest('event_date')->first();
+            }
+
             if ($event) {
                 $participant = Participant::with(['category', 'latestPayment.promotion', 'latestPayment.discountCode', 'event', 'familyMembers'])
                     ->where('event_id', $event->id)
