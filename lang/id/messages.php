@@ -66,6 +66,9 @@ return [
     'categories_item_timing' => 'Record Finish Time',
     'categories_item_finisher_tee' => 'Finisher Tee',
     'categories_item_sponsor_product' => 'Produk Sponsor',
+    'categories_reguler' => 'Reguler',
+    'categories_now' => 'Harga Sekarang',
+    'categories_early_bird_ends' => 'Early Bird Berakhir',
 
     // Category Info
     'cat_5k-family-fun-trail_desc' => 'Kategori santai untuk keluarga yang melewati rute indah dan ramah pemula sepanjang lintasan perbukitan hijau, melintasi area Bukit Ilalang Cijeruk, Bukit Pupay, dan Argo Edu Wisata Organik Mulyaharja.',
@@ -157,6 +160,9 @@ return [
     'role_ibu' => 'Ibu',
     'role_anak' => 'Anak',
     'role_saudara' => 'Saudara',
+    'reg_fee' => 'Biaya Pendaftaran',
+    'reg_discount' => 'Diskon',
+    'reg_total' => 'Total Pembayaran',
 
     // Status
     'status_badge' => 'Cek Status',

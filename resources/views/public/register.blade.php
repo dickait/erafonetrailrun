@@ -148,7 +148,7 @@
                                                     @endforeach
                                                 @else
                                                     <div class="flex justify-between text-sm">
-                                                        <span class="text-surface-600">Reguler</span>
+                                                        <span class="text-surface-600">{{ __('messages.categories_reguler') }}</span>
                                                         <span class="text-surface-900 font-bold">
                                                             @if($earlyBird)<strike class="opacity-50">@endif
                                                                 Rp {{ number_format($cat->getBasePrice(), 0, ',', '.') }}
@@ -162,14 +162,14 @@
                                                 <div class="bg-brand-50 p-3 rounded-xl border border-brand-100">
                                                     <div class="flex justify-between items-center mb-1">
                                                         <span class="text-brand-600 font-bold text-xs flex items-center gap-1">
-                                                            Early Bird Discount
+                                                            {{ __('messages.categories_early_bird') }} Discount
                                                         </span>
                                                         <span class="text-brand-600 font-bold text-sm">- Rp
                                                             {{ number_format($discount, 0, ',', '.') }}</span>
                                                     </div>
                                                     <div
                                                         class="flex justify-between items-center pt-2 mt-2 border-t border-brand-200">
-                                                        <span class="text-brand-900 font-bold text-sm">Harga Sekarang:</span>
+                                                        <span class="text-brand-900 font-bold text-sm">{{ __('messages.categories_now') }}:</span>
                                                         <div class="text-right">
                                                             @if($cat->slug == '5k-family-fun-trail')
                                                                 @foreach($cat->prices->sortBy('pax') as $cp)
@@ -184,7 +184,7 @@
                                                             @endif
                                                         </div>
                                                     </div>
-                                                    <p class="text-[10px] text-brand-400 italic mt-2">Berakhir:
+                                                    <p class="text-[10px] text-brand-400 italic mt-2">{{ __('messages.categories_early_bird_ends') }}:
                                                         {{ $earlyBird->end_date ? $earlyBird->end_date->format('d M Y') : '-' }}
                                                     </p>
                                                 </div>

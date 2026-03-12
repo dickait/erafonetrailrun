@@ -219,16 +219,16 @@
                                     class="bg-gradient-to-r {{ $colors[1] }} text-white px-3 py-2 rounded-lg font-bold text-center mt-2 shadow-md">
                                     @if($cat->slug == '5k-family-fun-trail')
                                         @foreach($cat->prices->sortBy('pax') as $cp)
-                                            <div class="text-xs">Now: Rp {{ number_format($cp->price - $discount, 0, ',', '.') }}
+                                            <div class="text-xs">{{ __('messages.categories_now') }}: Rp {{ number_format($cp->price - $discount, 0, ',', '.') }}
                                                 ({{ $cp->pax }} Pax)</div>
                                         @endforeach
                                     @else
-                                        <div class="text-base">Now: Rp {{ number_format($minPrice - $discount, 0, ',', '.') }}</div>
+                                            <div class="text-base">{{ __('messages.categories_now') }}: Rp {{ number_format($minPrice - $discount, 0, ',', '.') }}</div>
                                     @endif
                                 </div>
 
                                 <div class="text-[10px] text-surface-500 text-center italic mt-1">
-                                    Early Bird Ends: {{ $earlyBird->end_date ? $earlyBird->end_date->format('d M') : '-' }}
+                                    {{ __('messages.categories_early_bird_ends') }}: {{ $earlyBird->end_date ? $earlyBird->end_date->format('d M') : '-' }}
                                 </div>
                             @endif
                             @if($cat->slug != '5k-family-fun-trail')
