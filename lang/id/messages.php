@@ -187,6 +187,7 @@ return [
     'status_blood_type' => 'Golongan Darah',
     'status_jersey_size' => 'Ukuran Jersey',
     'status_family_members' => 'Anggota Keluarga',
+    'status_paid_at' => 'Waktu Pembayaran',
 
     // Gallery
     'gallery_badge' => 'Galeri',
@@ -300,6 +301,8 @@ return [
     'part_payment_failed' => 'Pembayaran Gagal',
     'part_payment_complete_title' => 'Selesaikan Pembayaran Anda',
     'part_payment_complete_subtitle' => 'Mohon periksa kembali detail pendaftaran Anda dan lanjutkan ke pembayaran untuk mengamankan tempat Anda.',
+    'part_payment_success_title' => 'Pembayaran Berhasil!',
+    'part_payment_success_subtitle' => 'Terima kasih telah melakukan pembayaran. Pendaftaran Anda kini telah dikonfirmasi.',
     'part_payment_reg_details' => 'Detail Pendaftaran',
     'part_payment_history' => 'Riwayat Pembayaran',
     'part_bib_not_available' => 'BIB Belum Tersedia',

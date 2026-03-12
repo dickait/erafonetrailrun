@@ -7,9 +7,11 @@
                 <span
                     class="inline-block px-4 py-1.5 bg-brand-50 text-brand-500 text-sm font-semibold rounded-full mb-6 tracking-wide uppercase">{{ __('messages.part_payment_title') }}</span>
                 <h1 class="font-display font-bold text-3xl md:text-4xl text-surface-900 mb-2">
-                    {{ __('messages.part_payment_complete_title') }}
+                    {{ $participant->payment_status == 'paid' ? __('messages.part_payment_success_title') : __('messages.part_payment_complete_title') }}
                 </h1>
-                <p class="text-surface-700">{{ __('messages.part_payment_complete_subtitle') }}</p>
+                <p class="text-surface-700">
+                    {{ $participant->payment_status == 'paid' ? __('messages.part_payment_success_subtitle') : __('messages.part_payment_complete_subtitle') }}
+                </p>
             </div>
 
             @if(isset($participant))
@@ -39,6 +41,10 @@
                             if (!$isFamily) {
                                 $fields[__('messages.status_blood_type')] = $participant->blood_type ?? '-';
                                 $fields[__('messages.status_jersey_size')] = $participant->jersey_size ?? '-';
+                            }
+
+                            if ($participant->payment_status == 'paid' && $participant->latestPayment && $participant->latestPayment->paid_at) {
+                                $fields[__('messages.status_paid_at')] = $participant->latestPayment->paid_at->format('d M Y, H:i');
                             }
 
                             $latestPayment = $participant->latestPayment;

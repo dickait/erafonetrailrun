@@ -186,6 +186,7 @@ return [
     'status_blood_type' => 'Blood Type',
     'status_jersey_size' => 'Jersey Size',
     'status_family_members' => 'Family Members',
+    'status_paid_at' => 'Paid At',
 
     // Gallery
     'gallery_badge' => 'Gallery',
@@ -299,6 +300,8 @@ return [
     'part_payment_failed' => 'Payment Failed',
     'part_payment_complete_title' => 'Complete Your Payment',
     'part_payment_complete_subtitle' => 'Please review your registration details and proceed to payment to secure your spot.',
+    'part_payment_success_title' => 'Payment Successful!',
+    'part_payment_success_subtitle' => 'Thank you for your payment. Your registration has now been confirmed.',
     'part_payment_reg_details' => 'Registration Details',
     'part_payment_history' => 'Payment History',
     'part_bib_not_available' => 'BIB Not Available Yet',
