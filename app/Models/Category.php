@@ -8,17 +8,12 @@ class Category extends Model
 {
     protected $fillable = [
         'event_id', 'name', 'slug', 'description',
-        'price', 'early_bird_price', 'early_bird_deadline',
         'quota', 'distance_km', 'color',
     ];
 
     protected function casts(): array
     {
-        return [
-            'price' => 'decimal:2',
-            'early_bird_price' => 'decimal:2',
-            'early_bird_deadline' => 'datetime',
-        ];
+        return [];
     }
 
     public function event()
@@ -36,12 +31,40 @@ class Category extends Model
         return $this->hasMany(CategoryPrice::class);
     }
 
-    public function getCurrentPrice(): float
+    public function getBasePrice($pax = 1): float
     {
-        if ($this->early_bird_price && $this->early_bird_deadline && now()->lte($this->early_bird_deadline)) {
-            return (float) $this->early_bird_price;
+        $categoryPrice = $this->prices()->where('pax', $pax)->first();
+        return (float) ($categoryPrice->price ?? 0);
+    }
+
+    public function getCurrentPrice($pax = 1): float
+    {
+        $price = $this->getBasePrice($pax);
+        if ($price <= 0) return 0;
+        
+        // Let's check for an active early bird promo
+        $earlyBird = $this->getActivePromotion('earlybird');
+        if ($earlyBird) {
+            if ($earlyBird->discount_type == 'fixed') {
+                $price -= (float) $earlyBird->discount_value;
+            } else {
+                $price -= $price * ((float) $earlyBird->discount_value / 100);
+            }
         }
-        return (float) $this->price;
+
+        return max(0, $price);
+    }
+
+    public function getActivePromotion($type)
+    {
+        return Promotion::where('type', $type)
+            ->where(function ($q) {
+                $q->whereNull('start_date')->orWhere('start_date', '<=', now());
+            })
+            ->where(function ($q) {
+                $q->whereNull('end_date')->orWhere('end_date', '>=', now());
+            })
+            ->first();
     }
 
     public function getRemainingQuota(): int
@@ -50,8 +73,17 @@ class Category extends Model
         return max(0, $this->quota - $registered);
     }
 
-    public function isEarlyBird(): bool
+    public function isEarlyBirdActive(): bool
     {
-        return $this->early_bird_price && $this->early_bird_deadline && now()->lte($this->early_bird_deadline) && $this->early_bird_price < $this->price;
+        $promo = $this->getActivePromotion('earlybird');
+        return !is_null($promo);
+    }
+
+    public function getEarlyBirdDiscount(): float
+    {
+        $promo = $this->getActivePromotion('earlybird');
+        if (!$promo) return 0;
+
+        return (float) $promo->discount_value;
     }
 }

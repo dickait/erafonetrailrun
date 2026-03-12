@@ -41,7 +41,7 @@
                             $latestPayment = $participant->latestPayment;
                             $multiplier = $isFamily ? ($participant->familyMembers->count() + 1) : 1;
                             
-                            $baseAmount = $latestPayment ? $latestPayment->amount : ($participant->category ? $participant->category->getCurrentPrice() * $multiplier : 0);
+                            $baseAmount = $latestPayment ? $latestPayment->amount : ($participant->category ? $participant->category->getBasePrice($multiplier) : 0);
                             $discountAmount = $latestPayment ? $latestPayment->discount_amount : 0;
                             $finalAmount = $latestPayment ? ($latestPayment->final_amount ?? ($baseAmount - $discountAmount)) : ($baseAmount - $discountAmount);
                         @endphp

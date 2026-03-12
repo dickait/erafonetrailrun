@@ -96,24 +96,38 @@ class RegistrationController extends Controller
             $multiplier = count($request->participants);
         }
 
-        $categoryPrice = $category->prices()->where('pax', $multiplier)->first();
-        $baseAmount = $categoryPrice ? (float) $categoryPrice->price : ($category->getCurrentPrice() * $multiplier);
+        // Calculate base price
+        $baseAmount = $category->getBasePrice($multiplier);
         
         $discountAmount = 0;
         $discountCodeId = null;
 
+        // 1. Automatic Early Bird Discount
+        $earlyBirdPromo = $category->getActivePromotion('earlybird');
+        if ($earlyBirdPromo) {
+            if ($earlyBirdPromo->discount_type == 'fixed') {
+                $discountAmount += (float) $earlyBirdPromo->discount_value;
+            } else {
+                $discountAmount += $baseAmount * ((float) $earlyBirdPromo->discount_value / 100);
+            }
+        }
+
+        // 2. Manual Discount Code
         if ($request->filled('discount_code')) {
             $dc = \App\Models\DiscountCode::where('code', strtoupper($request->discount_code))->first();
             if ($dc && $dc->isValid()) {
                 $promotion = $dc->promotion;
-                if ($promotion->discount_type == 'fixed') {
-                    $discountAmount = (float) $promotion->discount_value;
-                } else {
-                    $discountAmount = (float) ($promotion->discount_value / 100) * $baseAmount;
-                }
-                $discountCodeId = $dc->id;
                 
-                // Increment used count
+                // Avoid double-applying if the code is for the same earlybird promo
+                if (!$earlyBirdPromo || $earlyBirdPromo->id !== $promotion->id) {
+                    if ($promotion->discount_type == 'fixed') {
+                        $discountAmount += (float) $promotion->discount_value;
+                    } else {
+                        $discountAmount += $baseAmount * ((float) $promotion->discount_value / 100);
+                    }
+                }
+                
+                $discountCodeId = $dc->id;
                 $dc->increment('used_count');
             } else {
                 return back()->withInput()->withErrors(['discount_code' => 'Invalid or expired discount code.']);
