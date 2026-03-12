@@ -62,7 +62,7 @@
                     <div id="category-details-container" class="mt-6 border-t border-surface-300 pt-6 hidden">
                         @foreach($categories as $cat)
                             @php
-                                $usia = $cat->slug == '5k-family-trail' ? '10+' : '17+';
+                                $usia = $cat->slug == '5k-family-fun-trail' ? '10+' : '17+';
                             @endphp
                             <div id="cat-detail-{{ $cat->id }}" class="category-detail-content hidden">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -87,6 +87,19 @@
                                                 {{ __('messages.cat_age') }}</span></div>
                                     </div>
                                     <div>
+                                        @if($cat->slug != '5k-family-fun-trail')
+                                            <div class="flex justify-between text-sm mb-2"><span
+                                                    class="text-surface-700">{{ __('messages.cat_category') }}</span><span
+                                                    class="text-surface-900 font-medium">{{ __('messages.cat_category_open') }}<br>{{ __('messages.cat_category_master') }}</span>
+                                            </div>
+                                        @endif
+                                        <!-- If categories is not 5k, write this -->
+                                        @if($cat->slug != '5k-family-fun-trail')
+                                            <div class="flex justify-between text-sm mb-2"><span class="text-surface-700">Podium:
+                                                </span><span
+                                                    class="text-surface-900 font-medium text-right">{{ __('messages.cat_podium') }}<br>{{ __('messages.cat_podium_open_master') }}</span>
+                                            </div>
+                                        @endif
                                         <p class="text-sm font-semibold text-surface-900 mb-3">
                                             {{ __('messages.categories_entitlements') }}:
                                         </p>
@@ -108,13 +121,25 @@
                                                     viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M5 13l4 4L19 7" />
-                                                </svg>{{ __('messages.categories_item_racepack') }}</li>
+                                                </svg>
+                                                @if($cat->slug != '5k-family-fun-trail')
+                                                    {{ __('messages.cat_bib_chip_time') }}
+                                                @else
+                                                    BIB
+                                                @endif
+                                            </li>
                                             <li class="flex items-start gap-2"><svg
                                                     class="w-4 h-4 text-brand-500 mt-0.5 flex-shrink-0" fill="none"
                                                     viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M5 13l4 4L19 7" />
                                                 </svg>{{ __('messages.categories_item_refreshment') }}</li>
+                                            <li class="flex items-start gap-2"><svg
+                                                    class="w-4 h-4 text-brand-500 mt-0.5 flex-shrink-0" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M5 13l4 4L19 7" />
+                                                </svg>{{ __('messages.categories_item_sponsor_product') }}</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -1065,7 +1090,7 @@
                     if (radio.checked) {
                         isAnyChecked = true;
 
-                        isFamily = radio.dataset.slug === '5k-family-trail';
+                        isFamily = radio.dataset.slug === '5k-family-fun-trail';
 
                         btnNextContainer.classList.remove('hidden');
                         btnSubmitContainer.classList.add('hidden');
@@ -1214,21 +1239,21 @@
                 participantsData.forEach((p, index) => {
                     let title = isFamily ? `Peserta ${index + 1} ${index === 0 ? '(Team Leader)' : '(Family Member)'}` : 'Data Peserta';
                     html += `<div class="p-4 border border-surface-200 rounded-xl mb-4 bg-surface-50">
-                                                                                                                                                                                                                                                                                                                    <div class="flex justify-between items-start mb-2">
-                                                                                                                                                                                                                                                                                                                        <h4 class="font-bold text-brand-600">${title}</h4>
-                                                                                                                                                                                                                                                                                                                        <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
-                                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                                                                                                                                                                                                                                                                                                                        ${isFamily ? `<p><span class="text-surface-600">{{ __('messages.reg_role') }}:</span> <br><span class="font-medium text-surface-900 capitalize">${p.role || '-'}</span></p>` : ''}
-                                                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
-                                                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
-                                                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900 break-all">${p.email || '-'}</span></p>
-                                                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
-                                                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900 break-all">${p.identity_number || '-'}</span></p>
-                                                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
-                                                                                                                                                                                                                                                                                                                        <p><span class="text-surface-600">{{ __('messages.reg_blood_type') }}:</span> <br><span class="font-medium text-surface-900">${p.blood_type || '-'}</span></p>
-                                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                                </div>`;
+                                                                                                                                                                                                                                                                                                                                                            <div class="flex justify-between items-start mb-2">
+                                                                                                                                                                                                                                                                                                                                                                <h4 class="font-bold text-brand-600">${title}</h4>
+                                                                                                                                                                                                                                                                                                                                                                <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
+                                                                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                                                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                                                                                                                                                                                                                                                                                                                                                                ${isFamily ? `<p><span class="text-surface-600">{{ __('messages.reg_role') }}:</span> <br><span class="font-medium text-surface-900 capitalize">${p.role || '-'}</span></p>` : ''}
+                                                                                                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900 break-all">${p.email || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900 break-all">${p.identity_number || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                                                                <p><span class="text-surface-600">{{ __('messages.reg_blood_type') }}:</span> <br><span class="font-medium text-surface-900">${p.blood_type || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                                                                        </div>`;
 
                     for (let key in p) {
                         let input = document.createElement('input');
@@ -1298,7 +1323,7 @@
                             errList.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         }
                     @endif
-                                        } else {
+                                                                                } else {
                     updateCategoryDetails();
                 }
             })();

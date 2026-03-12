@@ -34,7 +34,7 @@ return [
     'about_badge' => 'Tentang Acara',
     'about_title' => 'Petualangan Trail Run di',
     'about_title_highlight' => 'Bogor',
-    'about_description' => 'ERA TRAIL RUN 2026 merupakan event lari trail yang menjadi bagian dari rangkaian Jelajah Era, menghadirkan pengalaman olahraga outdoor yang memadukan petualangan alam, gaya hidup aktif, dan teknologi. Diselenggarakan di Bogor Nirwana Residence, Bogor, peserta akan berlari melewati jalur perbukitan dan hutan yang indah dalam tiga kategori lomba, yaitu 5K, 10K, dan 15K. Event ini tidak hanya menawarkan tantangan trail yang seru di alam Bogor, tetapi juga pengalaman komunitas yang meriah dengan berbagai aktivitas event serta finisher medal bagi peserta yang berhasil menyelesaikan lomba.',
+    'about_description' => 'ERA TRAIL RUN 2026 merupakan event lari trail yang menjadi bagian dari rangkaian Jelajah Era, menghadirkan pengalaman olahraga outdoor yang memadukan petualangan alam, gaya hidup aktif, dan teknologi. Diselenggarakan di Bogor Nirwana Residence, Bogor, peserta akan berlari melewati jalur perbukitan dan hutan yang indah, melintasi Bukit Ilalang Cijeruk, Bukit Pupay, dan Argo Edu Wisata Organik Mulyaharja, dalam tiga kategori lomba, yaitu 5K Family Fun Trail, 10K, dan 15K. Event ini tidak hanya menawarkan tantangan trail yang seru di alam Bogor, tetapi juga pengalaman komunitas yang meriah dengan berbagai aktivitas event serta finisher medal bagi peserta yang berhasil menyelesaikan lomba.',
     'about_highlight_1' => '3 Kategori Lari',
     'about_highlight_2' => 'Trail Alam Bogor',
     'about_highlight_3' => 'Finisher Medal',
@@ -46,7 +46,7 @@ return [
     'categories_badge' => 'Kategori Lomba',
     'categories_title' => 'Pilih',
     'categories_title_highlight' => 'Tantanganmu',
-    'categories_subtitle' => 'Tiga kategori trail run — 5K family, 10K, dan 15K — siap menantang setiap pelari di jalur alam Bogor.',
+    'categories_subtitle' => 'Tiga kategori trail run — 5K family fun trail, 10K, dan 15K — siap menantang setiap pelari di jalur alam Bogor.',
     'categories_distance' => 'Jarak',
     'categories_elevation' => 'Kenaikan Elevasi',
     'categories_cot' => 'Batas Waktu',
@@ -65,13 +65,21 @@ return [
     'categories_item_cert' => 'E-Certificate',
     'categories_item_timing' => 'Record Finish Time',
     'categories_item_finisher_tee' => 'Finisher Tee',
+    'categories_item_sponsor_product' => 'Produk Sponsor',
 
     // Category Info
-    'cat_5k-family-trail_desc' => 'Kategori santai untuk keluarga, melewati rute indah dan ramah pemula sepanjang lintasan perbukitan hijau.',
-    'cat_10k_desc' => 'Persiapkan dirimu untuk tantangan 10K melintasi hutan pinus dan trek yang cukup menguras stamina.',
-    'cat_15k_desc' => 'Tantangan utama dengan rute 15K yang menguji daya tahan melalui elevasi yang signifikan.',
+    'cat_5k-family-fun-trail_desc' => 'Kategori santai untuk keluarga yang melewati rute indah dan ramah pemula sepanjang lintasan perbukitan hijau, melintasi area Bukit Ilalang Cijeruk, Bukit Pupay, dan Argo Edu Wisata Organik Mulyaharja.',
+    'cat_10k_desc' => 'Persiapkan dirimu untuk tantangan 10K melintasi hutan pinus dan trek yang cukup menguras stamina, dengan rute yang juga melewati Bukit Ilalang Cijeruk, Bukit Pupay, dan Argo Edu Wisata Organik Mulyaharja.',
+    'cat_15k_desc' => 'Tantangan utama dengan rute 15K yang menguji daya tahan melalui elevasi yang signifikan, melintasi Bukit Ilalang Cijeruk, Bukit Pupay, dan Argo Edu Wisata Organik Mulyaharja.',
     'cat_usia' => 'Usia',
     'cat_age' => 'Tahun',
+    'cat_category' => 'Kategori',
+    'cat_category_open' => 'Open (17-39 Tahun)',
+    'cat_category_master' => 'Master (+40 Tahun)',
+    'cat_podium' => 'Juara 1-3 Putra & Putri',
+    'cat_podium_open_master' => '(Open & Master)',
+    'cat_bib_chip_time' => 'BIB & Chip Time',
+
 
     // CTA
     'cta_title' => 'Siap Menaklukkan Jalur?',
@@ -191,7 +199,7 @@ return [
     'results_title' => 'Hasil Lomba',
     'results_subtitle' => 'Hasil lomba resmi akan dipublikasikan setelah acara',
     'results_coming_soon' => 'Segera Hadir',
-    'results_description' => 'Hasil lomba akan dipublikasikan di sini setelah :date. Periksa kembali nanti untuk klasemen lengkap dan waktu finish.',
+    'results_description' => 'Hasil lomba akan dipublikasikan di sini setelah acara berakhir. Periksa kembali nanti untuk klasemen lengkap dan waktu finish.',
 
     // Login
     'login_title' => 'Selamat Datang Kembali',

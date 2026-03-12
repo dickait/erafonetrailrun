@@ -25,7 +25,7 @@
                     $categoryColors = [
                         '10k' => ['from-accent-500 to-accent-600', 'accent-500', 'bg-accent-50', 'text-accent-600', 'border-accent-200', 'shadow-accent-500/20'],
                         '15k' => ['from-brand-500 to-brand-600', 'brand-500', 'bg-brand-50', 'text-brand-500', 'border-brand-200', 'shadow-brand-500/20'],
-                        '5k-family-trail' => ['from-emerald-500 to-emerald-600', 'emerald-500', 'bg-emerald-50', 'text-emerald-600', 'border-emerald-200', 'shadow-emerald-500/20'],
+                        '5k-family-fun-trail' => ['from-emerald-500 to-emerald-600', 'emerald-500', 'bg-emerald-50', 'text-emerald-600', 'border-emerald-200', 'shadow-emerald-500/20'],
                     ];
                 @endphp
 
@@ -44,8 +44,8 @@
                 <!-- Tab Contents -->
                 @foreach($categories as $index => $category)
                     @php
-                        $colors = $categoryColors[$category->slug] ?? $categoryColors['5k-family-trail'];
-                        $usia = $category->slug == '5k-family-trail' ? '10+' : '17+';
+                        $colors = $categoryColors[$category->slug] ?? $categoryColors['5k-family-fun-trail'];
+                        $usia = $category->slug == '5k-family-fun-trail' ? '10+' : '17+';
                         $imageFolder = str_replace('-trail', '', $category->slug);
                     @endphp
                     <div id="tab-content-{{ $category->slug }}" class="tab-content {{ $index === 0 ? '' : 'hidden' }}">

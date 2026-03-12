@@ -46,7 +46,7 @@ class DatabaseSeeder extends Seeder
         Category::create([
             'event_id' => $event->id,
             'name' => '5K Family Trail',
-            'slug' => '5k-family-trail',
+            'slug' => '5k-family-fun-trail',
             'description' => '5K Family Trail',
             'price' => 250000,
             'early_bird_price' => 200000,

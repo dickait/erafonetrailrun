@@ -34,7 +34,7 @@ return [
     'about_badge' => 'About The Event',
     'about_title' => 'A Trail Running Adventure in',
     'about_title_highlight' => 'Bogor',
-    'about_description' => 'ERA TRAIL RUN 2026 is a trail running event that is part of the Jelajah Era series, bringing an outdoor sports experience that combines nature adventure, active lifestyle, and technology. Held in Bogor Nirwana Residence, Bogor, participants will run through beautiful hills and forest trails in three race categories: 5K, 10K, and 15K. This event not only offers exciting trail challenges in Bogor\'s nature, but also a lively community experience with various event activities and a finisher medal for participants who successfully complete the race.',
+    'about_description' => 'ERA TRAIL RUN 2026 is a trail running event that is part of the Jelajah Era series, offering an outdoor sports experience that combines nature adventure, an active lifestyle, and technology. Held at Bogor Nirwana Residence, Bogor, participants will run through scenic hills and forest trails, passing through Bukit Ilalang Cijeruk, Bukit Pupay, and Argo Edu Wisata Organik Mulyaharja, across three race categories: 5K Family Fun Trail, 10K, and 15K. The event not only offers an exciting trail challenge in the natural landscapes of Bogor, but also a vibrant community experience with various event activities and finisher medals for participants who complete the race.',
     'about_highlight_1' => '3 Race Categories',
     'about_highlight_2' => 'Bogor Nature Trail',
     'about_highlight_3' => 'Finisher Medal',
@@ -46,7 +46,7 @@ return [
     'categories_badge' => 'Race Categories',
     'categories_title' => 'Choose Your',
     'categories_title_highlight' => 'Challenge',
-    'categories_subtitle' => 'Three trail run categories — 5K Family, 10K, and 15K — across the natural trails of Bogor.',
+    'categories_subtitle' => 'Three trail run categories — 5K Family Fun Trail, 10K, and 15K — across the natural trails of Bogor.',
     'categories_distance' => 'Distance',
     'categories_elevation' => 'Elevation Gain',
     'categories_cot' => 'Cut-Off Time',
@@ -65,13 +65,20 @@ return [
     'categories_item_cert' => 'E-Certificate',
     'categories_item_timing' => 'Timing System',
     'categories_item_finisher_tee' => 'Finisher Tee',
+    'categories_item_sponsor_product' => 'Sponsor Product',
 
     // Category Info
-    'cat_5k-family-trail_desc' => 'A relaxed category for the whole family, passing through beautiful and beginner-friendly green hills trails.',
-    'cat_10k_desc' => 'Prepare yourself for the 10K challenge across pine forests and an exciting stamina-testing trek.',
-    'cat_15k_desc' => 'The ultimate challenge with a 15K route that tests endurance through significant elevation gains.',
+    'cat_5k-family-fun-trail_desc' => 'A relaxed category for families, featuring a beginner-friendly scenic route through green hills, passing Bukit Ilalang Cijeruk, Bukit Pupay, and Argo Edu Wisata Organik Mulyaharja.',
+    'cat_10k_desc' => 'Get ready for a 10K challenge through pine forests and stamina-testing trails, with routes passing Bukit Ilalang Cijeruk, Bukit Pupay, and Argo Edu Wisata Organik Mulyaharja.',
+    'cat_15k_desc' => 'The ultimate challenge with a 15K route that tests endurance through significant elevation, passing Bukit Ilalang Cijeruk, Bukit Pupay, and Argo Edu Wisata Organik Mulyaharja.',
     'cat_usia' => 'Age',
     'cat_age' => 'Years Old',
+    'cat_category' => 'Category',
+    'cat_category_open' => 'Open (17-39 Years Old)',
+    'cat_category_master' => 'Master (+40 Years Old)',
+    'cat_podium' => 'Podium 1-3 Male & Female',
+    'cat_podium_open_master' => '(Open & Master)',
+    'cat_bib_chip_time' => 'BIB & Chip Time',
 
     // CTA
     'cta_title' => 'Ready to Conquer the Trail?',
@@ -191,7 +198,7 @@ return [
     'results_title' => 'Race Results',
     'results_subtitle' => 'Official race results will be published after the event',
     'results_coming_soon' => 'Coming Soon',
-    'results_description' => 'Race results will be published here after :date. Check back later for full standings and finish times.',
+    'results_description' => 'Race results will be published here after the event. Check back later for full standings and finish times.',
 
     // Login
     'login_title' => 'Welcome Back',
