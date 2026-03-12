@@ -115,9 +115,6 @@ class RegistrationController extends Controller
                 }
                 $discountCodeId = $dc->id;
                 $appliedPromotionId = $promotion->id;
-                
-                // Increment used count for the code
-                $dc->increment('used_count');
             } else {
                 return back()->withInput()->withErrors(['discount_code' => 'Invalid or expired discount code.']);
             }

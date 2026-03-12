@@ -128,9 +128,19 @@ class WebhookController extends Controller
                 'webhook_payload' => $payload,
             ]);
 
-            // Increment promotion quota if payment just became paid
-            if ($paymentStatus === 'paid' && $oldStatus !== 'paid' && $payment->promotion_id) {
-                $payment->promotion->increment('used_count');
+            // Increment promotion used_count and decrement quota if payment just became paid
+            if ($paymentStatus === 'paid' && $oldStatus !== 'paid') {
+                if ($payment->promotion_id) {
+                    $promo = $payment->promotion;
+                    $promo->increment('used_count');
+                    if ($promo->quota !== null && $promo->quota > 0) {
+                        $promo->decrement('quota');
+                    }
+                }
+                
+                if ($payment->discount_code_id) {
+                    $payment->discountCode->increment('used_count');
+                }
             }
 
             // Update participant payment status

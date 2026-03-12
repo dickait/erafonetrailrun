@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Category extends Model
 {
@@ -63,6 +64,9 @@ class Category extends Model
             })
             ->where(function ($q) {
                 $q->whereNull('end_date')->orWhere('end_date', '>=', now());
+            })
+            ->where(function ($q) {
+                $q->whereNull('quota')->orWhere('quota', '>', 0);
             })
             ->first();
     }

@@ -27,10 +27,11 @@ class Promotion extends Model
         $now = now();
         if ($this->start_date && $now->lt($this->start_date)) return false;
         if ($this->end_date && $now->gt($this->end_date)) return false;
+        
         if ($this->quota !== null) {
-            $used = $this->discountCodes()->sum('used_count');
-            if ($used >= $this->quota) return false;
+            if ($this->quota <= 0) return false;
         }
+        
         return true;
     }
 }
