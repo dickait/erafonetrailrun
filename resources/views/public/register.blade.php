@@ -50,8 +50,12 @@
                                         {{ strtoupper(explode(' ', $cat->name)[0]) }}
                                     </p>
                                     <p class="text-sm text-surface-700">{{ $cat->name }}</p>
-                                    <p class="text-sm text-brand-500 font-medium">Rp
-                                        {{ number_format($cat->getCurrentPrice(), 0, ',', '.') }}
+                                    <p class="text-sm text-brand-500 font-medium">
+                                        @if($cat->prices->count() > 1)
+                                            Rp {{ number_format($cat->prices->min('price'), 0, ',', '.') }} - {{ number_format($cat->prices->max('price'), 0, ',', '.') }}
+                                        @else
+                                            Rp {{ number_format($cat->getCurrentPrice(), 0, ',', '.') }}
+                                        @endif
                                     </p>
                                 </div>
                             </label>
@@ -153,8 +157,8 @@
                             class="block text-sm font-medium text-surface-800 mb-2">{{ __('messages.reg_family_count') }}</label>
                         <select id="family_count" name="family_count"
                             class="w-full sm:w-1/2 px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
-                            <option value="2" selected>{{ __('messages.reg_family_count_2') }}</option>
-                            <option value="3" selected>{{ __('messages.reg_family_count_3') }}</option>
+                            <option value="2" {{ old('family_count') == '2' ? 'selected' : '' }}>{{ __('messages.reg_family_count_2') }}</option>
+                            <option value="3" {{ old('family_count') == '3' ? 'selected' : '' }}>{{ __('messages.reg_family_count_3') }}</option>
                         </select>
                     </div>
                 </div>
@@ -423,6 +427,21 @@
                             {{ __('messages.reg_review_title') }}
                         </h3>
                         <div id="review-content" class="space-y-4"></div>
+                        
+                        <!-- Discount Code Field -->
+                        <div class="mt-6 pt-6 border-t border-surface-200">
+                            <label class="block text-sm font-medium text-surface-800 mb-1.5">Kode Diskon (Opsional)</label>
+                            <div class="flex gap-2">
+                                <input type="text" name="discount_code" value="{{ old('discount_code') }}"
+                                    class="flex-1 px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors uppercase"
+                                    placeholder="Masukkan kode diskon jika ada">
+                            </div>
+                            <p class="mt-1 text-xs text-surface-500 italic">Diskon akan diterapkan pada langkah pembayaran selanjutnya.</p>
+                            @error('discount_code')
+                                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <button type="button" id="btn-edit-data"
                             class="mt-6 cursor-pointer px-6 py-3 bg-brand-50 hover:bg-brand-100 text-brand-600 border border-brand-200 font-semibold rounded-xl transition-all shadow-sm hover:shadow text-sm">
                             {!! __('messages.reg_btn_edit') !!}

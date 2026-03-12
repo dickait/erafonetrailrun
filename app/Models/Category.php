@@ -31,6 +31,11 @@ class Category extends Model
         return $this->hasMany(Participant::class);
     }
 
+    public function prices()
+    {
+        return $this->hasMany(CategoryPrice::class);
+    }
+
     public function getCurrentPrice(): float
     {
         if ($this->early_bird_price && $this->early_bird_deadline && now()->lte($this->early_bird_deadline)) {

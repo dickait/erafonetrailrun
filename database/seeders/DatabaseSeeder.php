@@ -36,9 +36,9 @@ class DatabaseSeeder extends Seeder
             'slug' => 'era-trail-run-2026',
             'description' => 'Experience the ultimate trail running adventure through the stunning landscapes of Indonesia. Join hundreds of runners in this epic journey through dense tropical forests, volcanic terrains, and breathtaking mountain vistas. Whether you\'re a beginner or an experienced trail runner, ERA TRAIL RUN 2026 has a category for you.',
             'location' => 'Bogor Nirwana Residence, Bogor',
-            'event_date' => '2026-06-21 06:00:00',
+            'event_date' => '2026-06-28 06:00:00',
             'registration_open' => '2026-01-01 00:00:00',
-            'registration_close' => '2026-06-20 23:59:59',
+            'registration_close' => '2026-06-27 23:59:59',
             'is_active' => true,
         ]);
 

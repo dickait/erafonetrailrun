@@ -38,8 +38,12 @@
                                 $fields[__('messages.status_jersey_size')] = $participant->jersey_size ?? '-';
                             }
 
+                            $latestPayment = $participant->latestPayment;
                             $multiplier = $isFamily ? ($participant->familyMembers->count() + 1) : 1;
-                            $amount = $participant->latestPayment ? $participant->latestPayment->amount : ($participant->category ? $participant->category->getCurrentPrice() * $multiplier : 0);
+                            
+                            $baseAmount = $latestPayment ? $latestPayment->amount : ($participant->category ? $participant->category->getCurrentPrice() * $multiplier : 0);
+                            $discountAmount = $latestPayment ? $latestPayment->discount_amount : 0;
+                            $finalAmount = $latestPayment ? ($latestPayment->final_amount ?? ($baseAmount - $discountAmount)) : ($baseAmount - $discountAmount);
                         @endphp
 
                         @foreach($fields as $label => $val)
@@ -93,19 +97,22 @@
                             </div>
                         @endif
 
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between py-2 border-b border-surface-100">
-                            <span class="text-surface-700 text-sm font-semibold mb-1 sm:mb-0">Total Payment</span>
-                            <div class="text-right flex flex-col sm:flex-row items-end sm:items-center gap-2 mt-1 sm:mt-0">
-                                @if($multiplier > 1 && $participant->category)
-                                    <span
-                                        class="text-surface-500 text-xs font-medium bg-surface-100 px-2 py-1 rounded text-right sm:text-left">
-                                        ({{ $multiplier }} Participants &times; Rp
-                                        {{ number_format($participant->category->getCurrentPrice(), 0, ',', '.') }})
-                                    </span>
-                                @endif
-                                <div class="text-brand-600 text-lg sm:text-lg font-bold whitespace-nowrap">
-                                    Rp {{ number_format($amount, 0, ',', '.') }}
+                        <div class="mt-4 border-t border-surface-200 pt-4 space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-surface-600">Registration Fee</span>
+                                <span class="text-surface-900 font-medium">Rp {{ number_format($baseAmount, 0, ',', '.') }}</span>
+                            </div>
+                            
+                            @if($discountAmount > 0)
+                                <div class="flex justify-between text-sm text-emerald-600">
+                                    <span>Discount ({{ $latestPayment->discountCode->code ?? 'PROMO' }})</span>
+                                    <span class="font-medium">- Rp {{ number_format($discountAmount, 0, ',', '.') }}</span>
                                 </div>
+                            @endif
+
+                            <div class="flex justify-between items-center py-2 border-t border-surface-100 mt-2">
+                                <span class="text-surface-900 font-bold">Total Payment</span>
+                                <span class="text-brand-600 text-xl font-bold">Rp {{ number_format($finalAmount, 0, ',', '.') }}</span>
                             </div>
                         </div>
 

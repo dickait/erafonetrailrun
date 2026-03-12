@@ -90,6 +90,38 @@ class RegistrationController extends Controller
                 ->withErrors(['category_id' => 'This category is full. Please select another category.']);
         }
 
+        // Calculate amount
+        $multiplier = 1;
+        if ($request->has('participants') && is_array($request->participants) && count($request->participants) > 0) {
+            $multiplier = count($request->participants);
+        }
+
+        $categoryPrice = $category->prices()->where('pax', $multiplier)->first();
+        $baseAmount = $categoryPrice ? (float) $categoryPrice->price : ($category->getCurrentPrice() * $multiplier);
+        
+        $discountAmount = 0;
+        $discountCodeId = null;
+
+        if ($request->filled('discount_code')) {
+            $dc = \App\Models\DiscountCode::where('code', strtoupper($request->discount_code))->first();
+            if ($dc && $dc->isValid()) {
+                $promotion = $dc->promotion;
+                if ($promotion->discount_type == 'fixed') {
+                    $discountAmount = (float) $promotion->discount_value;
+                } else {
+                    $discountAmount = (float) ($promotion->discount_value / 100) * $baseAmount;
+                }
+                $discountCodeId = $dc->id;
+                
+                // Increment used count
+                $dc->increment('used_count');
+            } else {
+                return back()->withInput()->withErrors(['discount_code' => 'Invalid or expired discount code.']);
+            }
+        }
+
+        $finalAmount = max(0, $baseAmount - $discountAmount);
+
         $participant = DB::transaction(function () use ($validated, $request, $event, $category) {
             $participantInfo = $validated;
 
@@ -146,12 +178,6 @@ class RegistrationController extends Controller
         });
 
         // Call Mayar API to create payment request
-        // Calculate amount
-        $multiplier = 1;
-        if ($request->has('participants') && is_array($request->participants) && count($request->participants) > 0) {
-            $multiplier = count($request->participants);
-        }
-        $amount = $category->getCurrentPrice() * $multiplier;
         $paymentLink = '#';
         $invoiceId = 'INV-' . strtoupper(Str::random(10));
 
@@ -165,7 +191,7 @@ class RegistrationController extends Controller
                 ->post(config('services.mayar.api_url') . '/payment/create', [
                     'name' => $participant->full_name,
                     'email' => $participant->email,
-                    'amount' => (int) $amount,
+                    'amount' => (int) $finalAmount,
                     'mobile' => $mobile,
                     'description' => "Registration {$event->name} - {$category->name}",
                     'redirectUrl' => route('registration.payment', ['email' => $participant->email]),
@@ -180,6 +206,7 @@ class RegistrationController extends Controller
                     'participant_id' => $participant->id,
                     'invoice_id' => $invoiceId,
                     'payment_link' => $paymentLink,
+                    'amount' => $finalAmount
                 ]);
             } else {
                 \Illuminate\Support\Facades\Log::error('Mayar API error', [
@@ -198,7 +225,10 @@ class RegistrationController extends Controller
         // Create payment record with the Mayar link
         Payment::create([
             'participant_id' => $participant->id,
-            'amount' => $amount,
+            'amount' => $baseAmount,
+            'discount_code_id' => $discountCodeId,
+            'discount_amount' => $discountAmount,
+            'final_amount' => $finalAmount,
             'status' => 'pending',
             'invoice_id' => $invoiceId,
             'payment_link' => $paymentLink,
