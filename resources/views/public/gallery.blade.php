@@ -1,5 +1,5 @@
 @extends('layouts.public')
-@section('title', __('messages.gallery_title') . ' - Erafone Trail Run 2026')
+@section('title', __('messages.gallery_title') . ' - Era Trail Run 2026')
 @section('content')
     <section class="pt-28 pb-20 bg-surface-50 min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -7,7 +7,8 @@
                 <span
                     class="inline-block px-4 py-1.5 bg-brand-50 text-brand-500 text-sm font-semibold rounded-full mb-6 tracking-wide uppercase">{{ __('messages.gallery_badge') }}</span>
                 <h1 class="font-display font-bold text-3xl md:text-4xl text-surface-900 mb-2">
-                    {{ __('messages.gallery_title') }}</h1>
+                    {{ __('messages.gallery_title') }}
+                </h1>
                 <p class="text-surface-700">{{ __('messages.gallery_subtitle') }}</p>
             </div>
             <div class="flex flex-col items-center justify-center py-16">
@@ -20,7 +21,8 @@
                         </svg>
                     </div>
                     <h2 class="font-display font-bold text-2xl text-surface-900 mb-3">
-                        {{ __('messages.gallery_coming_soon') }}</h2>
+                        {{ __('messages.gallery_coming_soon') }}
+                    </h2>
                     <p class="text-surface-600 leading-relaxed">{{ __('messages.gallery_coming_soon_desc') }}</p>
                 </div>
             </div>

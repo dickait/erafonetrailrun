@@ -18,7 +18,7 @@ return [
     'hero_badge' => 'Registration Open',
     'hero_subtitle' => 'Conquer the trails of',
     'hero_location' => 'Bogor Nirwana Residence, Bogor',
-    'hero_tagline' => 'Run Smart. Run Trail. Run With Erafone.',
+    'hero_tagline' => 'Run Smart. Run Trail. Run With ERA.',
     'hero_desc' => 'Explore the trails of Bogor Nirwana Residence in a trail run event that combines nature adventure and wearable technology.',
     'hero_categories_label' => 'Category:',
     'hero_description' => 'An epic journey through beautiful hills and forests.',

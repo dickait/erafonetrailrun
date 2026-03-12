@@ -1,5 +1,5 @@
 @extends('layouts.public')
-@section('title', __('messages.part_payment_title') . ' - Erafone Trail Run 2026')
+@section('title', __('messages.part_payment_title') . ' - Era Trail Run 2026')
 @section('content')
     <section class="pt-28 pb-20 bg-surface-50 min-h-screen">
         <div class="max-w-2xl mx-auto px-4 sm:px-6">
@@ -108,8 +108,8 @@
                                 <span class="text-surface-600">{{ __('messages.reg_fee') }}</span>
                                 <span class="text-surface-900 font-medium">
                                     @if($discountAmount > 0)<strike class="opacity-50">@endif
-                                    Rp {{ number_format($baseAmount, 0, ',', '.') }}
-                                    @if($discountAmount > 0)</strike>@endif
+                                        Rp {{ number_format($baseAmount, 0, ',', '.') }}
+                                        @if($discountAmount > 0)</strike>@endif
                                 </span>
                             </div>
 

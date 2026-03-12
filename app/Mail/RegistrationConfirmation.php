@@ -13,11 +13,13 @@ class RegistrationConfirmation extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public Participant $participant) {}
+    public function __construct(public Participant $participant)
+    {
+    }
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'Registration Confirmation - Erafone Trail Run 2026');
+        return new Envelope(subject: 'Registration Confirmation - Era Trail Run 2026');
     }
 
     public function content(): Content

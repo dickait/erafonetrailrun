@@ -1,5 +1,5 @@
 @extends('layouts.public')
-@section('title', __('messages.race_course_title') . ' - Erafone Trail Run 2026')
+@section('title', __('messages.race_course_title') . ' - Era Trail Run 2026')
 @section('meta_description', __('messages.race_course_subtitle'))
 
 @section('content')
@@ -66,7 +66,8 @@
                                 <div class="flex items-center gap-3">
                                     <div class="w-1 h-8 rounded-full bg-gradient-to-b {{ $colors[0] }}"></div>
                                     <h2 class="font-display font-bold text-xl md:text-2xl text-white drop-shadow-lg">
-                                        {{ $category->name }}</h2>
+                                        {{ $category->name }}
+                                    </h2>
                                 </div>
                             </div>
                         </div>

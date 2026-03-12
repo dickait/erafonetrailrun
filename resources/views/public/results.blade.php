@@ -1,5 +1,5 @@
 @extends('layouts.public')
-@section('title', __('messages.results_title') . ' - Erafone Trail Run 2026')
+@section('title', __('messages.results_title') . ' - Era Trail Run 2026')
 @section('content')
     <section class="pt-28 pb-20 bg-surface-50 min-h-screen">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">

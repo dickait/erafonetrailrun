@@ -123,6 +123,7 @@ class WebhookController extends Controller
 
             $payment->update([
                 'status' => $paymentStatus,
+                'gateway_id' => $mayarId,
                 'payment_method' => $paymentMethod,
                 'paid_at' => $paymentStatus === 'paid' ? now() : null,
                 'webhook_payload' => $payload,
