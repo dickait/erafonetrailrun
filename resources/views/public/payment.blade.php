@@ -106,7 +106,7 @@
                             
                             @if($discountAmount > 0)
                                 <div class="flex justify-between text-sm text-emerald-600">
-                                    <span>Discount ({{ $latestPayment->discountCode->code ?? 'PROMO' }})</span>
+                                    <span>Discount ({{ $latestPayment->discountCode->code ?? $latestPayment->promotion->name ?? 'PROMO' }})</span>
                                     <span class="font-medium">- Rp {{ number_format($discountAmount, 0, ',', '.') }}</span>
                                 </div>
                             @endif

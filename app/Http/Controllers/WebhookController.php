@@ -104,6 +104,8 @@ class WebhookController extends Controller
             $statusCode = $data['statusCode'] ?? null;
             $statusStr = $status ?? $statusCode ?? '';
 
+            $oldStatus = $payment->status;
+
             // Map Mayar status to our internal status
             if ($event === 'payment.received') {
                 $paymentStatus = 'paid';
@@ -125,6 +127,11 @@ class WebhookController extends Controller
                 'paid_at' => $paymentStatus === 'paid' ? now() : null,
                 'webhook_payload' => $payload,
             ]);
+
+            // Increment promotion quota if payment just became paid
+            if ($paymentStatus === 'paid' && $oldStatus !== 'paid' && $payment->promotion_id) {
+                $payment->promotion->increment('used_count');
+            }
 
             // Update participant payment status
             $participantStatus = match ($paymentStatus) {

@@ -8,7 +8,7 @@ class Promotion extends Model
 {
     protected $fillable = [
         'name', 'type', 'discount_type', 'discount_value',
-        'start_date', 'end_date', 'quota'
+        'start_date', 'end_date', 'quota', 'used_count'
     ];
 
     protected $casts = [

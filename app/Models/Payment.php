@@ -10,7 +10,7 @@ class Payment extends Model
         'participant_id', 'order_id', 'invoice_id', 'payment_link',
         'amount', 'status', 'payment_method',
         'paid_at', 'webhook_payload',
-        'discount_code_id', 'discount_amount', 'final_amount',
+        'discount_code_id', 'promotion_id', 'discount_amount', 'final_amount',
     ];
 
     public static function generateOrderId()
@@ -49,5 +49,10 @@ class Payment extends Model
     public function discountCode()
     {
         return $this->belongsTo(DiscountCode::class);
+    }
+
+    public function promotion()
+    {
+        return $this->belongsTo(Promotion::class);
     }
 }

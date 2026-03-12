@@ -101,36 +101,37 @@ class RegistrationController extends Controller
         
         $discountAmount = 0;
         $discountCodeId = null;
+        $appliedPromotionId = null;
 
-        // 1. Automatic Early Bird Discount
-        $earlyBirdPromo = $category->getActivePromotion('earlybird');
-        if ($earlyBirdPromo) {
-            if ($earlyBirdPromo->discount_type == 'fixed') {
-                $discountAmount += (float) $earlyBirdPromo->discount_value;
-            } else {
-                $discountAmount += $baseAmount * ((float) $earlyBirdPromo->discount_value / 100);
-            }
-        }
-
-        // 2. Manual Discount Code
+        // 1. Priority check for Manual Discount Code
         if ($request->filled('discount_code')) {
             $dc = \App\Models\DiscountCode::where('code', strtoupper($request->discount_code))->first();
             if ($dc && $dc->isValid()) {
                 $promotion = $dc->promotion;
-                
-                // Avoid double-applying if the code is for the same earlybird promo
-                if (!$earlyBirdPromo || $earlyBirdPromo->id !== $promotion->id) {
-                    if ($promotion->discount_type == 'fixed') {
-                        $discountAmount += (float) $promotion->discount_value;
-                    } else {
-                        $discountAmount += $baseAmount * ((float) $promotion->discount_value / 100);
-                    }
+                if ($promotion->discount_type == 'fixed') {
+                    $discountAmount = (float) $promotion->discount_value;
+                } else {
+                    $discountAmount = $baseAmount * ((float) $promotion->discount_value / 100);
                 }
-                
                 $discountCodeId = $dc->id;
+                $appliedPromotionId = $promotion->id;
+                
+                // Increment used count for the code
                 $dc->increment('used_count');
             } else {
                 return back()->withInput()->withErrors(['discount_code' => 'Invalid or expired discount code.']);
+            }
+        } 
+        // 2. If no discount code is provided, check for automatic Early Bird
+        else {
+            $earlyBirdPromo = $category->getActivePromotion('earlybird');
+            if ($earlyBirdPromo) {
+                if ($earlyBirdPromo->discount_type == 'fixed') {
+                    $discountAmount = (float) $earlyBirdPromo->discount_value;
+                } else {
+                    $discountAmount = $baseAmount * ((float) $earlyBirdPromo->discount_value / 100);
+                }
+                $appliedPromotionId = $earlyBirdPromo->id;
             }
         }
 
@@ -246,6 +247,7 @@ class RegistrationController extends Controller
             'order_id' => $orderId,
             'amount' => $baseAmount,
             'discount_code_id' => $discountCodeId,
+            'promotion_id' => $appliedPromotionId,
             'discount_amount' => $discountAmount,
             'final_amount' => $finalAmount,
             'status' => 'pending',
@@ -264,7 +266,7 @@ class RegistrationController extends Controller
         if ($request->has('email')) {
             $event = Event::where('is_active', true)->latest('event_date')->first();
             if ($event) {
-                $participant = Participant::with(['category', 'latestPayment', 'event', 'familyMembers'])
+                $participant = Participant::with(['category', 'latestPayment.promotion', 'latestPayment.discountCode', 'event', 'familyMembers'])
                     ->where('event_id', $event->id)
                     ->where('email', $request->email)
                     ->first();
@@ -293,7 +295,7 @@ class RegistrationController extends Controller
 
             $event = Event::where('is_active', true)->latest('event_date')->first();
             if ($event) {
-                $participant = Participant::with(['category', 'latestPayment', 'event', 'familyMembers'])
+                $participant = Participant::with(['category', 'latestPayment.promotion', 'latestPayment.discountCode', 'event', 'familyMembers'])
                     ->where('event_id', $event->id)
                     ->where('email', $request->email)
                     ->first();
