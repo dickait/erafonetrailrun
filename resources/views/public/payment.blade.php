@@ -26,6 +26,7 @@
                             $isFamily = $participant->familyMembers && $participant->familyMembers->count() > 0;
 
                             $fields = [
+                                'Order ID' => $participant->latestPayment->order_id ?? '-',
                                 __('messages.status_name') . ($isFamily ? ' (Leader)' : '') => $participant->full_name,
                                 __('messages.status_email') => $participant->email,
                                 __('messages.status_category') => $participant->category->name ?? '-',

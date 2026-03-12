@@ -51,7 +51,7 @@ class DatabaseSeeder extends Seeder
             'quota' => 500,
             'distance_km' => 5,
             'elevation' => 80,
-            'cot' => 1,
+            'cot' => 2,
             'effort_km' => 6.5,
             'color' => '#22c55e',
         ]);
@@ -74,10 +74,10 @@ class DatabaseSeeder extends Seeder
             'name' => '15K',
             'slug' => '15k',
             'description' => '15K',
-            'quota' => 487,
-            'distance_km' => 16.71,
-            'elevation' => 294,
-            'cot' => 5,
+            'quota' => 300,
+            'distance_km' => 15,
+            'elevation' => 487,
+            'cot' => 4,
             'effort_km' => 16.7,
             'color' => '#ef4444',
         ]);

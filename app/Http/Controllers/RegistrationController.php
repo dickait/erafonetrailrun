@@ -191,6 +191,9 @@ class RegistrationController extends Controller
             return $participant;
         });
 
+        // Generate human-readable Order ID
+        $orderId = Payment::generateOrderId();
+
         // Call Mayar API to create payment request
         $paymentLink = '#';
         $invoiceId = 'INV-' . strtoupper(Str::random(10));
@@ -207,7 +210,7 @@ class RegistrationController extends Controller
                     'email' => $participant->email,
                     'amount' => (int) $finalAmount,
                     'mobile' => $mobile,
-                    'description' => "Registration {$event->name} - {$category->name}",
+                    'description' => "Order #{$orderId} - {$event->name} - {$category->name}",
                     'redirectUrl' => route('registration.payment', ['email' => $participant->email]),
                 ]);
 
@@ -218,6 +221,7 @@ class RegistrationController extends Controller
 
                 \Illuminate\Support\Facades\Log::info('Mayar payment created', [
                     'participant_id' => $participant->id,
+                    'order_id' => $orderId,
                     'invoice_id' => $invoiceId,
                     'payment_link' => $paymentLink,
                     'amount' => $finalAmount
@@ -239,6 +243,7 @@ class RegistrationController extends Controller
         // Create payment record with the Mayar link
         Payment::create([
             'participant_id' => $participant->id,
+            'order_id' => $orderId,
             'amount' => $baseAmount,
             'discount_code_id' => $discountCodeId,
             'discount_amount' => $discountAmount,
