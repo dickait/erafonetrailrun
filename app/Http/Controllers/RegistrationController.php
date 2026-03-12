@@ -132,6 +132,15 @@ class RegistrationController extends Controller
         $finalAmount = max(0, $baseAmount - $discountAmount);
         $isFree = $finalAmount <= 0;
 
+        \Illuminate\Support\Facades\Log::info('Registration calculation', [
+            'baseAmount' => $baseAmount,
+            'discountAmount' => $discountAmount,
+            'finalAmount' => $finalAmount,
+            'isFree' => $isFree,
+            'appliedPromotionId' => $appliedPromotionId,
+            'multiplier' => $multiplier
+        ]);
+
         $participant = DB::transaction(function () use ($validated, $request, $event, $category, $isFree, $appliedPromotionId) {
             $participantInfo = $validated;
 
@@ -275,7 +284,7 @@ class RegistrationController extends Controller
             'order_id' => $orderId,
             'amount' => $baseAmount,
             'promotion_id' => $appliedPromotionId,
-            'discount_amount' => $discount_amount ?? 0,
+            'discount_amount' => $discountAmount,
             'final_amount' => $finalAmount,
             'status' => 'pending',
             'invoice_id' => $invoiceId,

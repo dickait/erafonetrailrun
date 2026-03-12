@@ -56,9 +56,15 @@
                     <div class="space-y-4">
                         @php
                             $isFamily = $participant->familyMembers && $participant->familyMembers->count() > 0;
+                            $latestPayment = $participant->latestPayment;
+                            $multiplier = $isFamily ? ($participant->familyMembers->count() + 1) : 1;
+
+                            $baseAmount = $latestPayment ? $latestPayment->amount : ($participant->category ? $participant->category->getBasePrice($multiplier) : 0);
+                            $discountAmount = $latestPayment ? $latestPayment->discount_amount : 0;
+                            $finalAmount = $latestPayment ? ($latestPayment->final_amount ?? ($baseAmount - $discountAmount)) : ($baseAmount - $discountAmount);
 
                             $fields = [
-                                'Order ID' => $participant->latestPayment->order_id ?? '-',
+                                'Order ID' => $latestPayment->order_id ?? '-',
                                 __('messages.status_name') . ($isFamily ? ' (Leader)' : '') => $participant->full_name,
                                 __('messages.status_email') => $participant->email,
                                 __('messages.status_category') => $participant->category->name ?? '-',
@@ -67,17 +73,16 @@
                                 __('messages.status_bib') => $participant->bib_number ?? __('messages.status_bib_pending'),
                             ];
 
+                            if ($discountAmount > 0) {
+                                $promoLabel = optional($latestPayment->promotion)->code ?? optional($latestPayment->promotion)->name ?? 'PROMO';
+                                $fields[__('messages.reg_discount')] = $promoLabel . ' (- Rp ' . number_format($discountAmount, 0, ',', '.') . ')';
+                                $fields[__('messages.reg_total')] = 'Rp ' . number_format($finalAmount, 0, ',', '.');
+                            }
+
                             if (!$isFamily) {
                                 $fields[__('messages.status_blood_type')] = $participant->blood_type ?? '-';
                                 $fields[__('messages.status_jersey_size')] = $participant->jersey_size ?? '-';
                             }
-
-                            $latestPayment = $participant->latestPayment;
-                            $multiplier = $isFamily ? ($participant->familyMembers->count() + 1) : 1;
-
-                            $baseAmount = $latestPayment ? $latestPayment->amount : ($participant->category ? $participant->category->getBasePrice($multiplier) : 0);
-                            $discountAmount = $latestPayment ? $latestPayment->discount_amount : 0;
-                            $finalAmount = $latestPayment ? ($latestPayment->final_amount ?? ($baseAmount - $discountAmount)) : ($baseAmount - $discountAmount);
                         @endphp
 
                         @foreach($fields as $label => $val)
@@ -144,7 +149,7 @@
                             @if($discountAmount > 0)
                                 <div class="flex justify-between text-sm text-emerald-600">
                                     <span>{{ __('messages.reg_discount') }}
-                                        ({{ $latestPayment->promotion->code ?? $latestPayment->promotion->name ?? 'PROMO' }})</span>
+                                        ({{ optional($latestPayment->promotion)->code ?? optional($latestPayment->promotion)->name ?? 'PROMO' }})</span>
                                     <span class="font-medium">- Rp {{ number_format($discountAmount, 0, ',', '.') }}</span>
                                 </div>
                             @endif
@@ -172,9 +177,9 @@
                             </div>
                         </div>
                     </div>
-                    @if($participant->payment_status == 'pending' && isset($participant->payments) && $participant->payments->first())
+                    @if($participant->payment_status == 'pending' && $latestPayment)
                         <div class="mt-6">
-                            <a href="{{ $participant->payments->first()->payment_link ?? '#' }}" target="_blank"
+                            <a href="{{ $latestPayment->payment_link ?? '#' }}" target="_blank"
                                 class="block w-full py-3 text-center bg-gradient-to-r from-accent-500 to-accent-600 text-white font-semibold rounded-xl shadow-md">{{ __('messages.status_complete_payment') }}</a>
                         </div>
                     @endif
