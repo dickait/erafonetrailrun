@@ -560,9 +560,12 @@
                                     <input type="checkbox" name="agreement_1" required {{ old('agreement_1') ? 'checked' : '' }}
                                         class="w-5 h-5 rounded border-surface-300 bg-surface-50 text-brand-500 focus:ring-brand-500 focus:ring-offset-white">
                                 </div>
-                                <span
-                                    class="text-sm text-surface-600 group-hover:text-surface-900 transition-colors">{{ __('messages.reg_agreement_1') }}
-                                    *</span>
+                                <span id="text-agreement-1" 
+                                    data-default="{{ __('messages.reg_agreement_1') }}"
+                                    data-family="{{ __('messages.reg_agreement_1_5k') }}"
+                                    class="text-sm text-surface-600 group-hover:text-surface-900 transition-colors">
+                                    {{ __('messages.reg_agreement_1') }}
+                                </span>
                             </label>
 
                             <label class="flex items-start gap-3 cursor-pointer group">
@@ -1188,6 +1191,12 @@
                         categoryDetails.forEach(detail => detail.classList.add('hidden'));
                         const detailContent = document.getElementById('cat-detail-' + radio.value);
                         if (detailContent) detailContent.classList.remove('hidden');
+
+                        // Update agreement text
+                        const txtAgreement1 = document.getElementById('text-agreement-1');
+                        if (txtAgreement1) {
+                            txtAgreement1.innerText = isFamily ? txtAgreement1.dataset.family : txtAgreement1.dataset.default;
+                        }
                     }
                 });
                 if (isAnyChecked) {
