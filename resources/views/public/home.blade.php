@@ -32,12 +32,12 @@
                 {{ \Carbon\Carbon::parse($event->event_date)->locale(app()->getLocale())->translatedFormat('l, d F Y') }}
             </p>
             <!-- <p class="text-white/80 text-lg max-w-2xl mx-auto mb-6">
-                                                                                                                                                            {{ __('messages.hero_desc') }}
-                                                                                                                                                        </p> -->
+                                                                                                                                                                {{ __('messages.hero_desc') }}
+                                                                                                                                                            </p> -->
             <!-- <p
-                                                                                                                                                    class="text-white/90 text-lg max-w-2xl mx-auto mb-10 font-bold bg-white/10 inline-block px-4 py-2 rounded-xl backdrop-blur-sm border border-white/10">
-                                                                                                                                                    {{ __('messages.hero_categories_label') }} 5K &bull; 10K &bull; 15K
-                                                                                                                                                </p> -->
+                                                                                                                                                        class="text-white/90 text-lg max-w-2xl mx-auto mb-10 font-bold bg-white/10 inline-block px-4 py-2 rounded-xl backdrop-blur-sm border border-white/10">
+                                                                                                                                                        {{ __('messages.hero_categories_label') }} 5K &bull; 10K &bull; 15K
+                                                                                                                                                    </p> -->
             <!-- Countdown -->
             @if($event && $event->event_date->isFuture())
                 <div class="flex justify-center gap-4 md:gap-6 mb-10" id="countdown"
@@ -110,13 +110,14 @@
                     </div>
                 </div>
                 <div class="relative">
-                    <div
-                        class="bg-surface-100 rounded-3xl p-8 border border-surface-200 aspect-square flex flex-col items-center justify-center text-surface-400">
-                        <svg class="w-24 h-24 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        <p class="font-display font-medium text-lg">[Foto Trail Run / Alam]</p>
+                    <div class="relative w-full aspect-square overflow-hidden rounded-3xl shadow-2xl">
+                        <img src="{{ asset('storage/last-event-photos/yog01152.webp') }}" alt="Last Event - Era Trail Run"
+                            style="object-position: 50% 60%;"
+                            loading="lazy"
+                            class="w-full h-full object-cover object-center transition-transform duration-700 hover:scale-110" />
+                        {{-- Ganti 'object-center' di atas dengan 'object-top' atau 'object-bottom' untuk
+                        menaikkan/menurunkan fokus gambar --}}
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                     </div>
                 </div>
             </div>
@@ -219,16 +220,19 @@
                                     class="bg-gradient-to-r {{ $colors[1] }} text-white px-3 py-2 rounded-lg font-bold text-center mt-2 shadow-md">
                                     @if($cat->slug == '5k-family-fun-trail')
                                         @foreach($cat->prices->sortBy('pax') as $cp)
-                                            <div class="text-xs">{{ __('messages.categories_now') }}: Rp {{ number_format($cp->price - $discount, 0, ',', '.') }}
+                                            <div class="text-xs">{{ __('messages.categories_now') }}: Rp
+                                                {{ number_format($cp->price - $discount, 0, ',', '.') }}
                                                 ({{ $cp->pax }} Pax)</div>
                                         @endforeach
                                     @else
-                                            <div class="text-base">{{ __('messages.categories_now') }}: Rp {{ number_format($minPrice - $discount, 0, ',', '.') }}</div>
+                                        <div class="text-base">{{ __('messages.categories_now') }}: Rp
+                                            {{ number_format($minPrice - $discount, 0, ',', '.') }}</div>
                                     @endif
                                 </div>
 
                                 <div class="text-[10px] text-surface-500 text-center italic mt-1">
-                                    {{ __('messages.categories_early_bird_ends') }}: {{ $earlyBird->end_date ? $earlyBird->end_date->format('d M') : '-' }}
+                                    {{ __('messages.categories_early_bird_ends') }}:
+                                    {{ $earlyBird->end_date ? $earlyBird->end_date->format('d M') : '-' }}
                                 </div>
                             @endif
                             @if($cat->slug != '5k-family-fun-trail')
