@@ -28,7 +28,7 @@
                         placeholder="{{ __('messages.status_placeholder') }}" required
                         class="flex-1 w-full px-4 py-3 bg-white border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                     <button type="submit"
-                        class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-brand-500 to-brand-600 text-white font-semibold rounded-xl hover:from-brand-600 hover:to-brand-700 transition-all shadow-md whitespace-nowrap">{{ __('messages.status_check') }}</button>
+                        class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-brand-500 to-brand-600 text-white font-semibold rounded-xl hover:from-brand-600 hover:to-brand-700 transition-all shadow-md whitespace-nowrap cursor-pointer">{{ __('messages.status_check') }}</button>
                 </div>
                 <div class="flex flex-col items-center sm:items-start gap-3 mb-6">
                     <div class="captcha-img-container flex items-center gap-2">

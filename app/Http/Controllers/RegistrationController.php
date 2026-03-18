@@ -221,7 +221,7 @@ class RegistrationController extends Controller
                 'discount_amount' => $discountAmount,
                 'final_amount' => $finalAmount,
                 'status' => 'paid',
-                'invoice_id' => 'FREE-' . strtoupper(Str::random(10)),
+                'invoice_id' => 'INV-' . strtoupper(Str::random(10)),
                 'payment_link' => null,
                 'payment_method' => 'discount_full',
                 'paid_at' => now(),
@@ -245,7 +245,7 @@ class RegistrationController extends Controller
                 'discount_amount' => $discountAmount,
                 'final_amount' => $finalAmountWithRandom,
                 'status' => 'pending',
-                'invoice_id' => 'MANUAL-' . strtoupper(Str::random(10)),
+                'invoice_id' => 'INV-' . strtoupper(Str::random(10)),
                 'gateway_id' => null,
                 'payment_link' => null,
                 'payment_method' => 'manual',
@@ -316,6 +316,9 @@ class RegistrationController extends Controller
             'payment_link' => $paymentLink,
         ]);
 
+        // Clear captcha from session after successful validation to ensure new attempt uses new captcha
+        $request->session()->forget('captcha');
+
         return redirect()->route('registration.payment', ['email' => $participant->email])
             ->with('success', 'Registration successful! Please complete your payment.');
     }
@@ -366,6 +369,8 @@ class RegistrationController extends Controller
                     'captcha.required' => 'Please enter the captcha code.',
                     'captcha.captcha' => 'Invalid captcha code.',
                 ]);
+                // Clear captcha from session after successful validation
+                $request->session()->forget('captcha');
             }
 
             $event = Event::where('is_active', true)->latest('event_date')->first();

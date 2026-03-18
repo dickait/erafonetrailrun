@@ -432,10 +432,39 @@
                                 <label
                                     class="block text-sm font-medium text-surface-800">{{ __('messages.reg_jersey_size') }}</label>
                                 <button type="button"
-                                    onclick="document.getElementById('sizeChartModal').classList.remove('hidden')"
-                                    class="text-xs text-brand-500 hover:text-brand-600 underline font-medium">Panduan /
+                                    onclick="document.getElementById('sizeChartCollapse').classList.toggle('hidden')"
+                                    class="text-xs text-brand-500 hover:text-brand-600 underline font-medium cursor-pointer">Panduan /
                                     Size
                                     Chart</button>
+                            </div>
+                            <div id="sizeChartCollapse" class="hidden mb-6 p-4 bg-surface-50 border border-surface-200 rounded-2xl overflow-hidden shadow-inner">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h4 class="font-display font-bold text-surface-900 text-sm">Panduan Ukuran (Unisex)</h4>
+                                    <button type="button" onclick="document.getElementById('sizeChartCollapse').classList.add('hidden')" class="text-surface-500 hover:text-surface-700">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                    </button>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-[11px] text-left text-surface-600">
+                                        <thead class="bg-surface-200 text-surface-900 uppercase">
+                                            <tr>
+                                                <th class="px-2 py-1.5 rounded-tl-lg">Size</th>
+                                                <th class="px-2 py-1.5">Lebar Dada (cm)</th>
+                                                <th class="px-2 py-1.5 rounded-tr-lg">Panjang (cm)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-surface-200">
+                                            @foreach(['XS'=>[46,66], 'S'=>[48,68], 'M'=>[50,70], 'L'=>[52,72], 'XL'=>[54,74], 'XXL'=>[56,76]] as $sz => $dims)
+                                            <tr class="hover:bg-surface-100">
+                                                <td class="px-2 py-1.5 font-bold text-surface-900">{{ $sz }}</td>
+                                                <td class="px-2 py-1.5">{{ $dims[0] }}</td>
+                                                <td class="px-2 py-1.5">{{ $dims[1] }}</td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p class="text-[9px] text-surface-500 mt-2 italic text-center">* Toleransi perbedaan 1-2 cm.</p>
                             </div>
                             <div class="mb-3 p-4 bg-surface-50 rounded-xl flex items-center gap-4 text-center">
                                 <div class="flex-shrink-0 w-16 h-16 text-brand-400">
@@ -609,7 +638,7 @@
                             class="w-full max-w-[200px] px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-center text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                     </div>
                     <button type="submit" id="btn-submit"
-                        class="w-full py-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold rounded-2xl shadow-xl shadow-brand-500/25 hover:shadow-brand-500/40 transition-all duration-200 text-lg">
+                        class="w-full py-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold rounded-2xl shadow-xl shadow-brand-500/25 hover:shadow-brand-500/40 transition-all duration-200 text-lg cursor-pointer">
                         {{ __('messages.reg_submit') }}
                     </button>
                 </div>
@@ -617,82 +646,6 @@
         </div>
     </section>
 
-    <!-- Size Chart Modal -->
-    <div id="sizeChartModal"
-        class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/60 backdrop-blur-sm p-4">
-        <div
-            class="bg-white border border-surface-300 rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
-            <div
-                class="sticky top-0 bg-white/90 backdrop-blur-md p-6 border-b border-surface-300 flex justify-between items-center z-10">
-                <h3 class="text-xl font-display font-bold text-surface-900">Panduan Ukuran Jersey</h3>
-                <button type="button" onclick="document.getElementById('sizeChartModal').classList.add('hidden')"
-                    class="text-surface-700 hover:text-surface-900 transition-colors">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-            <div class="p-6">
-                <!-- Unisex Size Chart -->
-                <div class="mb-8">
-                    <h4 class="text-lg font-bold text-brand-500 mb-4 border-l-4 border-brand-500 pl-3">Unisex Size Chart
-                    </h4>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm text-left text-surface-600">
-                            <thead class="text-xs text-surface-900 uppercase bg-surface-100">
-                                <tr>
-                                    <th scope="col" class="px-4 py-3 rounded-tl-lg">Ukuran (Size)</th>
-                                    <th scope="col" class="px-4 py-3">Lebar Dada (cm)</th>
-                                    <th scope="col" class="px-4 py-3 rounded-tr-lg">Panjang Badan (cm)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="border-b border-surface-100 hover:bg-surface-50">
-                                    <td class="px-4 py-3 font-medium text-surface-900">XS</td>
-                                    <td class="px-4 py-3">46</td>
-                                    <td class="px-4 py-3">66</td>
-                                </tr>
-                                <tr class="border-b border-surface-100 hover:bg-surface-50">
-                                    <td class="px-4 py-3 font-medium text-surface-900">S</td>
-                                    <td class="px-4 py-3">48</td>
-                                    <td class="px-4 py-3">68</td>
-                                </tr>
-                                <tr class="border-b border-surface-100 hover:bg-surface-50">
-                                    <td class="px-4 py-3 font-medium text-surface-900">M</td>
-                                    <td class="px-4 py-3">50</td>
-                                    <td class="px-4 py-3">70</td>
-                                </tr>
-                                <tr class="border-b border-surface-100 hover:bg-surface-50">
-                                    <td class="px-4 py-3 font-medium text-surface-900">L</td>
-                                    <td class="px-4 py-3">52</td>
-                                    <td class="px-4 py-3">72</td>
-                                </tr>
-                                <tr class="border-b border-surface-100 hover:bg-surface-50">
-                                    <td class="px-4 py-3 font-medium text-surface-900">XL</td>
-                                    <td class="px-4 py-3">54</td>
-                                    <td class="px-4 py-3">74</td>
-                                </tr>
-                                <tr class="hover:bg-surface-50">
-                                    <td class="px-4 py-3 font-medium text-surface-900 rounded-bl-lg">XXL</td>
-                                    <td class="px-4 py-3">56</td>
-                                    <td class="px-4 py-3 rounded-br-lg">76</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-
-                <p class="text-xs text-surface-700 mt-4 text-center">* Toleransi ukuran perbedaan 1-2 cm.</p>
-
-                <div class="mt-8">
-                    <button type="button" onclick="document.getElementById('sizeChartModal').classList.add('hidden')"
-                        class="w-full py-3 bg-surface-100 hover:bg-surface-200 text-surface-900 font-medium rounded-xl transition-colors">Tutup
-                        Panduan</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     @push('scripts')
         <script>
