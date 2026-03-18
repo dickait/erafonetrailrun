@@ -66,6 +66,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/participants', [AdminController::class, 'participants'])->name('participants');
     Route::get('/payments', [AdminController::class, 'payments'])->name('payments');
+    Route::post('/payments/{payment}/update-status', [AdminController::class, 'updatePaymentStatus'])->name('payments.update-status');
     Route::get('/export-csv', [AdminController::class, 'exportCsv'])->name('export-csv');
     Route::post('/generate-bibs', [AdminController::class, 'generateBibs'])->name('generate-bibs');
     Route::get('/email-blast', [AdminController::class, 'emailBlastForm'])->name('email-blast');

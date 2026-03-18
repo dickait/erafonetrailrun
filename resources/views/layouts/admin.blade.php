@@ -132,6 +132,7 @@
     <div id="sidebar-overlay" class="hidden fixed inset-0 bg-black/50 z-40 md:hidden"
         onclick="document.getElementById('sidebar').classList.add('-translate-x-full'); this.classList.add('hidden');">
     </div>
+    @stack('modals')
     @stack('scripts')
 </body>
 

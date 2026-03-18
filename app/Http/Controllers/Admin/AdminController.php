@@ -8,8 +8,11 @@ use App\Models\Category;
 use App\Models\Participant;
 use App\Models\Payment;
 use App\Jobs\SendEmailBlast;
+use App\Mail\PaymentConfirmation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Carbon;
 
 class AdminController extends Controller
 {
@@ -64,6 +67,59 @@ class AdminController extends Controller
     {
         $payments = Payment::with(['participant.category'])->latest()->paginate(20);
         return view('admin.payments', compact('payments'));
+    }
+
+    public function updatePaymentStatus(Request $request, Payment $payment)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,paid,failed,expired,refunded',
+            'paid_date' => 'nullable|date',
+            'paid_time' => 'nullable'
+        ]);
+
+        $oldStatus = $payment->status;
+        $newStatus = $request->status;
+
+        DB::transaction(function () use ($payment, $newStatus, $request, $oldStatus) {
+            $paidAt = null;
+            if ($newStatus === 'paid') {
+                if ($request->filled('paid_date') && $request->filled('paid_time')) {
+                    $paidAt = Carbon::createFromFormat('Y-m-d H:i', $request->paid_date . ' ' . $request->paid_time);
+                } else {
+                    $paidAt = now();
+                }
+            }
+
+            $payment->update([
+                'status' => $newStatus,
+                'paid_at' => $paidAt,
+            ]);
+
+            // Update participant status
+            $payment->participant->update([
+                'payment_status' => $newStatus === 'paid' ? 'paid' : ($newStatus === 'pending' ? 'pending' : 'failed'),
+            ]);
+
+            // Handle promotion quota
+            if ($newStatus === 'paid' && $oldStatus !== 'paid') {
+                if ($payment->promotion_id) {
+                    $promo = $payment->promotion;
+                    $promo->increment('used_count');
+                    if ($promo->quota !== null && $promo->quota > 0) {
+                        $promo->decrement('quota');
+                    }
+                }
+
+                // Send Confirmation Email
+                try {
+                    Mail::to($payment->participant->email)->queue(new PaymentConfirmation($payment->participant));
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error('Email sending failed in manual update', ['error' => $e->getMessage()]);
+                }
+            }
+        });
+
+        return back()->with('success', 'Payment status updated successfully.');
     }
 
     public function emailBlast()
