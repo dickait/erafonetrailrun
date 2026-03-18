@@ -3,6 +3,8 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Konfirmasi Pendaftaran ERA Trail Run 2026</title>
 </head>
 
@@ -47,57 +49,60 @@
               </p>
 
               <!-- Detail Box -->
-              <table width="100%" cellpadding="8" cellspacing="0" style="border-collapse:collapse; margin-top:15px;">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse; margin-top:15px; width:100%;">
 
                 <tr style="background:#f9f9f9;">
-                  <td width="40%"><strong>Order ID</strong></td>
-                  <td>{{ optional($participant->latestPayment)->order_id ?? '-' }}</td>
+                  <td width="40%" style="padding:10px; border-bottom: 1px solid #eeeeee;"><strong>Order ID</strong></td>
+                  <td style="padding:10px; border-bottom: 1px solid #eeeeee;">{{ optional($participant->latestPayment)->order_id ?? '-' }}</td>
                 </tr>
                 <tr>
-                  <td><strong>Nama</strong></td>
-                  <td>{{ $participant->full_name }}</td>
+                  <td width="40%" style="padding:10px; border-bottom: 1px solid #eeeeee;"><strong>Nama</strong></td>
+                  <td style="padding:10px; border-bottom: 1px solid #eeeeee;">{{ $participant->full_name }}</td>
                 </tr>
                 <tr style="background:#f9f9f9;">
-                  <td><strong>Email</strong></td>
-                  <td>{{ $participant->email }}</td>
+                  <td width="40%" style="padding:10px; border-bottom: 1px solid #eeeeee;"><strong>Email</strong></td>
+                  <td style="padding:10px; border-bottom: 1px solid #eeeeee;">{{ $participant->email }}</td>
                 </tr>
                 <tr>
-                  <td><strong>Kategori</strong></td>
-                  <td>{{ $participant->category->name ?? '-' }}</td>
+                  <td width="40%" style="padding:10px; border-bottom: 1px solid #eeeeee;"><strong>Kategori</strong></td>
+                  <td style="padding:10px; border-bottom: 1px solid #eeeeee;">{{ $participant->category->name ?? '-' }}</td>
                 </tr>
                 <tr style="background:#f9f9f9;">
-                  <td><strong>Acara</strong></td>
-                  <td>{{ $participant->event->name ?? 'ERA Trail Run 2026' }}</td>
+                  <td width="40%" style="padding:10px; border-bottom: 1px solid #eeeeee;"><strong>Acara</strong></td>
+                  <td style="padding:10px; border-bottom: 1px solid #eeeeee;">{{ $participant->event->name ?? 'ERA Trail Run 2026' }}</td>
                 </tr>
                 <tr>
-                  <td><strong>Tanggal Daftar</strong></td>
-                  <td>{{ $participant->created_at->format('d M Y') }}</td>
+                  <td width="40%" style="padding:10px; border-bottom: 1px solid #eeeeee;"><strong>Tanggal Daftar</strong></td>
+                  <td style="padding:10px; border-bottom: 1px solid #eeeeee;">{{ $participant->created_at->format('d M Y') }}</td>
                 </tr>
                 <tr style="background:#f9f9f9;">
-                  <td><strong>Golongan Darah</strong></td>
-                  <td>{{ $participant->blood_type ?? '-' }}</td>
+                  <td width="40%" style="padding:10px; border-bottom: 1px solid #eeeeee;"><strong>Golongan Darah</strong></td>
+                  <td style="padding:10px; border-bottom: 1px solid #eeeeee;">{{ $participant->blood_type ?? '-' }}</td>
                 </tr>
                 <tr>
-                  <td><strong>Ukuran Jersey</strong></td>
-                  <td>{{ $participant->jersey_size ?? '-' }}</td>
+                  <td width="40%" style="padding:10px;"><strong>Ukuran Jersey</strong></td>
+                  <td style="padding:10px;">{{ $participant->jersey_size ?? '-' }}</td>
+                </tr>
+                <tr style="display:none; height:0px;">
+                  <td colspan="2" style="height:0px; line-height:0px; padding:0;">&nbsp;</td>
                 </tr>
               </table>
 
               <!-- Payment -->
-              <table width="100%" cellpadding="10" cellspacing="0" style="margin-top:20px; border-collapse:collapse;">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top:20px; border-collapse:collapse; width:100%;">
                 <tr>
-                  <td style="background:#F6AE1B; color:#000;">
+                  <td width="40%" style="background:#F6AE1B; color:#000; padding:10px;">
                     <strong>Biaya Pendaftaran</strong>
                   </td>
-                  <td style="background:#F6AE1B; text-align:right;">
+                  <td style="background:#F6AE1B; text-align:right; padding:10px;">
                     Rp {{ number_format(optional($participant->latestPayment)->amount ?? 0, 0, ',', '.') }}
                   </td>
                 </tr>
                 <tr>
-                  <td style="background:#495355; color:#ffffff;">
+                  <td width="40%" style="background:#495355; color:#ffffff; padding:10px;">
                     <strong>Total Pembayaran</strong>
                   </td>
-                  <td style="background:#495355; color:#ffffff; text-align:right;">
+                  <td style="background:#495355; color:#ffffff; text-align:right; padding:10px;">
                     <strong>Rp
                       {{ number_format(optional($participant->latestPayment)->final_amount ?? (optional($participant->latestPayment)->amount ?? 0), 0, ',', '.') }}</strong>
                   </td>
