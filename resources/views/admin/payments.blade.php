@@ -70,12 +70,12 @@
                                 </span>
                             </td>
                             <td class="px-4 py-3 text-surface-700">{{ $pay->payment_method ?? '-' }}</td>
-                            <td class="px-4 py-3 text-surface-700">{{ $pay->created_at->format('d/m/Y H:i') }} WIB</td>
+                            <td class="px-4 py-3 text-surface-700">{{ $pay->created_at->format('d/m/Y H:i:s') }} WIB</td>
                             <td class="px-4 py-3 text-surface-700">
-                                {{ $pay->paid_at ? $pay->paid_at->format('d/m/Y H:i') : '-' }} WIB</td>
+                                {{ $pay->paid_at ? $pay->paid_at->format('d/m/Y H:i:s') : '-' }} WIB</td>
                             <td class="px-4 py-3">
                                 <button type="button"
-                                    onclick="openEditModal('{{ $pay->id }}', '{{ $pay->status }}', '{{ $pay->paid_at ? $pay->paid_at->format('Y-m-d') : now()->format('Y-m-d') }}', '{{ $pay->paid_at ? $pay->paid_at->format('H:i') : now()->format('H:i') }}')"
+                                    onclick="openEditModal('{{ $pay->id }}', '{{ $pay->status }}', '{{ $pay->paid_at ? $pay->paid_at->format('Y-m-d') : now()->format('Y-m-d') }}', '{{ $pay->paid_at ? $pay->paid_at->format('H:i:s') : now()->format('H:i:s') }}')"
                                     class="text-brand-600 hover:text-brand-700 font-medium">
                                     Edit
                                 </button>
@@ -171,9 +171,20 @@
                                 <span style="font-weight:700; color:#555;">:</span>
                                 <select id="modalMinute"
                                     style="flex:1; padding:10px 8px; border:1px solid #d1d5db; border-radius:10px; font-size:14px; box-sizing:border-box;">
-                                    @foreach(['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'] as $m)
-                                        <option value="{{ $m }}">{{ $m }}</option>
-                                    @endforeach
+                                    @for($m = 0; $m < 60; $m++)
+                                        <option value="{{ str_pad($m, 2, '0', STR_PAD_LEFT) }}">
+                                            {{ str_pad($m, 2, '0', STR_PAD_LEFT) }}
+                                        </option>
+                                    @endfor
+                                </select>
+                                <span style="font-weight:700; color:#555;">:</span>
+                                <select id="modalSecond"
+                                    style="flex:1; padding:10px 8px; border:1px solid #d1d5db; border-radius:10px; font-size:14px; box-sizing:border-box;">
+                                    @for($s = 0; $s < 60; $s++)
+                                        <option value="{{ str_pad($s, 2, '0', STR_PAD_LEFT) }}">
+                                            {{ str_pad($s, 2, '0', STR_PAD_LEFT) }}
+                                        </option>
+                                    @endfor
                                 </select>
                             </div>
                             <input type="hidden" name="paid_time" id="modalTime">
@@ -205,13 +216,11 @@
                 document.getElementById('modalDay').value = dp[2] || '{{ now()->format("d") }}';
                 syncDate();
 
-                // Parse time HH:mm into hour and minute selects
-                var parts = time ? time.split(':') : ['00', '00'];
+                // Parse time HH:mm:ss into hour, minute and second selects
+                var parts = time ? time.split(':') : ['00', '00', '00'];
                 document.getElementById('modalHour').value = parts[0] || '00';
-                var min = parseInt(parts[1] || 0);
-                var rounded = String(Math.round(min / 5) * 5).padStart(2, '0');
-                if (rounded === '60') rounded = '55';
-                document.getElementById('modalMinute').value = rounded;
+                document.getElementById('modalMinute').value = parts[1] || '00';
+                document.getElementById('modalSecond').value = parts[2] || '00';
                 syncTime();
 
                 document.getElementById('editModal').style.display = 'block';
@@ -226,7 +235,8 @@
             function syncTime() {
                 var h = document.getElementById('modalHour').value;
                 var m = document.getElementById('modalMinute').value;
-                document.getElementById('modalTime').value = h + ':' + m;
+                var s = document.getElementById('modalSecond').value;
+                document.getElementById('modalTime').value = h + ':' + m + ':' + s;
             }
             function closeEditModal() {
                 document.getElementById('editModal').style.display = 'none';
@@ -240,6 +250,7 @@
             document.getElementById('modalYear').addEventListener('change', syncDate);
             document.getElementById('modalHour').addEventListener('change', syncTime);
             document.getElementById('modalMinute').addEventListener('change', syncTime);
+            document.getElementById('modalSecond').addEventListener('change', syncTime);
             document.getElementById('editForm').addEventListener('submit', function () { syncDate(); syncTime(); });
         </script>
     @endpush

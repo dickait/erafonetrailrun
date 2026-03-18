@@ -77,7 +77,7 @@
                   <td width="40%" style="padding:10px; border-bottom: 1px solid #eeeeee;"><strong>Waktu Bayar</strong>
                   </td>
                   <td style="padding:10px; border-bottom: 1px solid #eeeeee;">
-                    {{ optional(optional($participant->latestPayment)->paid_at)->format('d M Y H:i') ?? '-' }}
+                    {{ optional(optional($participant->latestPayment)->paid_at)->format('d M Y H:i:s') ?? '-' }} WIB
                   </td>
                 </tr>
               </table>

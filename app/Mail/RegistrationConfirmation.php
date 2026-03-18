@@ -31,10 +31,16 @@ class RegistrationConfirmation extends Mailable implements ShouldQueue
 
     public function attachments(): array
     {
-        return [
-            Attachment::fromPath(public_path('qris.webp'))
-                ->as('qris-pembayaran.webp')
-                ->withMime('image/webp'),
-        ];
+        $finalAmount = optional($this->participant->latestPayment)->final_amount ?? ($this->participant->latestPayment->amount ?? 0);
+
+        if ($finalAmount > 0) {
+            return [
+                Attachment::fromPath(public_path('qris.webp'))
+                    ->as('qris-pembayaran.webp')
+                    ->withMime('image/webp'),
+            ];
+        }
+
+        return [];
     }
 }

@@ -108,7 +108,7 @@ class AdminController extends Controller
             $paidAt = null;
             if ($newStatus === 'paid') {
                 if ($request->filled('paid_date') && $request->filled('paid_time')) {
-                    $paidAt = Carbon::createFromFormat('Y-m-d H:i', $request->paid_date . ' ' . $request->paid_time);
+                    $paidAt = Carbon::createFromFormat('Y-m-d H:i:s', $request->paid_date . ' ' . $request->paid_time);
                 } else {
                     $paidAt = now();
                 }

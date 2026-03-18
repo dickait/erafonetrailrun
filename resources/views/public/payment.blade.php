@@ -41,7 +41,7 @@
                                 __('messages.status_email') => $participant->email,
                                 __('messages.status_category') => $participant->category->name ?? '-',
                                 __('messages.status_event') => $participant->event->name ?? '-',
-                                __('messages.status_registered') => $participant->created_at->format('d M Y'),
+                                __('messages.status_registered') => $participant->created_at->format('d M Y H:i:s') . ' WIB',
                                 __('messages.status_bib') => $participant->bib_number ?? __('messages.status_bib_pending'),
                             ];
 
@@ -132,7 +132,7 @@
                                     <span class="text-brand-600 text-xl font-bold">Rp
                                         {{ number_format($finalAmount, 0, ',', '.') }}</span>
                                 </div>
-                                @if(config('services.payment') === 'manual')
+                                @if(config('services.payment') === 'manual' && $finalAmount > 0)
                                     <p style="font-size: 8px;"
                                         class="text-surface-500 text-right leading-none mt-1 uppercase tracking-tighter">3 digit
                                         terakhir adalah kode unik untuk verifikasi pembayaran</p>
