@@ -117,3 +117,16 @@ Route::get('/mail-preview/payment', function () {
 });
 
 require __DIR__ . '/auth.php';
+
+// Route to manually link storage
+Route::get('/init-storage', function () {
+    if (!file_exists(public_path('storage'))) {
+        try {
+            Artisan::call('storage:link');
+            return 'Storage linked successfully!';
+        } catch (\Exception $e) {
+            return 'Error linking storage: ' . $e->getMessage();
+        }
+    }
+    return 'Storage is already linked.';
+});
