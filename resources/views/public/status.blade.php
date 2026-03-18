@@ -226,10 +226,17 @@
                                                 "*Email:* " . $participant->email . "\n" .
                                                 "*Kategori:* " . ($participant->category->name ?? '-') . "\n" .
                                                 "*Acara:* " . ($participant->event->name ?? '-') . "\n" .
-                                                "*Tanggal Daftar:* " . $participant->created_at->format('d M Y') . "\n" .
+                                                "*Tanggal Daftar:* " . $participant->created_at->format('d M Y H:i:s') . " WIB\n" .
                                                 "*Golongan Darah:* " . ($participant->blood_type ?? '-') . "\n" .
-                                                "*Ukuran Jersey:* " . ($participant->jersey_size ?? '-') . "\n\n" .
-                                                "*Biaya Pendaftaran:* Rp " . number_format($baseAmount, 0, ',', '.') . "\n" .
+                                                "*Ukuran Jersey:* " . ($participant->jersey_size ?? '-') . "\n\n";
+                                            if ($participant->familyMembers && $participant->familyMembers->count() > 0) {
+                                                $waMessage .= "*Anggota Keluarga:*\n";
+                                                foreach ($participant->familyMembers as $m) {
+                                                    $waMessage .= "- " . $m->full_name . " (" . ($m->jersey_size ?? '-') . ")\n";
+                                                }
+                                                $waMessage .= "\n";
+                                            }
+                                            $waMessage .= "*Biaya Pendaftaran:* Rp " . number_format($baseAmount, 0, ',', '.') . "\n" .
                                                 "*Total Pembayaran:* Rp " . number_format($finalAmount, 0, ',', '.') . "\n\n" .
                                                 "Berikut bukti pembayaran melalui QRIS yang ditampilkan di website.\n\n" .
                                                 "Mohon konfirmasi dan pengecekan lebih lanjut.\n" .

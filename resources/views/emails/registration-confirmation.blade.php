@@ -247,10 +247,18 @@
                   "\n" .
                   "*Ukuran Jersey:* " .
                   ($participant->jersey_size ?? '-') .
-                  "\n\n" .
-                  "*Biaya Pendaftaran:* Rp " .
-                  number_format($baseAmount, 0, ',', '.') .
-                  "\n";
+                  "\n\n";
+
+                if ($participant->familyMembers && $participant->familyMembers->count() > 0) {
+                  $waMessage .= "*Anggota Keluarga:*\n";
+                  foreach ($participant->familyMembers as $m) {
+                    $waMessage .= "- " . $m->full_name . " (" . ($m->jersey_size ?? '-') . ")\n";
+                  }
+                  $waMessage .= "\n";
+                }
+
+                $waMessage .= "*Biaya Pendaftaran:* Rp " . number_format($baseAmount, 0, ',', '.') . "\n";
+
 
                 if ($discountAmount > 0) {
                   $waMessage .= '*Diskon ' . ($promoCode ? "($promoCode)" : '') . ':* - Rp ' . number_format($discountAmount, 0, ',', '.') . "\n";
