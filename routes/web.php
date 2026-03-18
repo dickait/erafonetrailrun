@@ -89,18 +89,18 @@ Route::get('/optimize-app', function () {
 });
 
 
-/*
-|--------------------------------------------------------------------------
-| Route untuk migrate database
-|--------------------------------------------------------------------------
-*/
+// /*
+// |--------------------------------------------------------------------------
+// | Route untuk migrate database
+// |--------------------------------------------------------------------------
+// */
 
-Route::get('/migrate-db', function () {
-    Artisan::call('migrate', [
-        '--force' => true
-    ]);
-    return Artisan::output();
-});
+// Route::get('/migrate-db', function () {
+//     Artisan::call('migrate', [
+//         '--force' => true
+//     ]);
+//     return Artisan::output();
+// });
 
 // Email Preview Route
 Route::get('/mail-preview/registration', function () {

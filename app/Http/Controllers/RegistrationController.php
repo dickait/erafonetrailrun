@@ -100,7 +100,7 @@ class RegistrationController extends Controller
 
         // Calculate base price
         $baseAmount = $category->getBasePrice($multiplier);
-        
+
         $discountAmount = 0;
         $appliedPromotionId = null;
 
@@ -117,7 +117,7 @@ class RegistrationController extends Controller
             } else {
                 return back()->withInput()->withErrors(['discount_code' => 'Invalid or expired discount code.']);
             }
-        } 
+        }
         // 2. If no discount code is provided, check for automatic Early Bird
         else {
             $earlyBirdPromo = $category->getActivePromotion('earlybird');
@@ -231,7 +231,7 @@ class RegistrationController extends Controller
 
             // Send Email Confirmation
             try {
-                Mail::to($participant->email)->send(new RegistrationConfirmation($participant));
+                Mail::to($participant->email)->queue(new RegistrationConfirmation($participant));
             } catch (\Exception $e) {
                 \Illuminate\Support\Facades\Log::error('Email sending failed for free registration', ['error' => $e->getMessage()]);
             }
@@ -262,7 +262,7 @@ class RegistrationController extends Controller
 
             // Send Email Confirmation
             try {
-                Mail::to($participant->email)->send(new RegistrationConfirmation($participant));
+                Mail::to($participant->email)->queue(new RegistrationConfirmation($participant));
             } catch (\Exception $e) {
                 \Illuminate\Support\Facades\Log::error('Email sending failed for manual registration', ['error' => $e->getMessage()]);
             }
@@ -334,7 +334,7 @@ class RegistrationController extends Controller
 
         // Send Email Confirmation
         try {
-            Mail::to($participant->email)->send(new RegistrationConfirmation($participant));
+            Mail::to($participant->email)->queue(new RegistrationConfirmation($participant));
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Email sending failed for gateway registration', ['error' => $e->getMessage()]);
         }
