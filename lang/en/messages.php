@@ -195,6 +195,9 @@ return [
     'gallery_subtitle' => 'The gallery will be updated after the event is finished. Stay tuned!',
     'gallery_coming_soon' => 'Coming Soon',
     'gallery_coming_soon_desc' => 'We are preparing the best moments from the event. Photos and videos will be available here after the event concludes. Don\'t miss it!',
+    'gallery_section_title' => 'ERA Trail Excitement 🔥',
+    'gallery_section_subtitle' => 'See how exciting the experience was on the previous trail tracks',
+    'gallery_view_all' => 'View All Gallery',
 
     // Race Course
     'race_course_badge' => 'Race Course',

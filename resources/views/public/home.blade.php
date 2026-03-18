@@ -309,8 +309,96 @@
         </div>
     </section>
 
+    <!-- Gallery Section -->
+    <section id="gallery-preview" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="font-display font-bold text-3xl md:text-4xl text-surface-900 mb-4">
+                    {{ __('messages.gallery_section_title') }}
+                </h2>
+                <p class="text-surface-600 text-lg">
+                    {{ __('messages.gallery_section_subtitle') }}
+                </p>
+            </div>
+
+            @php
+                $previewPhotos = [
+                    'yog01298.webp', 'yog01447.webp', 'yog01659.webp',
+                    'yog00911.webp', 'yog00628.webp', 'yog01155.webp',
+                    'yog01210.webp', 'yog00977.webp', 'yog01574.webp'
+                ];
+            @endphp
+
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12">
+                @foreach($previewPhotos as $photo)
+                    <div class="aspect-square overflow-hidden rounded-2xl cursor-pointer group relative"
+                         onclick="openGalleryModal('{{ asset('storage/last-event-photos/' . $photo) }}', this)">
+                        <img src="{{ asset('storage/last-event-photos/' . $photo) }}" 
+                             alt="Era Trail Run Gallery"
+                             loading="lazy"
+                             class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                            </svg>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="text-center">
+                <a href="{{ route('gallery') }}" 
+                   class="inline-flex items-center gap-2 text-brand-600 font-bold hover:text-brand-700 transition-colors text-lg group">
+                    {{ __('messages.gallery_view_all') }}
+                    <span class="transition-transform group-hover:translate-x-1">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Modal -->
+    <div id="gallery-modal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-black/95 backdrop-blur-sm" onclick="closeGalleryModal()"></div>
+        <div class="relative h-full w-full flex items-center justify-center p-4 md:p-8 pointer-events-none">
+            <button onclick="closeGalleryModal()" 
+                    class="absolute top-6 right-6 text-white/70 hover:text-white transition-colors z-10 pointer-events-auto">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <img id="modal-image" src="" alt="Full Screen" 
+                 class="max-w-full max-h-full object-contain rounded-xl shadow-2xl transform transition-all duration-300 scale-95 opacity-0 pointer-events-auto">
+        </div>
+    </div>
+
     @push('scripts')
         <script>
+            function openGalleryModal(imgSrc) {
+                const modal = document.getElementById('gallery-modal');
+                const img = document.getElementById('modal-image');
+                img.src = imgSrc;
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                setTimeout(() => {
+                    img.classList.remove('scale-95', 'opacity-0');
+                }, 10);
+            }
+
+            function closeGalleryModal() {
+                const modal = document.getElementById('gallery-modal');
+                const img = document.getElementById('modal-image');
+                img.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }, 300);
+            }
+
+            // Close modal on escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeGalleryModal();
+            });
+
             const countdown = document.getElementById('countdown');
             if (countdown) {
                 const target = new Date(countdown.dataset.target).getTime();
