@@ -231,6 +231,30 @@ class RegistrationController extends Controller
                 ->with('success', 'Registration successful! Your registration has been confirmed.');
         }
 
+        // Handle Manual Payment Mode
+        if (config('services.payment') === 'manual') {
+            // Add 3 random digits (100-999)
+            $randomDigits = rand(100, 999);
+            $finalAmountWithRandom = $finalAmount + $randomDigits;
+
+            Payment::create([
+                'participant_id' => $participant->id,
+                'order_id' => $orderId,
+                'amount' => $baseAmount,
+                'promotion_id' => $appliedPromotionId,
+                'discount_amount' => $discountAmount,
+                'final_amount' => $finalAmountWithRandom,
+                'status' => 'pending',
+                'invoice_id' => 'MANUAL-' . strtoupper(Str::random(10)),
+                'gateway_id' => null,
+                'payment_link' => null,
+                'payment_method' => 'manual',
+            ]);
+
+            return redirect()->route('registration.payment', ['email' => $participant->email])
+                ->with('success', 'Registration successful! Please complete your manual payment via QRIS.');
+        }
+
         // Call Mayar API to create payment request
         $paymentLink = '#';
         $invoiceId = 'INV-' . strtoupper(Str::random(10));

@@ -71,9 +71,9 @@ return [
     'categories_early_bird_ends' => 'Early Bird Ends',
 
     // Category Info
-    'cat_5k-family-fun-trail_desc' => 'A relaxed category for families, featuring a beginner-friendly scenic route through green hills, passing Bukit Ilalang Cijeruk, Bukit Pupay, and Argo Edu Wisata Organik Mulyaharja.',
-    'cat_10k_desc' => 'Get ready for a 10K challenge through pine forests and stamina-testing trails, with routes passing Bukit Ilalang Cijeruk, Bukit Pupay, and Argo Edu Wisata Organik Mulyaharja.',
-    'cat_15k_desc' => 'The ultimate challenge with a 15K route that tests endurance through significant elevation, passing Bukit Ilalang Cijeruk, Bukit Pupay, and Argo Edu Wisata Organik Mulyaharja.',
+    'cat_5k-family-fun-trail_desc' => 'A relaxed category for families, featuring a beginner-friendly scenic route through green hills, passing Bukit Pupay and Bukit Wangun.',
+    'cat_10k_desc' => 'Get ready for a 10K challenge through pine forests and stamina-testing trails, with routes passing Bukit Pupay, Bukit Wangun, Saung Eling, and Argo Edu Wisata Organik Mulyaharja.',
+    'cat_15k_desc' => 'The ultimate challenge with a 15K route that tests endurance through significant elevation, passing Bukit Pupay, Bukit Wangun, Saung Eling, Argo Edu Wisata Organik Mulyaharja, and Lembah Fatamorgana.',
     'cat_usia' => 'Age',
     'cat_age' => 'Years Old',
     'cat_category' => 'Category',

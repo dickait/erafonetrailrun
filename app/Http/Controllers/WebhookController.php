@@ -11,6 +11,12 @@ class WebhookController extends Controller
 {
     public function handleMayar(Request $request)
     {
+        // If manual payment mode, ignore Mayar webhooks
+        if (config('services.payment') === 'manual') {
+            Log::info('Mayar webhook received but ignored because PAYMENT=manual');
+            return response()->json(['message' => 'Manual payment mode active, webhook ignored'], 200);
+        }
+
         // Log incoming webhook for debugging
         Log::info('Mayar webhook received', [
             'headers' => $request->headers->all(),
