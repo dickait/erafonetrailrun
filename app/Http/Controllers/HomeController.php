@@ -25,7 +25,20 @@ class HomeController extends Controller
 
     public function gallery()
     {
-        return view('public.gallery');
+        $directory = storage_path('app/public/last-event-photos');
+        $photos = [];
+        
+        if (file_exists($directory)) {
+            $files = array_diff(scandir($directory), ['.', '..']);
+            foreach ($files as $file) {
+                if (preg_match('/\.(webp|jpg|jpeg|png)$/i', $file)) {
+                    $photos[] = $file;
+                }
+            }
+            shuffle($photos);
+        }
+
+        return view('public.gallery', compact('photos'));
     }
 
     public function results()

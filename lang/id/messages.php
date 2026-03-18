@@ -192,8 +192,9 @@ return [
 
     // Gallery
     'gallery_badge' => 'Galeri',
-    'gallery_title' => 'Galeri Acara',
-    'gallery_subtitle' => 'Galeri akan diperbarui setelah acara selesai. Nantikan ya!',
+    'gallery_title' => 'Galeri Momen ERA Trail Run',
+    'gallery_subtitle' => 'Keseruan event ERA sebelumnya yang penuh dengan semangat dan tantangan di jalur alam Bogor.',
+    'gallery_load_more' => 'Muat Lebih Banyak',
     'gallery_coming_soon' => 'Segera Hadir',
     'gallery_coming_soon_desc' => 'Kami sedang mempersiapkan momen-momen terbaik dari acara ini. Foto dan video akan tersedia di sini setelah acara berakhir. Jangan sampai terlewat!',
     'gallery_section_title' => 'Keseruan ERA Trail 🔥',

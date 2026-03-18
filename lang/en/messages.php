@@ -191,8 +191,9 @@ return [
 
     // Gallery
     'gallery_badge' => 'Gallery',
-    'gallery_title' => 'Event Gallery',
-    'gallery_subtitle' => 'The gallery will be updated after the event is finished. Stay tuned!',
+    'gallery_title' => 'ERA Trail Run Moments Gallery',
+    'gallery_subtitle' => 'The excitement of the previous ERA event filled with spirit and challenge in the natural trails of Bogor.',
+    'gallery_load_more' => 'Load More',
     'gallery_coming_soon' => 'Coming Soon',
     'gallery_coming_soon_desc' => 'We are preparing the best moments from the event. Photos and videos will be available here after the event concludes. Don\'t miss it!',
     'gallery_section_title' => 'ERA Trail Excitement 🔥',
