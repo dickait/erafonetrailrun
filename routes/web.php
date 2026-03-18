@@ -105,11 +105,15 @@ Route::get('/optimize-app', function () {
 
 // Email Preview Route
 Route::get('/mail-preview/registration', function () {
-    $participant = \App\Models\Participant::with(['latestPayment', 'category', 'event'])->latest()->first();
-    if (!$participant) {
-        return 'No participants found to preview. Please register one first.';
-    }
+    $participant = \App\Models\Participant::with(['latestPayment.promotion', 'category', 'event'])->latest()->first();
+    if (!$participant) return 'No participants found.';
     return new \App\Mail\RegistrationConfirmation($participant);
+});
+
+Route::get('/mail-preview/payment', function () {
+    $participant = \App\Models\Participant::with(['latestPayment.promotion', 'category', 'event'])->latest()->first();
+    if (!$participant) return 'No participants found.';
+    return new \App\Mail\PaymentConfirmation($participant);
 });
 
 require __DIR__ . '/auth.php';

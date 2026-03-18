@@ -1,1 +1,1 @@
-<img src="{{ asset('eratrailrun.webp') }}" {{ $attributes }} alt="Era Logo" />
+<img src="{{ asset('erafone-icon-00.webp') }}" {{ $attributes }} alt="Era Logo" />

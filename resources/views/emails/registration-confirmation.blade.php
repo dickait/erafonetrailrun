@@ -28,6 +28,10 @@
                       height="50"
                       style="display: block; border: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic;">
                   </td>
+                  <td style="vertical-align: middle; padding-right: 15px;">
+                    <img src="{{ $message->embed(public_path('eratrailrun-putih.webp')) }}" alt="Era Trail Run" width="50" height="50"
+                      style="display: block; border: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic;">
+                  </td>
                   <td style="vertical-align: middle; text-align: left;">
                     <h2 style="margin:0; font-size: 24px; line-height: 1.2;">ERA TRAIL RUN 2026</h2>
                     <p style="margin:2px 0 0; font-size: 14px;">Konfirmasi Pendaftaran</p>
@@ -144,7 +148,8 @@
               @if ($finalAmount > 0)
                 <!-- Note -->
                 <p style="margin-top:20px;">
-                  Pastikan pembayaran sesuai nominal (termasuk 3 digit kode unik). Silakan transfer melalui QRIS pada
+                  Pastikan pembayaran sesuai nominal (termasuk 3 digit kode unik). Tiga digit terakhir adalah kode unik
+                  untuk verifikasi pembayaran. Silakan transfer melalui QRIS pada
                   lampiran email ini.
                 </p>
 
