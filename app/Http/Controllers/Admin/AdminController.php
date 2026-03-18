@@ -136,7 +136,8 @@ class AdminController extends Controller
 
                 // Send Confirmation Email
                 try {
-                    Mail::to($payment->participant->email)->queue(new PaymentConfirmation($payment->participant));
+                    $participant = $payment->participant->load(['event', 'category', 'familyMembers']);
+                    Mail::to($participant->email)->queue(new PaymentConfirmation($participant));
                 } catch (\Exception $e) {
                     \Illuminate\Support\Facades\Log::error('Email sending failed in manual update', ['error' => $e->getMessage()]);
                 }

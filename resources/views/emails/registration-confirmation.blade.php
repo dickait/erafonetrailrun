@@ -29,7 +29,8 @@
                       style="display: block; border: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic;">
                   </td>
                   <td style="vertical-align: middle; padding-right: 15px;">
-                    <img src="{{ $message->embed(public_path('eratrailrun-putih.webp')) }}" alt="Era Trail Run" width="50" height="50"
+                    <img src="{{ $message->embed(public_path('eratrailrun-putih.png')) }}" alt="Era Trail Run"
+                      width="50" height="50"
                       style="display: block; border: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic;">
                   </td>
                   <td style="vertical-align: middle; text-align: left;">
@@ -49,7 +50,7 @@
 
               <p>
                 Terima kasih telah mendaftar pada
-                <strong>{{ $participant->event->name ?? 'ERA Trail Run 2026' }}</strong>.
+                <strong>{{ $participant->event->name ?? 'Era Trail Run 2026' }}</strong>.
                 Berikut adalah detail pendaftaran dan pembayaran Anda:
               </p>
 
@@ -62,6 +63,7 @@
                   : max(0, $baseAmount - $discountAmount);
                 $orderId = optional($latestPayment)->order_id ?? '-';
                 $promoCode = optional($latestPayment ? $latestPayment->promotion : null)->code;
+                $isFamily = $participant->familyMembers && $participant->familyMembers->count() > 0;
               @endphp
 
               <!-- Detail Box -->
@@ -113,6 +115,53 @@
                   <td colspan="2" style="height:0px; line-height:0px; padding:0;">&nbsp;</td>
                 </tr>
               </table>
+
+              @if ($isFamily)
+                <!-- Family Members -->
+                <div style="margin-top:20px; border: 1px solid #eeeeee; border-radius: 8px; overflow: hidden;">
+                  <div style="background:#f9f9f9; padding: 10px; border-bottom: 1px solid #eeeeee;">
+                    <strong style="font-size: 14px; color: #333;">Anggota Keluarga (Family Members)</strong>
+                  </div>
+                  <table border="0" cellpadding="0" cellspacing="0" width="100%"
+                    style="border-collapse:collapse; width:100%; font-size: 13px;">
+                    <thead>
+                      <tr style="background:#fcfcfc;">
+                        <th align="left" style="padding:10px; border-bottom: 1px solid #eeeeee;">Nama</th>
+                        <th align="left" style="padding:10px; border-bottom: 1px solid #eeeeee;">Golongan Darah</th>
+                        <th align="left" style="padding:10px; border-bottom: 1px solid #eeeeee;">Jersey</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td style="padding:10px; border-bottom: 1px solid #eeeeee;">
+                          {{ $participant->full_name }} <span
+                            style="font-size: 11px; background: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 4px;">Leader</span>
+                        </td>
+                        <td align="left" style="padding:10px; border-bottom: 1px solid #eeeeee;">
+                          {{ $participant->blood_type ?? '-' }}
+                        </td>
+                        <td align="left" style="padding:10px; border-bottom: 1px solid #eeeeee;">
+                          {{ $participant->jersey_size ?? '-' }}
+                        </td>
+                      </tr>
+                      @foreach ($participant->familyMembers as $member)
+                        <tr>
+                          <td style="padding:10px; border-bottom: 1px solid #eeeeee;">
+                            {{ $member->full_name }} <span
+                              style="font-size: 11px; background: #f3f4f6; color: #4b5563; padding: 2px 6px; border-radius: 4px;">Member</span>
+                          </td>
+                          <td align="left" style="padding:10px; border-bottom: 1px solid #eeeeee;">
+                            {{ $member->blood_type ?? '-' }}
+                          </td>
+                          <td align="left" style="padding:10px; border-bottom: 1px solid #eeeeee;">
+                            {{ $member->jersey_size ?? '-' }}
+                          </td>
+                        </tr>
+                      @endforeach
+                    </tbody>
+                  </table>
+                </div>
+              @endif
 
               <!-- Payment -->
               <table border="0" cellpadding="0" cellspacing="0" width="100%"
