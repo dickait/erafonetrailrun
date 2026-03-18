@@ -102,4 +102,13 @@ Route::get('/migrate-db', function () {
     return Artisan::output();
 });
 
+// Email Preview Route
+Route::get('/mail-preview/registration', function () {
+    $participant = \App\Models\Participant::with(['latestPayment', 'category', 'event'])->latest()->first();
+    if (!$participant) {
+        return 'No participants found to preview. Please register one first.';
+    }
+    return new \App\Mail\RegistrationConfirmation($participant);
+});
+
 require __DIR__ . '/auth.php';

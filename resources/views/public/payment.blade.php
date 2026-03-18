@@ -133,7 +133,9 @@
                                         {{ number_format($finalAmount, 0, ',', '.') }}</span>
                                 </div>
                                 @if(config('services.payment') === 'manual')
-                                    <p style="font-size: 8px;" class="text-surface-500 text-right leading-none mt-1 uppercase tracking-tighter">3 digit terakhir adalah kode unik untuk verifikasi pembayaran</p>
+                                    <p style="font-size: 8px;"
+                                        class="text-surface-500 text-right leading-none mt-1 uppercase tracking-tighter">3 digit
+                                        terakhir adalah kode unik untuk verifikasi pembayaran</p>
                                 @endif
                             </div>
                         </div>
@@ -185,7 +187,7 @@
                                     <div class="space-y-4">
                                         <div class="p-4 bg-brand-50 rounded-xl border border-brand-100">
                                             <p class="text-sm text-brand-800 text-center leading-relaxed">
-                                                <strong>Informasi:</strong> Status pembayaran Anda akan diperbarui secara manual dalam
+                                                <strong>Informasi:</strong> Status pembayaran Anda akan diperbarui dalam
                                                 waktu <strong>1x24 jam</strong> setelah Anda melakukan konfirmasi pembayaran.
                                             </p>
                                         </div>

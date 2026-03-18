@@ -12,6 +12,8 @@ use App\Models\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\RegistrationConfirmation;
 use Illuminate\Support\Str;
 
 class RegistrationController extends Controller
@@ -227,6 +229,13 @@ class RegistrationController extends Controller
                 'paid_at' => now(),
             ]);
 
+            // Send Email Confirmation
+            try {
+                Mail::to($participant->email)->send(new RegistrationConfirmation($participant));
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Email sending failed for free registration', ['error' => $e->getMessage()]);
+            }
+
             return redirect()->route('registration.payment', ['email' => $participant->email])
                 ->with('success', 'Registration successful! Your registration has been confirmed.');
         }
@@ -250,6 +259,13 @@ class RegistrationController extends Controller
                 'payment_link' => null,
                 'payment_method' => 'manual',
             ]);
+
+            // Send Email Confirmation
+            try {
+                Mail::to($participant->email)->send(new RegistrationConfirmation($participant));
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Email sending failed for manual registration', ['error' => $e->getMessage()]);
+            }
 
             return redirect()->route('registration.payment', ['email' => $participant->email])
                 ->with('success', 'Registration successful! Please complete your manual payment via QRIS.');
@@ -315,6 +331,13 @@ class RegistrationController extends Controller
             'gateway_id' => $gatewayId ?? null,
             'payment_link' => $paymentLink,
         ]);
+
+        // Send Email Confirmation
+        try {
+            Mail::to($participant->email)->send(new RegistrationConfirmation($participant));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Email sending failed for gateway registration', ['error' => $e->getMessage()]);
+        }
 
         // Clear captcha from session after successful validation to ensure new attempt uses new captcha
         $request->session()->forget('captcha');

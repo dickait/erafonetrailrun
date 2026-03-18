@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Queue\SerializesModels;
 
 class RegistrationConfirmation extends Mailable
@@ -19,11 +20,20 @@ class RegistrationConfirmation extends Mailable
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'Registration Confirmation - Era Trail Run 2026');
+        return new Envelope(subject: 'Konfirmasi Pendaftaran - Era Trail Run 2026');
     }
 
     public function content(): Content
     {
         return new Content(view: 'emails.registration-confirmation');
+    }
+
+    public function attachments(): array
+    {
+        return [
+            Attachment::fromPath(public_path('qris.webp'))
+                ->as('qris-pembayaran.webp')
+                ->withMime('image/webp'),
+        ];
     }
 }
