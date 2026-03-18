@@ -8,6 +8,7 @@ use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\WebhookController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Artisan;
 
 // Language Switcher
 Route::get('/lang/{locale}', function (string $locale) {
@@ -106,13 +107,15 @@ Route::get('/optimize-app', function () {
 // Email Preview Route
 Route::get('/mail-preview/registration', function () {
     $participant = \App\Models\Participant::with(['latestPayment.promotion', 'category', 'event'])->latest()->first();
-    if (!$participant) return 'No participants found.';
+    if (!$participant)
+        return 'No participants found.';
     return new \App\Mail\RegistrationConfirmation($participant);
 });
 
 Route::get('/mail-preview/payment', function () {
     $participant = \App\Models\Participant::with(['latestPayment.promotion', 'category', 'event'])->latest()->first();
-    if (!$participant) return 'No participants found.';
+    if (!$participant)
+        return 'No participants found.';
     return new \App\Mail\PaymentConfirmation($participant);
 });
 
@@ -120,13 +123,28 @@ require __DIR__ . '/auth.php';
 
 // Route to manually link storage
 Route::get('/init-storage', function () {
-    if (!file_exists(public_path('storage'))) {
-        try {
-            Artisan::call('storage:link');
-            return 'Storage linked successfully!';
-        } catch (\Exception $e) {
-            return 'Error linking storage: ' . $e->getMessage();
-        }
+    // 1. Tentukan path asal (folder storage di dalam eratrailrun)
+    // Gunakan base_path karena folder aplikasi Anda ada di luar public_html
+    $target = base_path('storage/app/public');
+
+    // 2. Tentukan path tujuan (folder yang akan diakses publik)
+    $shortcut = public_path('storage');
+
+    // 3. Cek jika link sudah ada, hapus dulu jika itu adalah link mati (broken link)
+    if (is_link($shortcut) || file_exists($shortcut)) {
+        // Jika Anda ingin mengulang, hapus manual via File Manager atau gunakan:
+        // app('files')->delete($shortcut); 
+        return 'Link storage sudah ada atau folder "storage" sudah ada di public_html.';
     }
-    return 'Storage is already linked.';
+
+    try {
+        // Menggunakan fungsi symlink bawaan PHP (bukan Artisan/exec)
+        if (symlink($target, $shortcut)) {
+            return 'Berhasil! Link storage dibuat menggunakan native PHP symlink.';
+        } else {
+            return 'Gagal membuat symlink. Cek izin akses folder parent.';
+        }
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
+    }
 });
