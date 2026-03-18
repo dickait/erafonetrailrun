@@ -356,6 +356,32 @@
         </div>
     </section>
 
+    <!-- Support Section -->
+    <section id="support" class="py-20 bg-gradient-to-r from-brand-900 via-brand-800 to-brand-900 relative overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(245,158,11,0.12),transparent_70%)]"></div>
+        <div class="max-w-3xl mx-auto px-4 text-center relative z-10">
+            <h2 class="font-display font-bold text-3xl md:text-5xl text-white mb-6 uppercase tracking-tight">
+                {{ __('messages.support_title') }}
+            </h2>
+            <div class="w-20 h-1.5 bg-accent-400 mx-auto mb-8 rounded-full shadow-lg shadow-accent-400/20"></div>
+            <p class="text-white/80 text-lg md:text-xl mb-12 leading-relaxed italic">
+                "{{ __('messages.support_subtitle') }}"
+            </p>
+            
+            <div class="flex flex-wrap justify-center items-center gap-6 md:gap-10">
+                <div class="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20 shadow-xl hover:bg-white/20 transition-all duration-300 transform hover:-translate-y-2">
+                    <img src="{{ asset('erafone-icon-01.webp') }}" class="h-14 md:h-20 w-auto brightness-0 invert" alt="Erafone Icon" />
+                </div>
+                <div class="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20 shadow-xl hover:bg-white/20 transition-all duration-300 transform hover:-translate-y-2">
+                    <img src="{{ asset('eratrailrun-putih.webp') }}" class="h-14 md:h-20 w-auto" alt="Era Trail Run" />
+                </div>
+                <div class="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20 shadow-xl hover:bg-white/20 transition-all duration-300 transform hover:-translate-y-2">
+                    <img src="{{ asset('erafone-bg-teks.webp') }}" class="h-14 md:h-20 w-auto brightness-0 invert" alt="Erafone Text" />
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Gallery Modal -->
     <div id="gallery-modal" class="fixed inset-0 z-[100] hidden">
         <div class="absolute inset-0 bg-black/95 backdrop-blur-sm" onclick="closeGalleryModal()"></div>

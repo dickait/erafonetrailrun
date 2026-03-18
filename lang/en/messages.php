@@ -198,6 +198,8 @@ return [
     'gallery_section_title' => 'ERA Trail Excitement 🔥',
     'gallery_section_subtitle' => 'See how exciting the experience was on the previous trail tracks',
     'gallery_view_all' => 'View All Gallery',
+    'support_title' => 'Supported by',
+    'support_subtitle' => 'Synergy of collaboration to provide the best trail run experience for all participants.',
 
     // Race Course
     'race_course_badge' => 'Race Course',

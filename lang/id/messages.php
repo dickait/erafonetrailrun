@@ -199,6 +199,8 @@ return [
     'gallery_section_title' => 'Keseruan ERA Trail 🔥',
     'gallery_section_subtitle' => 'Lihat bagaimana serunya pengalaman di jalur trail sebelumnya',
     'gallery_view_all' => 'Lihat Semua Galeri',
+    'support_title' => 'Didukung oleh',
+    'support_subtitle' => 'Sinergi kolaborasi untuk menghadirkan pengalaman trail run terbaik bagi seluruh peserta.',
 
     // Race Course
     'race_course_badge' => 'Rute Lari',
