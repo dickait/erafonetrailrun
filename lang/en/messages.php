@@ -262,6 +262,8 @@ return [
     'admin_scan_title' => 'Scan QR Code or Enter Participant ID',
     'admin_scan_placeholder' => 'Enter or scan participant ID (UUID)',
     'admin_checkin_btn' => 'Check In',
+    'admin_registration_date' => 'Registration Date',
+    'admin_payment_date' => 'Payment Date',
     'admin_checkin_success' => 'Check-in Successful!',
     'admin_checkin_failed' => 'Check-in Failed',
     'admin_no_event' => 'No active event found. Please create an event first.',

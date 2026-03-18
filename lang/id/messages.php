@@ -263,6 +263,8 @@ return [
     'admin_scan_title' => 'Pindai QR Code atau Masukkan ID Peserta',
     'admin_scan_placeholder' => 'Masukkan atau pindai ID peserta (UUID)',
     'admin_checkin_btn' => 'Check In',
+    'admin_registration_date' => 'Tanggal Daftar',
+    'admin_payment_date' => 'Tanggal Bayar',
     'admin_checkin_success' => 'Check-in Berhasil!',
     'admin_checkin_failed' => 'Check-in Gagal',
     'admin_no_event' => 'Tidak ada acara aktif. Silakan buat acara terlebih dahulu.',

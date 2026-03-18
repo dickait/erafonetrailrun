@@ -63,10 +63,34 @@ class AdminController extends Controller
         return view('admin.participants', compact('participants', 'categories'));
     }
 
-    public function payments()
+    public function payments(Request $request)
     {
-        $payments = Payment::with(['participant.category'])->latest()->paginate(20);
-        return view('admin.payments', compact('payments'));
+        $event = Event::latest()->first();
+        $categories = $event ? $event->categories : collect();
+
+        $query = Payment::with(['participant.category']);
+
+        if ($request->filled('search')) {
+            $s = $request->search;
+            $query->whereHas('participant', function ($q) use ($s) {
+                $q->where('full_name', 'like', "%$s%")
+                  ->orWhere('email', 'like', "%$s%");
+            });
+        }
+
+        if ($request->filled('category')) {
+            $query->whereHas('participant', function ($q) use ($request) {
+                $q->where('category_id', $request->category);
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $payments = $query->latest()->paginate(20)->withQueryString();
+
+        return view('admin.payments', compact('payments', 'categories'));
     }
 
     public function updatePaymentStatus(Request $request, Payment $payment)
