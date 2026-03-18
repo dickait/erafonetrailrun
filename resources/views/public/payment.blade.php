@@ -126,10 +126,15 @@
                                 </div>
                             @endif
 
-                            <div class="flex justify-between items-center py-2 border-t border-surface-100 mt-2">
-                                <span class="text-surface-900 font-bold">{{ __('messages.reg_total') }}</span>
-                                <span class="text-brand-600 text-xl font-bold">Rp
-                                    {{ number_format($finalAmount, 0, ',', '.') }}</span>
+                            <div class="py-2 border-t border-surface-100 mt-2">
+                                <div class="flex justify-between items-baseline">
+                                    <span class="text-surface-900 font-bold">{{ __('messages.reg_total') }}</span>
+                                    <span class="text-brand-600 text-xl font-bold">Rp
+                                        {{ number_format($finalAmount, 0, ',', '.') }}</span>
+                                </div>
+                                @if(config('services.payment') === 'manual')
+                                    <p style="font-size: 8px;" class="text-surface-500 text-right leading-none mt-1 uppercase tracking-tighter">3 digit terakhir adalah kode unik untuk verifikasi pembayaran</p>
+                                @endif
                             </div>
                         </div>
 
