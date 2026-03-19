@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RegistrationConfirmation;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Midtrans\Config;
 use Midtrans\Snap;
@@ -29,7 +30,9 @@ class RegistrationController extends Controller
         }
 
         $categories = $event->categories;
-        $countries = Country::orderBy('name')->get();
+        $countries = Cache::remember('countries_list', 86400, function () {
+            return Country::orderBy('name')->get();
+        });
 
         return view('public.register', compact('event', 'categories', 'countries'));
     }
@@ -483,13 +486,18 @@ class RegistrationController extends Controller
 
     public function getProvinces(Request $request)
     {
-        $provinces = Province::orderBy('name')->get();
+        $provinces = Cache::remember('provinces_list', 86400, function () {
+            return Province::orderBy('name')->get();
+        });
         return response()->json($provinces);
     }
 
     public function getCities(Request $request)
     {
-        $cities = City::where('province_id', $request->province_id)->orderBy('name')->get();
+        $provinceId = $request->province_id;
+        $cities = Cache::remember("cities_list_{$provinceId}", 86400, function () use ($provinceId) {
+            return City::where('province_id', $provinceId)->orderBy('name')->get();
+        });
         return response()->json($cities);
     }
 }
