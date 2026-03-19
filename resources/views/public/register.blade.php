@@ -287,12 +287,12 @@
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                            <div class="sm:col-span-2">
-                                <label class="block text-sm font-medium text-surface-800 mb-1.5">Name
+                            <div>
+                                <label class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_full_name') }}
                                     *</label>
                                 <input type="text" name="full_name" value="{{ old('full_name') }}" required
                                     class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
-                                    placeholder="Name">
+                                    placeholder="{{ __('messages.reg_full_name') }}">
                             </div>
 
                             <div>
