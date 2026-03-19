@@ -229,12 +229,73 @@
                                         </a>
                                     </div>
                                 </div>
+                            @elseif(config('services.payment') === 'midtrans')
+                                <button id="pay-button"
+                                    class="block w-full py-4 text-center bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold text-lg rounded-xl shadow-md transition-all">Proceed
+                                    to Payment (Midtrans)</button>
                             @else
                                 <a href="{{ $participant->latestPayment->payment_link ?? '#' }}" target="_blank"
                                     class="block w-full py-4 text-center bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold text-lg rounded-xl shadow-md transition-all">Proceed
                                     to Payment (Mayar.id)</a>
                             @endif
                         </div>
+                    @endif
+
+                    @if($participant->payment_status == 'pending' && config('services.payment') === 'midtrans')
+                        <script src="{{ config('midtrans.snap_url') }}" data-client-key="{{ config('midtrans.client_key') }}"></script>
+                        <script type="text/javascript">
+                            const payButton = document.getElementById('pay-button');
+                            if (payButton) {
+                                payButton.addEventListener('click', function(e) {
+                                    e.preventDefault();
+                                    payButton.disabled = true;
+                                    payButton.innerHTML = 'Processing...';
+
+                                    fetch('{{ route('midtrans.token') }}', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                            },
+                                            body: JSON.stringify({
+                                                participant_id: '{{ $participant->id }}'
+                                            })
+                                        })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            if (data.token) {
+                                                window.snap.pay(data.token, {
+                                                    onSuccess: function(result) {
+                                                        window.location.href =
+                                                            '{{ route('registration.payment', ['email' => $participant->email]) }}';
+                                                    },
+                                                    onPending: function(result) {
+                                                        window.location.reload();
+                                                    },
+                                                    onError: function(result) {
+                                                        alert("Payment failed!");
+                                                        payButton.disabled = false;
+                                                        payButton.innerHTML = 'Proceed to Payment (Midtrans)';
+                                                    },
+                                                    onClose: function() {
+                                                        payButton.disabled = false;
+                                                        payButton.innerHTML = 'Proceed to Payment (Midtrans)';
+                                                    }
+                                                });
+                                            } else {
+                                                alert(data.error || 'Failed to get payment token');
+                                                payButton.disabled = false;
+                                                payButton.innerHTML = 'Proceed to Payment (Midtrans)';
+                                            }
+                                        })
+                                        .catch(error => {
+                                            console.error('Error:', error);
+                                            payButton.disabled = false;
+                                            payButton.innerHTML = 'Proceed to Payment (Midtrans)';
+                                        });
+                                });
+                            }
+                        </script>
                     @endif
 
                     @if($participant->payment_status == 'paid')

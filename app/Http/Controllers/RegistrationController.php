@@ -277,6 +277,33 @@ class RegistrationController extends Controller
         $paymentLink = '#';
         $invoiceId = 'INV-' . strtoupper(Str::random(10));
 
+        // Handle Midtrans Payment Mode
+        if (config('services.payment') === 'midtrans') {
+            Payment::create([
+                'participant_id' => $participant->id,
+                'order_id' => $orderId,
+                'amount' => $baseAmount,
+                'promotion_id' => $appliedPromotionId,
+                'discount_amount' => $discountAmount,
+                'final_amount' => $finalAmount,
+                'status' => 'pending',
+                'invoice_id' => $invoiceId,
+                'payment_link' => null, // Token will be fetched via AJAX in the frontend
+                'payment_method' => 'midtrans',
+            ]);
+
+            // Send Email Confirmation
+            try {
+                $participant->load('familyMembers');
+                Mail::to($participant->email)->queue(new RegistrationConfirmation($participant));
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Email sending failed for midtrans registration', ['error' => $e->getMessage()]);
+            }
+
+            return redirect()->route('registration.payment', ['email' => $participant->email])
+                ->with('success', 'Registration successful! Please complete your payment via Midtrans.');
+        }
+
         $mobile = $participant->phone;
         if (strlen($mobile) < 10) {
             $mobile = str_pad($mobile, 10, '0', STR_PAD_RIGHT);

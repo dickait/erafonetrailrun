@@ -6,6 +6,7 @@ use App\Http\Controllers\Participant\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\WebhookController;
+use App\Http\Controllers\MidtransController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
@@ -37,6 +38,8 @@ Route::get('/api/cities', [RegistrationController::class, 'getCities'])->name('a
 
 // Webhook (CSRF excluded via bootstrap/app.php)
 Route::post('/webhook/mayar', [WebhookController::class, 'handleMayar'])->name('webhook.mayar');
+Route::post('/webhook/midtrans', [MidtransController::class, 'webhook'])->name('webhook.midtrans');
+Route::post('/midtrans/token', [MidtransController::class, 'createToken'])->name('midtrans.token');
 
 /* |-------------------------------------------------------------------------- | Auth Routes (Breeze) |-------------------------------------------------------------------------- */
 Route::get('/dashboard', function () {
