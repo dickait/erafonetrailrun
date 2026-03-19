@@ -53,6 +53,8 @@ class MidtransController extends Controller
             ],
             'callbacks' => [
                 'finish' => route('registration.payment', ['email' => $participant->email]),
+                'unfinish' => route('registration.payment', ['email' => $participant->email]),
+                'error' => route('registration.payment', ['email' => $participant->email]),
             ]
         ];
 
