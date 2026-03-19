@@ -112,6 +112,14 @@ Route::get('/mail-preview/registration', function () {
     $participant = \App\Models\Participant::with(['latestPayment.promotion', 'category', 'event'])->latest()->first();
     if (!$participant)
         return 'No participants found.';
+    
+    // Simulate payment method for preview
+    if (request('type') === 'midtrans' && $participant->latestPayment) {
+        $participant->latestPayment->payment_method = 'midtrans';
+    } elseif (request('type') === 'manual' && $participant->latestPayment) {
+        $participant->latestPayment->payment_method = 'manual';
+    }
+
     return new \App\Mail\RegistrationConfirmation($participant);
 });
 

@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RegistrationConfirmation;
 use Illuminate\Support\Str;
+use Midtrans\Config;
+use Midtrans\Snap;
 
 class RegistrationController extends Controller
 {
@@ -279,6 +281,41 @@ class RegistrationController extends Controller
 
         // Handle Midtrans Payment Mode
         if (config('services.payment') === 'midtrans') {
+            Config::$serverKey = config('midtrans.server_key');
+            Config::$isProduction = config('midtrans.is_production');
+            Config::$isSanitized = config('midtrans.is_sanitized');
+            Config::$is3ds = config('midtrans.is_3ds');
+
+            $params = [
+                'transaction_details' => [
+                    'order_id' => $orderId . '-' . time(),
+                    'gross_amount' => (int) $finalAmount,
+                ],
+                'customer_details' => [
+                    'first_name' => $participant->full_name,
+                    'email' => $participant->email,
+                    'phone' => $participant->phone,
+                ],
+                'item_details' => [
+                    [
+                        'id' => $category->id,
+                        'price' => (int) $finalAmount,
+                        'quantity' => 1,
+                        'name' => $category->name,
+                    ]
+                ],
+                'callbacks' => [
+                    'finish' => route('registration.payment', ['email' => $participant->email]),
+                ]
+            ];
+
+            try {
+                $paymentUrl = Snap::createTransaction($params)->redirect_url;
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Midtrans Link Creation Failed', ['error' => $e->getMessage()]);
+                $paymentUrl = route('registration.payment', ['email' => $participant->email]);
+            }
+
             Payment::create([
                 'participant_id' => $participant->id,
                 'order_id' => $orderId,
@@ -288,7 +325,7 @@ class RegistrationController extends Controller
                 'final_amount' => $finalAmount,
                 'status' => 'pending',
                 'invoice_id' => $invoiceId,
-                'payment_link' => null, // Token will be fetched via AJAX in the frontend
+                'payment_link' => $paymentUrl,
                 'payment_method' => 'midtrans',
             ]);
 

@@ -20,7 +20,7 @@ class PaymentConfirmation extends Mailable implements ShouldQueue
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'Payment Confirmed - Era Trail Run 2026');
+        return new Envelope(subject: 'Pembayaran Terkonfirmasi - Era Trail Run 2026');
     }
 
     public function content(): Content

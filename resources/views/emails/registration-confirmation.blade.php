@@ -195,23 +195,40 @@
               </table>
 
               @if ($finalAmount > 0)
-                <!-- Note -->
-                <p style="margin-top:20px;">
-                  Pastikan pembayaran sesuai nominal (termasuk 3 digit kode unik). Tiga digit terakhir adalah kode unik
-                  untuk verifikasi pembayaran. Silakan transfer melalui QRIS pada
-                  lampiran email ini.
-                </p>
+                @if (optional($latestPayment)->payment_method === 'midtrans')
+                  <!-- Midtrans Payment Instruction -->
+                  <p style="margin-top:20px;">
+                    Silakan lakukan pembayaran melalui tombol di bawah ini menggunakan <strong>Midtrans</strong>. Anda dapat
+                    memilih berbagai metode pembayaran seperti Virtual Account, Kartu Kredit, atau E-Wallet.
+                  </p>
 
-                <div style="text-align: center; margin-top: 20px;">
-                  <img src="{{ $message->embed(public_path('qris.webp')) }}" alt="QRIS" width="250"
-                    style="border-radius: 12px; border: 1px solid #ddd;">
-                </div>
+                  <div style="margin-top: 25px; text-align: center;">
+                    <a href="{{ $latestPayment->payment_link ?? route('registration.payment', ['email' => $participant->email]) }}" target="_blank"
+                      style="background-color: #E02534; color: #ffffff; padding: 14px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
+                      Bayar Sekarang (Midtrans)
+                    </a>
+                  </div>
 
-                <p>
-                  Informasi: Status pembayaran Anda akan diperbarui dalam waktu 1x24 jam setelah Anda melakukan
-                  konfirmasi
-                  pembayaran.
-                </p>
+                  <p style="font-size: 13px; color: #666; margin-top: 15px;">
+                    *Status pembayaran Anda akan diperbarui secara otomatis setelah transaksi berhasil.
+                  </p>
+                @else
+                  <!-- Manual (QRIS) Payment Instruction -->
+                  <p style="margin-top:20px;">
+                    Pastikan pembayaran sesuai nominal. Silakan transfer melalui QRIS pada lampiran email ini atau scan gambar
+                    di bawah:
+                  </p>
+
+                  <div style="text-align: center; margin-top: 20px;">
+                    <img src="{{ $message->embed(public_path('qris.webp')) }}" alt="QRIS" width="250"
+                      style="border-radius: 12px; border: 1px solid #ddd;">
+                  </div>
+
+                  <p>
+                    Informasi: Status pembayaran Anda akan diperbarui dalam waktu 1x24 jam setelah Anda melakukan
+                    konfirmasi pembayaran.
+                  </p>
+                @endif
               @else
                 <p
                   style="margin-top:20px; border: 1px solid #22c55e; background: #f0fdf4; color: #166534; padding: 15px; border-radius: 8px; text-align: center;">
@@ -265,7 +282,11 @@
                 }
 
                 if ($finalAmount > 0) {
-                  $waMessage .= '*Total Pembayaran:* Rp ' . number_format($finalAmount, 0, ',', '.') . "\n\n" . "Berikut bukti pembayaran melalui QRIS yang terlampir.\n\n";
+                  if (optional($latestPayment)->payment_method === 'midtrans') {
+                    $waMessage .= "Saya akan melakukan pembayaran melalui Midtrans Snap.\n\n";
+                  } else {
+                    $waMessage .= '*Total Pembayaran:* Rp ' . number_format($finalAmount, 0, ',', '.') . "\n\n" . "Berikut bukti pembayaran melalui QRIS yang terlampir.\n\n";
+                  }
                 } else {
                   $waStatus = " (Lunas/Diskon 100%)";
                   $waMessage .= "*Total Pembayaran:* Rp 0" . $waStatus . "\n";
