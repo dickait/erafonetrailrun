@@ -132,6 +132,7 @@ class MidtransController extends Controller
 
             $payment->update([
                 'status' => $paymentStatus,
+                'gateway_id' => $notif->transaction_id ?? $payment->gateway_id,
                 'payment_method' => $type,
                 'paid_at' => $paymentStatus === 'paid' ? now() : null,
                 'webhook_payload' => $request->all(),

@@ -233,7 +233,7 @@ class RegistrationController extends Controller
 
             // Send Email Confirmation
             try {
-                $participant->load('familyMembers');
+                $participant->load(['familyMembers', 'latestPayment']);
                 Mail::to($participant->email)->queue(new RegistrationConfirmation($participant));
             } catch (\Exception $e) {
                 \Illuminate\Support\Facades\Log::error('Email sending failed for free registration', ['error' => $e->getMessage()]);
@@ -265,7 +265,7 @@ class RegistrationController extends Controller
 
             // Send Email Confirmation
             try {
-                $participant->load('familyMembers');
+                $participant->load(['familyMembers', 'latestPayment']);
                 Mail::to($participant->email)->queue(new RegistrationConfirmation($participant));
             } catch (\Exception $e) {
                 \Illuminate\Support\Facades\Log::error('Email sending failed for manual registration', ['error' => $e->getMessage()]);
@@ -331,7 +331,7 @@ class RegistrationController extends Controller
 
             // Send Email Confirmation
             try {
-                $participant->load('familyMembers');
+                $participant->load(['familyMembers', 'latestPayment']);
                 Mail::to($participant->email)->queue(new RegistrationConfirmation($participant));
             } catch (\Exception $e) {
                 \Illuminate\Support\Facades\Log::error('Email sending failed for midtrans registration', ['error' => $e->getMessage()]);
@@ -400,7 +400,7 @@ class RegistrationController extends Controller
 
         // Send Email Confirmation
         try {
-            $participant->load('familyMembers');
+            $participant->load(['familyMembers', 'latestPayment']);
             Mail::to($participant->email)->queue(new RegistrationConfirmation($participant));
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Email sending failed for gateway registration', ['error' => $e->getMessage()]);
