@@ -72,7 +72,7 @@ return [
 
     // Category Info
     'cat_5k-family-fun-trail_desc' => 'Kategori santai untuk keluarga yang melewati rute indah dan ramah pemula sepanjang lintasan perbukitan hijau, melintasi area Bukit Pupay dan Bukit Wangun.',
-    'cat_10k_desc' => 'Persiapkan dirimu untuk tantangan 10K melintasi hutan pinus dan trek yang cukup menguras stamina, dengan rute yang juga melewati Bukit Pupay, Bukit Wangun, Saung Eling, dan Argo Edu Wisata Organik Mulyaharja.',
+    'cat_10k_desc' => 'Persiapkan dirimu untuk tantangan 10K melintasi hutan dan trek yang cukup menguras stamina, dengan rute yang juga melewati Bukit Pupay, Bukit Wangun, Saung Eling, dan Argo Edu Wisata Organik Mulyaharja.',
     'cat_15k_desc' => 'Tantangan utama dengan rute 15K yang menguji daya tahan melalui elevasi yang signifikan, melintasi Bukit Pupay, Bukit Wangun, Saung Eling, Argo Edu Wisata Organik Mulyaharja, dan Lembah Fatamorgana.',
     'cat_usia' => 'Usia',
     'cat_age' => 'Tahun',
