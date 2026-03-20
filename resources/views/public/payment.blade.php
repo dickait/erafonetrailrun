@@ -60,9 +60,7 @@
 
 
 
-                            if ($participant->payment_status == 'paid' && $latestPayment && $latestPayment->paid_at) {
-                                $fields['Status Pembayaran Lunas'] = $latestPayment->paid_at->format('d M Y H:i:s') . ' WIB';
-                            }
+
 
                             if (!$isFamily) {
                                 $fields[__('messages.status_blood_type')] = $participant->blood_type ?? '-';
@@ -141,7 +139,7 @@
 
                             @if(($latestPayment->fee_amount ?? 0) > 0)
                                 <div class="flex justify-between text-sm text-surface-600">
-                                    <span>Biaya Layanan Transaksi (+PPN 11%)</span>
+                                    <span>Biaya Layanan Pembayaran (+11% PPN)</span>
                                     <span class="font-medium">+ Rp
                                         {{ number_format($latestPayment->fee_amount, 0, ',', '.') }}</span>
                                 </div>
@@ -149,7 +147,7 @@
 
                             <div class="py-2 border-t border-surface-100 mt-2">
                                 <div class="flex justify-between items-baseline">
-                                    <span class="text-surface-900 font-bold">{{ __('messages.reg_total') }}</span>
+                                    <span class="text-surface-900 font-bold">Subtotal Pembayaran</span>
                                     <span class="text-brand-600 text-xl font-bold">Rp
                                         {{ number_format($finalAmount + ($latestPayment->fee_amount ?? 0), 0, ',', '.') }}</span>
                                 </div>
@@ -303,12 +301,12 @@
 
                                 <div class="bg-brand-50 p-4 rounded-xl border border-brand-100 mb-6">
                                     <div class="flex justify-between items-center text-sm mb-1 text-surface-600">
-                                        <span>Subtotal</span>
+                                        <span>Subtotal Pembayaran</span>
                                         <span id="display-subtotal" data-val="{{ (int) $finalAmount }}">Rp
                                             {{ number_format($finalAmount, 0, ',', '.') }}</span>
                                     </div>
                                     <div class="flex justify-between items-center text-sm mb-2 text-surface-600">
-                                        <span>Payment Service Fee (+11% PPN)</span>
+                                        <span>Biaya Layanan Pembayaran (+11% PPN)</span>
                                         <span id="display-fee" class="font-medium text-brand-600">Rp 0</span>
                                     </div>
                                     <div class="flex justify-between items-center pt-2 border-t border-brand-200">

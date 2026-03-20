@@ -216,7 +216,7 @@
                 @if (optional($latestPayment)->fee_amount > 0)
                   <tr>
                     <td width="40%" style="background:#F6AE1B; color:#000; padding:10px; border-top: 1px dashed #ca8a04;">
-                      <strong>Biaya Layanan Transaksi</strong>
+                      <strong>Biaya Layanan Pembayaran (+11% PPN)</strong>
                     </td>
                     <td style="background:#F6AE1B; text-align:right; padding:10px; border-top: 1px dashed #ca8a04;">
                       + Rp {{ number_format($latestPayment->fee_amount, 0, ',', '.') }}

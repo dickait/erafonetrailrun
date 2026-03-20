@@ -88,9 +88,8 @@
 
 
 
-                            if ($participant->payment_status == 'paid' && $latestPayment && $latestPayment->paid_at) {
-                                $fields['Status Pembayaran Lunas'] = $latestPayment->paid_at->format('d M Y H:i:s') . ' WIB';
-                            }
+
+
 
                             if (!$isFamily) {
                                 $fields[__('messages.status_blood_type')] = $participant->blood_type ?? '-';

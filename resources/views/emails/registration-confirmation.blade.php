@@ -70,14 +70,14 @@
                 // Category logic
                 $categoryNameForEmail = $participant->category->name ?? '-';
                 if ($participant->category && !str_contains(strtolower($categoryNameForEmail), 'family') && $participant->date_of_birth) {
-                    $regYear = $participant->created_at->year;
-                    $birthYear = $participant->date_of_birth->year;
-                    $ageAtRegForEmail = $regYear - $birthYear;
-                    if ($ageAtRegForEmail >= 40) {
-                        $categoryNameForEmail .= ' (Master)';
-                    } elseif ($ageAtRegForEmail >= 17) {
-                        $categoryNameForEmail .= ' (Open)';
-                    }
+                  $regYear = $participant->created_at->year;
+                  $birthYear = $participant->date_of_birth->year;
+                  $ageAtRegForEmail = $regYear - $birthYear;
+                  if ($ageAtRegForEmail >= 40) {
+                    $categoryNameForEmail .= ' (Master)';
+                  } elseif ($ageAtRegForEmail >= 17) {
+                    $categoryNameForEmail .= ' (Open)';
+                  }
                 }
               @endphp
 
@@ -202,7 +202,7 @@
                 @if ($feeAmount > 0)
                   <tr>
                     <td width="40%" style="background:#F6AE1B; color:#000; padding:10px; border-top: 1px dashed #ca8a04;">
-                      <strong>Biaya Layanan Transaksi (+11% PPN)</strong>
+                      <strong>Biaya Layanan Pembayaran (+11% PPN)</strong>
                     </td>
                     <td style="background:#F6AE1B; text-align:right; padding:10px; border-top: 1px dashed #ca8a04;">
                       + Rp {{ number_format($feeAmount, 0, ',', '.') }}
@@ -217,14 +217,23 @@
                     <strong>Rp {{ number_format($totalToPay, 0, ',', '.') }}</strong>
                   </td>
                 </tr>
+                @if ($feeAmount <= 0 && $finalAmount > 0)
+                  <tr>
+                    <td colspan="2"
+                      style="text-align:right; padding:5px 10px; font-size:11px; color:#666; font-style:italic;">
+                      * Belum termasuk biaya layanan pembayaran
+                    </td>
+                  </tr>
+                @endif
               </table>
 
               @if ($finalAmount > 0)
                 @if (optional($latestPayment)->payment_method === 'midtrans')
                   <!-- Midtrans Payment Instruction -->
                   <p style="margin-top:20px;">
-                    Silakan lakukan pembayaran melalui tombol di bawah ini. Anda dapat
-                    memilih berbagai metode pembayaran seperti QRIS, Virtual Account, atau E-Wallet.
+                    Silakan lakukan pembayaran melalui tombol di bawah ini. Biaya di atas belum termasuk biaya layanan
+                    metode pembayaran. Anda dapat memilih berbagai metode pembayaran seperti QRIS, Virtual Account, atau
+                    E-Wallet.
                   </p>
 
                   <div style="margin-top: 25px; text-align: center;">
@@ -240,7 +249,8 @@
                 @else
                   <!-- Manual (QRIS) Payment Instruction -->
                   <p style="margin-top:20px;">
-                    Pastikan pembayaran sesuai nominal. Silakan transfer melalui QRIS pada lampiran email ini atau scan gambar
+                    Pastikan pembayaran sesuai nominal. Silakan transfer melalui QRIS pada lampiran email ini atau scan
+                    gambar
                     di bawah:
                   </p>
 
@@ -307,7 +317,7 @@
                 }
 
                 if ($feeAmount > 0) {
-                  $waMessage .= '*Biaya Layanan Transaksi (+11% PPN):* + Rp ' . number_format($feeAmount, 0, ',', '.') . "\n";
+                  $waMessage .= '*Biaya Layanan Pembayaran (+11% PPN):* + Rp ' . number_format($feeAmount, 0, ',', '.') . "\n";
                 }
 
                 if ($totalToPay > 0) {
