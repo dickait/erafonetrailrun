@@ -78,7 +78,7 @@
                         {{ __('messages.about_title') }} <span
                             class="text-brand-500">{{ __('messages.about_title_highlight') }}</span>
                     </h2>
-                    <p class="text-surface-700 leading-relaxed text-lg mb-8">{{ __('messages.about_description') }}</p>
+                    <p class="text-surface-700 leading-relaxed text-sm md:text-lg mb-8">{{ __('messages.about_description') }}</p>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div
                             class="bg-surface-50 border border-surface-300 rounded-xl p-4 flex flex-col items-center justify-center text-center">
@@ -148,148 +148,168 @@
                     @php
                         $colors = $categoryColors[$cat->slug] ?? $categoryColors['5k-family-fun-trail'];
                         $usia = $cat->slug == '5k-family-fun-trail' ? '10+' : '17+';
+                        $catTitle = $cat->slug == '5k-family-fun-trail' ? '5K Family Fun Trail' : $cat->name;
                     @endphp
                     <div
-                        class="bg-white border {{ $colors[5] }} rounded-2xl p-8 hover:border-{{ $colors[2] }}/50 transition-all duration-300 hover:-translate-y-2 group relative overflow-hidden shadow-sm hover:shadow-xl">
+                        class="category-card bg-white border {{ $colors[5] }} rounded-2xl p-6 md:p-8 hover:border-{{ $colors[2] }}/50 transition-all duration-300 hover:-translate-y-2 group relative overflow-hidden shadow-sm hover:shadow-xl cursor-pointer md:cursor-default"
+                        onclick="toggleCategory(this)">
                         <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r {{ $colors[1] }}"></div>
-                        <div class="w-16 h-16 {{ $colors[6] }} rounded-2xl flex items-center justify-center mb-6">
-                            <span
-                                class="font-display text-xl font-bold {{ $colors[4] }}">{{ strtoupper(explode('-', $cat->slug)[0]) }}</span>
+                        
+                        <!-- Header (Icon and Title) -->
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 md:w-16 md:h-16 {{ $colors[6] }} rounded-2xl flex items-center justify-center shrink-0">
+                                    <span class="font-display text-base md:text-xl font-bold {{ $colors[4] }}">
+                                        {{ strtoupper(explode('-', $cat->slug)[0]) }}
+                                    </span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <h3 class="font-display text-lg md:text-xl font-bold text-surface-900 leading-tight">{{ $catTitle }}</h3>
+                                    <span class="md:hidden text-[10px] text-brand-500 font-bold uppercase tracking-wider mt-0.5 btn-label">Lihat Detail</span>
+                                </div>
+                            </div>
+                            <div class="md:hidden text-surface-400 transition-transform duration-300 arrow-icon">
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
                         </div>
-                        <h3 class="font-display text-xl font-bold text-surface-900 mb-3">{{ $cat->name }}</h3>
-                        <p class="text-surface-700 text-sm mb-6">{{ __('messages.cat_' . $cat->slug . '_desc') }}</p>
-                        <div class="space-y-3 mb-6">
-                            <div class="flex justify-between text-sm"><span
-                                    class="text-surface-700">{{ __('messages.categories_distance') }}</span><span
-                                    class="text-surface-900 font-medium">{{ $cat->distance_km }} km</span></div>
-                            <div class="flex justify-between text-sm"><span
-                                    class="text-surface-700">{{ __('messages.categories_elevation') }}</span><span
-                                    class="text-surface-900 font-medium">{{ $cat->elevation ?? 0 }} m</span></div>
-                            <div class="flex justify-between text-sm"><span
-                                    class="text-surface-700">{{ __('messages.categories_cot') }}</span><span
-                                    class="text-surface-900 font-medium">{{ $cat->cot ?? 0 }}
-                                    {{ app()->getLocale() == 'id' ? 'Jam' : 'Hours' }}</span></div>
-                            <div class="flex justify-between text-sm"><span
-                                    class="text-surface-700">{{ __('messages.categories_age') }}</span><span
-                                    class="text-surface-900 font-medium">{{ $usia }} {{ __('messages.cat_age') }}</span></div>
-                            @php
-                                $prices = $cat->prices->sortBy('price');
-                                $minPrice = $prices->first()?->price ?? 0;
-                                $maxPrice = $prices->last()?->price ?? 0;
 
-                                $earlyBird = $cat->getActivePromotion('earlybird');
-                                $discount = 0;
-                                if ($earlyBird) {
-                                    $discount = (float) $earlyBird->discount_value;
-                                }
+                        <!-- Content (Collapsible) -->
+                        <div class="category-body hidden md:block mt-6">
+                            <p class="text-surface-700 text-sm mb-6">{{ __('messages.cat_' . $cat->slug . '_desc') }}</p>
+                            <div class="space-y-3 mb-6">
+                                <div class="flex justify-between text-sm"><span
+                                        class="text-surface-700">{{ __('messages.categories_distance') }}</span><span
+                                        class="text-surface-900 font-medium">{{ $cat->distance_km }} km</span></div>
+                                <div class="flex justify-between text-sm"><span
+                                        class="text-surface-700">{{ __('messages.categories_elevation') }}</span><span
+                                        class="text-surface-900 font-medium">{{ $cat->elevation ?? 0 }} m</span></div>
+                                <div class="flex justify-between text-sm"><span
+                                        class="text-surface-700">{{ __('messages.categories_cot') }}</span><span
+                                        class="text-surface-900 font-medium">{{ $cat->cot ?? 0 }}
+                                        {{ app()->getLocale() == 'id' ? 'Jam' : 'Hours' }}</span></div>
+                                <div class="flex justify-between text-sm"><span
+                                        class="text-surface-700">{{ __('messages.categories_age') }}</span><span
+                                        class="text-surface-900 font-medium">{{ $usia }} {{ __('messages.cat_age') }}</span></div>
+                                @php
+                                    $prices = $cat->prices->sortBy('price');
+                                    $minPrice = $prices->first()?->price ?? 0;
+                                    $maxPrice = $prices->last()?->price ?? 0;
 
-                                $showRange = $minPrice != $maxPrice;
-                            @endphp
-                            @if($cat->slug == '5k-family-fun-trail')
-                                @foreach($cat->prices->sortBy('pax') as $cp)
-                                    <div class="flex justify-between text-sm">
-                                        <span class="text-surface-700">{{ __('messages.categories_price') }} ({{ $cp->pax }} Pax)</span>
-                                        <span class="text-surface-900 font-medium">
+                                    $earlyBird = $cat->getActivePromotion('earlybird');
+                                    $discount = 0;
+                                    if ($earlyBird) {
+                                        $discount = (float) $earlyBird->discount_value;
+                                    }
+
+                                    $showRange = $minPrice != $maxPrice;
+                                @endphp
+                                @if($cat->slug == '5k-family-fun-trail')
+                                    @foreach($cat->prices->sortBy('pax') as $cp)
+                                        <div class="flex justify-between text-sm">
+                                            <span class="text-surface-700">{{ __('messages.categories_price') }} ({{ $cp->pax }} Pax)</span>
+                                            <span class="text-surface-900 font-medium">
+                                                @if($earlyBird)<strike class="opacity-50">@endif
+                                                    Rp {{ number_format($cp->price, 0, ',', '.') }}
+                                                    @if($earlyBird)</strike>@endif
+                                            </span>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="flex justify-between text-sm"><span
+                                            class="text-surface-700">{{ __('messages.categories_price') }}</span><span
+                                            class="text-surface-900 font-medium">
                                             @if($earlyBird)<strike class="opacity-50">@endif
-                                                Rp {{ number_format($cp->price, 0, ',', '.') }}
+                                                Rp {{ number_format($minPrice, 0, ',', '.') }}
                                                 @if($earlyBird)</strike>@endif
                                         </span>
                                     </div>
-                                @endforeach
-                            @else
-                                <div class="flex justify-between text-sm"><span
-                                        class="text-surface-700">{{ __('messages.categories_price') }}</span><span
-                                        class="text-surface-900 font-medium">
-                                        @if($earlyBird)<strike class="opacity-50">@endif
-                                            Rp {{ number_format($minPrice, 0, ',', '.') }}
-                                            @if($earlyBird)</strike>@endif
-                                    </span>
-                                </div>
-                            @endif
-                            @if($earlyBird)
-                                <div class="flex justify-between text-sm items-center">
-                                    <span class="{{ $colors[4] }} font-bold inline-flex items-center gap-1">
-                                        {{ __('messages.categories_early_bird') }}
-                                    </span>
-                                    <span class="{{ $colors[4] }} font-bold">
-                                        - Rp {{ number_format($discount, 0, ',', '.') }}
-                                    </span>
-                                </div>
+                                @endif
+                                @if($earlyBird)
+                                    <div class="flex justify-between text-sm items-center">
+                                        <span class="{{ $colors[4] }} font-bold inline-flex items-center gap-1">
+                                            {{ __('messages.categories_early_bird') }}
+                                        </span>
+                                        <span class="{{ $colors[4] }} font-bold">
+                                            - Rp {{ number_format($discount, 0, ',', '.') }}
+                                        </span>
+                                    </div>
 
-                                <div
-                                    class="bg-gradient-to-r {{ $colors[1] }} text-white px-3 py-2 rounded-lg font-bold text-center mt-2 shadow-md">
-                                    @if($cat->slug == '5k-family-fun-trail')
-                                        @foreach($cat->prices->sortBy('pax') as $cp)
-                                            <div class="text-xs">{{ __('messages.categories_now') }}: Rp
-                                                {{ number_format($cp->price - $discount, 0, ',', '.') }}
-                                                ({{ $cp->pax }} Pax)</div>
-                                        @endforeach
-                                    @else
-                                        <div class="text-base">{{ __('messages.categories_now') }}: Rp
-                                            {{ number_format($minPrice - $discount, 0, ',', '.') }}</div>
-                                    @endif
-                                </div>
+                                    <div
+                                        class="bg-gradient-to-r {{ $colors[1] }} text-white px-3 py-2 rounded-lg font-bold text-center mt-2 shadow-md">
+                                        @if($cat->slug == '5k-family-fun-trail')
+                                            @foreach($cat->prices->sortBy('pax') as $cp)
+                                                <div class="text-xs">{{ __('messages.categories_now') }}: Rp
+                                                    {{ number_format($cp->price - $discount, 0, ',', '.') }}
+                                                    ({{ $cp->pax }} Pax)</div>
+                                            @endforeach
+                                        @else
+                                            <div class="text-base">{{ __('messages.categories_now') }}: Rp
+                                                {{ number_format($minPrice - $discount, 0, ',', '.') }}</div>
+                                        @endif
+                                    </div>
 
-                                <div class="text-[10px] text-surface-500 text-center italic mt-1">
-                                    {{ __('messages.categories_early_bird_ends') }}:
-                                    {{ $earlyBird->end_date ? $earlyBird->end_date->format('d M') : '-' }}
-                                </div>
-                            @endif
-                            @if($cat->slug != '5k-family-fun-trail')
-                                <div class="flex justify-between text-sm"><span
-                                        class="text-surface-700">{{ __('messages.cat_category') }}</span><span
-                                        class="text-surface-900 font-medium">{{ __('messages.cat_category_open') }}<br>{{ __('messages.cat_category_master') }}</span>
-                                </div>
-                            @endif
-                            <!-- If categories is not 5k, write this -->
-                            @if($cat->slug != '5k-family-fun-trail')
-                                <div class="flex justify-between text-sm"><span class="text-surface-700">Podium: </span><span
-                                        class="text-surface-900 font-medium text-right">{{ __('messages.cat_podium') }}<br>{{ __('messages.cat_podium_open_master') }}</span>
-                                </div>
-                            @endif
+                                    <div class="text-[10px] text-surface-500 text-center italic mt-1">
+                                        {{ __('messages.categories_early_bird_ends') }}:
+                                        {{ $earlyBird->end_date ? $earlyBird->end_date->format('d M') : '-' }}
+                                    </div>
+                                @endif
+                                @if($cat->slug != '5k-family-fun-trail')
+                                    <div class="flex justify-between text-sm"><span
+                                            class="text-surface-700">{{ __('messages.cat_category') }}</span><span
+                                            class="text-surface-900 font-medium">{{ __('messages.cat_category_open') }}<br>{{ __('messages.cat_category_master') }}</span>
+                                    </div>
+                                @endif
+                                @if($cat->slug != '5k-family-fun-trail')
+                                    <div class="flex justify-between text-sm"><span class="text-surface-700">Podium: </span><span
+                                            class="text-surface-900 font-medium text-right">{{ __('messages.cat_podium') }}<br>{{ __('messages.cat_podium_open_master') }}</span>
+                                    </div>
+                                @endif
+                            </div>
+                            <!-- Entitlements -->
+                            <div class="mb-6 pt-4 border-t border-surface-300">
+                                <p class="text-sm font-semibold text-surface-900 mb-3">{{ __('messages.categories_entitlements') }}:
+                                </p>
+                                <ul class="text-sm text-surface-700 space-y-2">
+                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-500 mt-0.5 flex-shrink-0"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 13l4 4L19 7" />
+                                        </svg>{{ __('messages.categories_item_jersey') }}</li>
+                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-500 mt-0.5 flex-shrink-0"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 13l4 4L19 7" />
+                                        </svg>{{ __('messages.categories_item_medal') }}</li>
+                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-500 mt-0.5 flex-shrink-0"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        @if($cat->slug != '5k-family-fun-trail')
+                                            {{ __('messages.cat_bib_chip_time') }}
+                                        @else
+                                            BIB
+                                        @endif
+                                    </li>
+                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-500 mt-0.5 flex-shrink-0"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 13l4 4L19 7" />
+                                        </svg>{{ __('messages.categories_item_refreshment') }}</li>
+                                    <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-500 mt-0.5 flex-shrink-0"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 13l4 4L19 7" />
+                                        </svg>{{ __('messages.categories_item_sponsor_product') }}</li>
+                                </ul>
+                            </div>
+                            <a href="{{ route('register.create', ['category' => $cat->id]) }}"
+                                class="block w-full py-3 text-center bg-gradient-to-r {{ $colors[1] }} hover:opacity-90 text-white font-semibold rounded-xl transition-all duration-200 mt-auto shadow-md">
+                                {{ __('messages.categories_register_for') }} {{ $cat->name }}
+                            </a>
                         </div>
-                        <!-- Entitlements -->
-                        <div class="mb-6 pt-4 border-t border-surface-300">
-                            <p class="text-sm font-semibold text-surface-900 mb-3">{{ __('messages.categories_entitlements') }}:
-                            </p>
-                            <ul class="text-sm text-surface-700 space-y-2">
-                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-500 mt-0.5 flex-shrink-0"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7" />
-                                    </svg>{{ __('messages.categories_item_jersey') }}</li>
-                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-500 mt-0.5 flex-shrink-0"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7" />
-                                    </svg>{{ __('messages.categories_item_medal') }}</li>
-                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-500 mt-0.5 flex-shrink-0"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    @if($cat->slug != '5k-family-fun-trail')
-                                        {{ __('messages.cat_bib_chip_time') }}
-                                    @else
-                                        BIB
-                                    @endif
-                                </li>
-                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-500 mt-0.5 flex-shrink-0"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7" />
-                                    </svg>{{ __('messages.categories_item_refreshment') }}</li>
-                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-brand-500 mt-0.5 flex-shrink-0"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7" />
-                                    </svg>{{ __('messages.categories_item_sponsor_product') }}</li>
-                            </ul>
-                        </div>
-                        <a href="{{ route('register.create', ['category' => $cat->id]) }}"
-                            class="block w-full py-3 text-center bg-gradient-to-r {{ $colors[1] }} hover:opacity-90 text-white font-semibold rounded-xl transition-all duration-200 mt-auto shadow-md">
-                            {{ __('messages.categories_register_for') }} {{ $cat->name }}
-                        </a>
                     </div>
                 @endforeach
             </div>
@@ -438,6 +458,25 @@
                         document.getElementById('seconds').textContent = Math.floor((diff % (1000 * 60)) / 1000);
                     }
                 }, 1000);
+            }
+
+            function toggleCategory(card) {
+                if (window.innerWidth >= 768) return;
+
+                const body = card.querySelector('.category-body');
+                const arrow = card.querySelector('.arrow-icon');
+                const label = card.querySelector('.btn-label');
+                const isHidden = body.classList.contains('hidden');
+
+                if (isHidden) {
+                    body.classList.remove('hidden');
+                    arrow.classList.add('rotate-180');
+                    label.innerText = 'Tutup Detail';
+                } else {
+                    body.classList.add('hidden');
+                    arrow.classList.remove('rotate-180');
+                    label.innerText = 'Lihat Detail';
+                }
             }
 
             // Smooth scrolling for anchor links
