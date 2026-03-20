@@ -141,98 +141,103 @@ class MidtransController extends Controller
      */
     public function webhook(Request $request)
     {
-        $notif = new Notification();
+        try {
+            $notif = new Notification();
 
-        $transaction = $notif->transaction_status;
-        $type = $notif->payment_type;
-        $order_id_from_notif = $notif->order_id;
-        $fraud = $notif->fraud_status;
+            $transaction = $notif->transaction_status;
+            $type = $notif->payment_type;
+            $order_id_from_notif = $notif->order_id;
+            $fraud = $notif->fraud_status;
 
-        Log::info('Midtrans Webhook received', [
-            'order_id' => $order_id_from_notif,
-            'status' => $transaction,
-            'type' => $type
-        ]);
-
-        $payment = Payment::where('order_id', $order_id_from_notif)->first();
-
-        // If not found, try to extract base order ID (removes the timestamp suffix)
-        if (!$payment) {
-            $parts = explode('-', $order_id_from_notif);
-            if (count($parts) >= 2) {
-                // If it was ETR26-00001 or ETR26-00001-TIMESTAMP
-                // $parts[0] = ETR26, $parts[1] = 00001
-                $base_order_id = $parts[0] . '-' . $parts[1];
-                $payment = Payment::where('order_id', $base_order_id)->first();
-            }
-        }
-
-        if (!$payment) {
-            Log::error('Payment not found for Order ID: ' . $order_id_from_notif);
-            return response()->json(['message' => 'Payment not found'], 404);
-        }
-
-        DB::transaction(function () use ($payment, $transaction, $fraud, $type, $notif, $request) {
-            $oldStatus = $payment->status;
-
-            // Jika status sudah 'paid', jangan update lagi dari webhook attempt lama
-            if ($oldStatus === 'paid') {
-                Log::info('Payment already paid, ignoring webhook for Order ID: ' . $notif->order_id);
-                return;
-            }
-
-            $paymentStatus = 'pending';
-
-            if ($transaction == 'capture') {
-                if ($type == 'credit_card') {
-                    if ($fraud == 'challenge') {
-                        $paymentStatus = 'pending';
-                    } else {
-                        $paymentStatus = 'paid';
-                    }
-                }
-            } elseif ($transaction == 'settlement') {
-                $paymentStatus = 'paid';
-            } elseif ($transaction == 'pending') {
-                $paymentStatus = 'pending';
-            } elseif ($transaction == 'deny') {
-                $paymentStatus = 'failed';
-            } elseif ($transaction == 'expire') {
-                $paymentStatus = 'expired';
-            } elseif ($transaction == 'cancel') {
-                $paymentStatus = 'failed';
-            }
-
-            $payment->update([
-                'status' => $paymentStatus,
-                'gateway_id' => $notif->transaction_id ?? $payment->gateway_id,
-                'payment_method' => $type,
-                'paid_at' => $paymentStatus === 'paid' ? now() : null,
-                'webhook_payload' => $request->all(),
+            Log::info('Midtrans Webhook received', [
+                'order_id' => $order_id_from_notif,
+                'status' => $transaction,
+                'type' => $type
             ]);
 
-            // If paid, update participant status and handle promotion
-            if ($paymentStatus === 'paid' && $oldStatus !== 'paid') {
-                $payment->participant->update(['payment_status' => 'paid']);
+            $payment = Payment::where('order_id', $order_id_from_notif)->first();
 
-                if ($payment->promotion_id) {
-                    $promo = $payment->promotion;
-                    $promo->increment('used_count');
-                    if ($promo->quota !== null && $promo->quota > 0) {
-                        $promo->decrement('quota');
-                    }
-                }
-
-                // Optional: Send payment confirmation email
-                try {
-                    \Illuminate\Support\Facades\Mail::to($payment->participant->email)
-                        ->queue(new \App\Mail\PaymentConfirmation($payment->participant));
-                } catch (\Exception $e) {
-                    Log::error('Failed to send payment confirmation email: ' . $e->getMessage());
+            // If not found, try to extract base order ID (removes the timestamp suffix)
+            if (!$payment) {
+                $parts = explode('-', $order_id_from_notif);
+                if (count($parts) >= 2) {
+                    $base_order_id = $parts[0] . '-' . $parts[1];
+                    $payment = Payment::where('order_id', $base_order_id)->first();
                 }
             }
-        });
 
-        return response()->json(['message' => 'OK']);
+            if (!$payment) {
+                Log::warning('Payment not found for Order ID: ' . $order_id_from_notif);
+                return response()->json(['message' => 'Payment not found'], 404);
+            }
+
+            DB::transaction(function () use ($payment, $transaction, $fraud, $type, $notif, $request) {
+                $oldStatus = $payment->status;
+
+                if ($oldStatus === 'paid') {
+                    Log::info('Payment already paid, ignoring webhook for Order ID: ' . $notif->order_id);
+                    return;
+                }
+
+                $paymentStatus = 'pending';
+
+                if ($transaction == 'capture') {
+                    if ($type == 'credit_card') {
+                        if ($fraud == 'challenge') {
+                            $paymentStatus = 'pending';
+                        } else {
+                            $paymentStatus = 'paid';
+                        }
+                    }
+                } elseif ($transaction == 'settlement') {
+                    $paymentStatus = 'paid';
+                } elseif ($transaction == 'pending') {
+                    $paymentStatus = 'pending';
+                } elseif ($transaction == 'deny') {
+                    $paymentStatus = 'failed';
+                } elseif ($transaction == 'expire') {
+                    $paymentStatus = 'expired';
+                } elseif ($transaction == 'cancel') {
+                    $paymentStatus = 'failed';
+                }
+
+                $payment->update([
+                    'status' => $paymentStatus,
+                    'gateway_id' => $notif->transaction_id ?? $payment->gateway_id,
+                    'payment_method' => $type,
+                    'paid_at' => $paymentStatus === 'paid' ? now() : null,
+                    'webhook_payload' => $request->all(),
+                ]);
+
+                if ($paymentStatus === 'paid' && $oldStatus !== 'paid') {
+                    $payment->participant->update(['payment_status' => 'paid']);
+
+                    if ($payment->promotion_id) {
+                        $promo = $payment->promotion;
+                        $promo->increment('used_count');
+                        if ($promo->quota !== null && $promo->quota > 0) {
+                            $promo->decrement('quota');
+                        }
+                    }
+
+                    try {
+                        \Illuminate\Support\Facades\Mail::to($payment->participant->email)
+                            ->queue(new \App\Mail\PaymentConfirmation($payment->participant));
+                    } catch (\Exception $e) {
+                        Log::error('Failed to send payment confirmation email: ' . $e->getMessage());
+                    }
+                }
+            });
+
+            return response()->json(['message' => 'OK']);
+        } catch (\Exception $e) {
+            Log::error('Midtrans Webhook Error: ' . $e->getMessage(), [
+                'payload' => $request->all()
+            ]);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Internal Server Error: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }
