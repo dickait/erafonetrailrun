@@ -11,18 +11,20 @@ return [
     'nav_login' => 'Masuk',
     'nav_dashboard' => 'Dasbor',
     'nav_register' => 'Daftar Sekarang',
+    'nav_reg_closed' => 'Pendaftaran akan dibuka',
     'nav_logout' => 'Keluar',
     'nav_view_site' => 'Lihat Situs',
 
     // Hero
     'hero_badge' => 'Pendaftaran Dibuka',
+    'hero_badge_closed' => 'Pendaftaran akan dibuka',
     'hero_subtitle' => 'Taklukkan jalur',
     'hero_location' => 'Bogor Nirwana Residence, Bogor',
     'hero_tagline' => 'Run Smart. Run Trail. Run With Erafone.',
     'hero_desc' => 'Jelajahi jalur Bogor Nirwana Residence dalam event trail run yang menggabungkan petualangan alam dan teknologi wearable.',
     'hero_categories_label' => 'Kategori:',
     'hero_description' => 'Petualangan epik melewati bukit dan hutan yang indah.',
-    'hero_register' => 'Daftar Sekarang →',
+    'hero_register' => 'Lihat Kategori →',
     'hero_learn_more' => 'Pelajari Lebih Lanjut',
 
     // Countdown

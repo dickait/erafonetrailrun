@@ -15,8 +15,10 @@
         <div class="relative z-10 text-center px-4 max-w-4xl mx-auto pt-20">
             <div
                 class="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 border border-white/20 rounded-full mb-8 animate-pulse">
-                <span class="w-2 h-2 rounded-full bg-accent-400"></span>
-                <span class="text-sm font-medium text-white/90">{{ __('messages.hero_badge') }}</span>
+                <span class="w-2 h-2 rounded-full @if(env('IS_OPEN', true)) bg-accent-400 @else bg-surface-400 animate-none @endif"></span>
+                <span class="text-sm font-medium text-white/90">
+                    {{ env('IS_OPEN', true) ? __('messages.hero_badge') : __('messages.hero_badge_closed') }}
+                </span>
             </div>
             <h1 class="font-display font-black text-5xl md:text-7xl lg:text-8xl mb-6 leading-tight">
                 <span class="text-white">ERA</span><br>
@@ -295,10 +297,16 @@
                                         </svg>{{ __('messages.categories_item_sponsor_product') }}</li>
                                 </ul>
                             </div>
-                            <a href="{{ route('register.create', ['category' => $cat->id]) }}"
-                                class="block w-full py-3 text-center bg-gradient-to-r {{ $colors[1] }} hover:opacity-90 text-white font-semibold rounded-xl transition-all duration-200 mt-auto shadow-md">
-                                {{ __('messages.categories_register_for') }} {{ $cat->name }}
-                            </a>
+                            @if(env('IS_OPEN', true))
+                                <a href="{{ route('register.create', ['category' => $cat->id]) }}"
+                                    class="block w-full py-3 text-center bg-gradient-to-r {{ $colors[1] }} hover:opacity-90 text-white font-semibold rounded-xl transition-all duration-200 mt-auto shadow-md">
+                                    {{ __('messages.categories_register_for') }} {{ $cat->name }}
+                                </a>
+                            @else
+                                <span class="block w-full py-3 text-center bg-surface-200 text-surface-400 font-semibold rounded-xl mt-auto cursor-not-allowed">
+                                    {{ __('messages.nav_reg_closed') }}
+                                </span>
+                            @endif
                         </div>
                     </div>
                 @endforeach
@@ -312,10 +320,16 @@
         <div class="max-w-3xl mx-auto px-4 text-center relative z-10">
             <h2 class="font-display font-bold text-3xl md:text-4xl text-white mb-6">{{ __('messages.cta_title') }}</h2>
             <p class="text-white/80 text-lg mb-8">{{ __('messages.cta_subtitle') }}</p>
-            <a href="{{ route('register.create') }}"
-                class="inline-block px-8 py-4 bg-white hover:bg-surface-100 text-brand-600 font-bold rounded-2xl shadow-xl shadow-black/10 hover:shadow-black/20 transition-all duration-300 transform hover:-translate-y-1 text-lg">
-                {{ __('messages.cta_register') }}
-            </a>
+            @if(env('IS_OPEN', true))
+                <a href="{{ route('register.create') }}"
+                    class="inline-block px-8 py-4 bg-white hover:bg-surface-100 text-brand-600 font-bold rounded-2xl shadow-xl shadow-black/10 hover:shadow-black/20 transition-all duration-300 transform hover:-translate-y-1 text-lg">
+                    {{ __('messages.cta_register') }}
+                </a>
+            @else
+                <span class="inline-block px-8 py-4 bg-surface-200 text-surface-500 font-bold rounded-2xl cursor-not-allowed">
+                    {{ __('messages.nav_reg_closed') }}
+                </span>
+            @endif
         </div>
     </section>
 

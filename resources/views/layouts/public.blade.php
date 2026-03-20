@@ -63,10 +63,16 @@
                         <a href="{{ route('dashboard') }}"
                             class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_dashboard') }}</a>
                     @endauth
-                    <a href="{{ route('register.create') }}"
-                        class="px-5 py-2.5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white text-sm font-semibold rounded-xl shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 transition-all duration-200 transform hover:-translate-y-0.5">
-                        {{ __('messages.nav_register') }}
-                    </a>
+                    @if(env('IS_OPEN', true))
+                        <a href="{{ route('register.create') }}"
+                            class="px-5 py-2.5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white text-sm font-semibold rounded-xl shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 transition-all duration-200 transform hover:-translate-y-0.5">
+                            {{ __('messages.nav_register') }}
+                        </a>
+                    @else
+                        <span class="px-5 py-2.5 bg-surface-200 text-surface-500 text-sm font-semibold rounded-xl cursor-not-allowed">
+                            {{ __('messages.nav_reg_closed') }}
+                        </span>
+                    @endif
                 </div>
                 <!-- Mobile menu button -->
                 <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-surface-100 transition-colors">
@@ -103,8 +109,12 @@
                         class="px-3 py-1.5 text-xs rounded-lg {{ app()->getLocale() === 'en' ? 'bg-brand-50 text-brand-500' : 'text-surface-500 hover:bg-surface-100' }}">🇬🇧
                         EN</a>
                 </div>
-                <a href="{{ route('register.create') }}"
-                    class="block px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-brand-500 to-brand-600 text-center">{{ __('messages.nav_register') }}</a>
+                @if(env('IS_OPEN', true))
+                    <a href="{{ route('register.create') }}"
+                        class="block px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-brand-500 to-brand-600 text-center">{{ __('messages.nav_register') }}</a>
+                @else
+                    <span class="block px-4 py-2.5 rounded-lg text-sm font-semibold text-surface-500 bg-surface-100 text-center">{{ __('messages.nav_reg_closed') }}</span>
+                @endif
             </div>
         </div>
     </nav>
