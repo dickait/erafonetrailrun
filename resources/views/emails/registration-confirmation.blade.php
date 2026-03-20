@@ -58,12 +58,27 @@
                 $latestPayment = $participant->latestPayment;
                 $baseAmount = optional($latestPayment)->amount ?? 0;
                 $discountAmount = optional($latestPayment)->discount_amount ?? 0;
+                $feeAmount = optional($latestPayment)->fee_amount ?? 0;
                 $finalAmount = (optional($latestPayment)->final_amount !== null)
                   ? $latestPayment->final_amount
                   : max(0, $baseAmount - $discountAmount);
+                $totalToPay = $finalAmount + $feeAmount;
                 $orderId = optional($latestPayment)->order_id ?? '-';
                 $promoCode = optional($latestPayment ? $latestPayment->promotion : null)->code;
                 $isFamily = $participant->familyMembers && $participant->familyMembers->count() > 0;
+
+                // Category logic
+                $categoryNameForEmail = $participant->category->name ?? '-';
+                if ($participant->category && !str_contains(strtolower($categoryNameForEmail), 'family') && $participant->date_of_birth) {
+                    $regYear = $participant->created_at->year;
+                    $birthYear = $participant->date_of_birth->year;
+                    $ageAtRegForEmail = $regYear - $birthYear;
+                    if ($ageAtRegForEmail >= 40) {
+                        $categoryNameForEmail .= ' (Master)';
+                    } elseif ($ageAtRegForEmail >= 17) {
+                        $categoryNameForEmail .= ' (Open)';
+                    }
+                }
               @endphp
 
               <!-- Detail Box -->
@@ -84,7 +99,7 @@
                 </tr>
                 <tr>
                   <td width="40%" style="padding:10px; border-bottom: 1px solid #eeeeee;"><strong>Kategori</strong></td>
-                  <td style="padding:10px; border-bottom: 1px solid #eeeeee;">{{ $participant->category->name ?? '-' }}
+                  <td style="padding:10px; border-bottom: 1px solid #eeeeee;">{{ $categoryNameForEmail }}
                   </td>
                 </tr>
                 <tr style="background:#f9f9f9;">
@@ -184,12 +199,22 @@
                     </td>
                   </tr>
                 @endif
+                @if ($feeAmount > 0)
+                  <tr>
+                    <td width="40%" style="background:#F6AE1B; color:#000; padding:10px; border-top: 1px dashed #ca8a04;">
+                      <strong>Biaya Layanan Transaksi (+11% PPN)</strong>
+                    </td>
+                    <td style="background:#F6AE1B; text-align:right; padding:10px; border-top: 1px dashed #ca8a04;">
+                      + Rp {{ number_format($feeAmount, 0, ',', '.') }}
+                    </td>
+                  </tr>
+                @endif
                 <tr>
                   <td width="40%" style="background:#495355; color:#ffffff; padding:10px;">
                     <strong>Total Pembayaran</strong>
                   </td>
                   <td style="background:#495355; color:#ffffff; text-align:right; padding:10px;">
-                    <strong>Rp {{ number_format($finalAmount, 0, ',', '.') }}</strong>
+                    <strong>Rp {{ number_format($totalToPay, 0, ',', '.') }}</strong>
                   </td>
                 </tr>
               </table>
@@ -199,11 +224,11 @@
                   <!-- Midtrans Payment Instruction -->
                   <p style="margin-top:20px;">
                     Silakan lakukan pembayaran melalui tombol di bawah ini. Anda dapat
-                    memilih berbagai metode pembayaran seperti Virtual Account, Kartu Kredit, atau E-Wallet.
+                    memilih berbagai metode pembayaran seperti QRIS, Virtual Account, atau E-Wallet.
                   </p>
 
                   <div style="margin-top: 25px; text-align: center;">
-                    <a href="{{ $latestPayment->payment_link ?? route('registration.payment', ['email' => $participant->email]) }}" target="_blank"
+                    <a href="{{ route('registration.payment', ['email' => $participant->email]) }}" target="_blank"
                       style="background-color: #E02534; color: #ffffff; padding: 14px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
                       Bayar Sekarang
                     </a>
@@ -251,7 +276,7 @@
                   $participant->email .
                   "\n" .
                   "*Kategori:* " .
-                  ($participant->category->name ?? '-') .
+                  $categoryNameForEmail .
                   "\n" .
                   "*Acara:* " .
                   ($participant->event->name ?? '-') .
@@ -281,11 +306,15 @@
                   $waMessage .= '*Diskon ' . ($promoCode ? "($promoCode)" : '') . ':* - Rp ' . number_format($discountAmount, 0, ',', '.') . "\n";
                 }
 
-                if ($finalAmount > 0) {
+                if ($feeAmount > 0) {
+                  $waMessage .= '*Biaya Layanan Transaksi (+11% PPN):* + Rp ' . number_format($feeAmount, 0, ',', '.') . "\n";
+                }
+
+                if ($totalToPay > 0) {
                   if (optional($latestPayment)->payment_method === 'midtrans') {
-                    $waMessage .= "Saya akan segera melakukan pembayaran.\n\n";
+                    $waMessage .= "*Total Pembayaran:* Rp " . number_format($totalToPay, 0, ',', '.') . "\n" . "Saya akan segera melakukan pembayaran.\n\n";
                   } else {
-                    $waMessage .= '*Total Pembayaran:* Rp ' . number_format($finalAmount, 0, ',', '.') . "\n\n" . "Berikut bukti pembayaran melalui QRIS yang terlampir.\n\n";
+                    $waMessage .= '*Total Pembayaran:* Rp ' . number_format($totalToPay, 0, ',', '.') . "\n\n" . "Berikut bukti pembayaran melalui QRIS yang terlampir.\n\n";
                   }
                 } else {
                   $waStatus = " (Lunas/Diskon 100%)";

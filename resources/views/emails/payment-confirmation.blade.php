@@ -64,6 +64,19 @@
                 $orderId = optional($latestPayment)->order_id ?? '-';
                 $promoCode = optional($latestPayment ? $latestPayment->promotion : null)->code;
                 $isFamily = $participant->familyMembers && $participant->familyMembers->count() > 0;
+
+                // Category logic
+                $categoryNameForEmail = $participant->category->name ?? '-';
+                if ($participant->category && !str_contains(strtolower($categoryNameForEmail), 'family') && $participant->date_of_birth) {
+                  $regYear = $participant->created_at->year;
+                  $birthYear = $participant->date_of_birth->year;
+                  $ageAtRegForEmail = $regYear - $birthYear;
+                  if ($ageAtRegForEmail >= 40) {
+                    $categoryNameForEmail .= ' (Master)';
+                  } elseif ($ageAtRegForEmail >= 17) {
+                    $categoryNameForEmail .= ' (Open)';
+                  }
+                }
               @endphp
 
               <!-- Detail Box -->
@@ -90,7 +103,7 @@
                 </tr>
                 <tr style="background:#f9f9f9;">
                   <td width="40%" style="padding:10px; border-bottom: 1px solid #eeeeee;"><strong>Kategori</strong></td>
-                  <td style="padding:10px; border-bottom: 1px solid #eeeeee;">{{ $participant->category->name ?? '-' }}
+                  <td style="padding:10px; border-bottom: 1px solid #eeeeee;">{{ $categoryNameForEmail }}
                   </td>
                 </tr>
                 <tr>
@@ -203,7 +216,7 @@
                 @if (optional($latestPayment)->fee_amount > 0)
                   <tr>
                     <td width="40%" style="background:#F6AE1B; color:#000; padding:10px; border-top: 1px dashed #ca8a04;">
-                      <strong>Biaya Layanan Pembayaran</strong>
+                      <strong>Biaya Layanan Transaksi</strong>
                     </td>
                     <td style="background:#F6AE1B; text-align:right; padding:10px; border-top: 1px dashed #ca8a04;">
                       + Rp {{ number_format($latestPayment->fee_amount, 0, ',', '.') }}
@@ -215,7 +228,8 @@
                     <strong>Total Pembayaran</strong>
                   </td>
                   <td style="background:#495355; color:#ffffff; text-align:right; padding:10px;">
-                    <strong>Rp {{ number_format($finalAmount + (optional($latestPayment)->fee_amount ?? 0), 0, ',', '.') }}</strong>
+                    <strong>Rp
+                      {{ number_format($finalAmount + (optional($latestPayment)->fee_amount ?? 0), 0, ',', '.') }}</strong>
                   </td>
                 </tr>
               </table>
@@ -223,8 +237,9 @@
               <p style="margin-top:30px;">
                 Selanjutnya, informasi penting terkait acara seperti <i>race pack collection</i>, <i>technical
                   meeting</i>,
-                serta update lainnya akan kami sampaikan melalui email berikutnya dan juga melalui media sosial resmi
-                Erafone Bogor.
+                serta update lainnya akan kami sampaikan melalui email berikutnya dan juga melalui instagram <a
+                  href="https://www.instagram.com/erafonestores_bogor/" target="_blank"
+                  style="color: #E02534; text-decoration: underline;">Erafone Store Bogor</a>.
               </p>
 
               <p>

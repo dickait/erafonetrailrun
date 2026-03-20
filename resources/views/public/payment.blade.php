@@ -308,7 +308,7 @@
                                             {{ number_format($finalAmount, 0, ',', '.') }}</span>
                                     </div>
                                     <div class="flex justify-between items-center text-sm mb-2 text-surface-600">
-                                        <span>Payment Service Fee</span>
+                                        <span>Payment Service Fee (+11% PPN)</span>
                                         <span id="display-fee" class="font-medium text-brand-600">Rp 0</span>
                                     </div>
                                     <div class="flex justify-between items-center pt-2 border-t border-brand-200">
