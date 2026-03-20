@@ -61,7 +61,7 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="py-20 md:py-28 bg-white relative">
+    <section id="about" class="py-12 md:py-16 bg-white relative scroll-mt-16 md:scroll-mt-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <div>
@@ -116,7 +116,7 @@
     </section>
 
     <!-- Categories Section -->
-    <section id="categories" class="py-20 md:py-28 bg-gradient-to-b from-white to-surface-100 relative">
+    <section id="categories" class="py-12 md:py-16 bg-gradient-to-b from-white to-surface-100 relative scroll-mt-16 md:scroll-mt-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <span
@@ -307,7 +307,7 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="py-20 bg-gradient-to-r from-brand-900 via-brand-800 to-brand-900 relative overflow-hidden">
+    <section class="py-12 bg-gradient-to-r from-brand-900 via-brand-800 to-brand-900 relative overflow-hidden">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(245,158,11,0.12),transparent_70%)]"></div>
         <div class="max-w-3xl mx-auto px-4 text-center relative z-10">
             <h2 class="font-display font-bold text-3xl md:text-4xl text-white mb-6">{{ __('messages.cta_title') }}</h2>
@@ -320,7 +320,7 @@
     </section>
 
     <!-- Gallery Section -->
-    <section id="gallery-preview" class="py-20 bg-white">
+    <section id="gallery-preview" class="py-12 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <h2 class="font-display font-bold text-3xl md:text-4xl text-surface-900 mb-4">
@@ -367,7 +367,7 @@
     </section>
 
     <!-- Support Section -->
-    <section id="support" class="py-20 bg-gradient-to-r from-brand-900 via-brand-800 to-brand-900 relative overflow-hidden">
+    <section id="support" class="py-12 bg-gradient-to-r from-brand-900 via-brand-800 to-brand-900 relative overflow-hidden">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(245,158,11,0.12),transparent_70%)]"></div>
         <div class="max-w-3xl mx-auto px-4 text-center relative z-10">
             <h2 class="font-display font-bold text-3xl md:text-5xl text-white mb-6 uppercase tracking-tight">
