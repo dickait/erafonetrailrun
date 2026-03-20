@@ -231,11 +231,11 @@
                                 </div>
                             @elseif(config('services.payment') === 'midtrans')
                                 <button id="pay-button"
-                                    class="block w-full py-4 text-center bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold text-lg rounded-xl shadow-md transition-all">Proceed
+                                    class="block w-full py-4 text-center bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold text-lg rounded-xl shadow-md transition-all cursor-pointer">Proceed
                                     to Payment</button>
                             @else
                                 <a href="{{ $participant->latestPayment->payment_link ?? '#' }}" target="_blank"
-                                    class="block w-full py-4 text-center bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold text-lg rounded-xl shadow-md transition-all">Proceed
+                                    class="block w-full py-4 text-center bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold text-lg rounded-xl shadow-md transition-all cursor-pointer">Proceed
                                     to Payment</a>
                             @endif
                         </div>
@@ -301,7 +301,7 @@
                     @if($participant->payment_status == 'paid')
                         <div class="mt-8">
                             <a href="{{ route('registration.status', ['email' => $participant->email]) }}"
-                                class="block w-full py-3 text-center bg-surface-100 hover:bg-surface-200 text-surface-900 font-semibold rounded-xl transition-all">Check
+                                class="block w-full py-3 text-center bg-surface-100 hover:bg-surface-200 text-surface-900 font-semibold rounded-xl transition-all cursor-pointer">Check
                                 Status</a>
                         </div>
                     @endif
