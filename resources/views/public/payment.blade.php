@@ -232,11 +232,11 @@
                             @elseif(config('services.payment') === 'midtrans')
                                 <button id="pay-button"
                                     class="block w-full py-4 text-center bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold text-lg rounded-xl shadow-md transition-all">Proceed
-                                    to Payment (Midtrans)</button>
+                                    to Payment</button>
                             @else
                                 <a href="{{ $participant->latestPayment->payment_link ?? '#' }}" target="_blank"
                                     class="block w-full py-4 text-center bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold text-lg rounded-xl shadow-md transition-all">Proceed
-                                    to Payment (Mayar.id)</a>
+                                    to Payment</a>
                             @endif
                         </div>
                     @endif
@@ -275,23 +275,23 @@
                                                     onError: function(result) {
                                                         alert("Payment failed!");
                                                         payButton.disabled = false;
-                                                        payButton.innerHTML = 'Proceed to Payment (Midtrans)';
+                                                        payButton.innerHTML = 'Proceed to Payment';
                                                     },
                                                     onClose: function() {
                                                         payButton.disabled = false;
-                                                        payButton.innerHTML = 'Proceed to Payment (Midtrans)';
+                                                        payButton.innerHTML = 'Proceed to Payment';
                                                     }
                                                 });
                                             } else {
                                                 alert(data.error || 'Failed to get payment token');
                                                 payButton.disabled = false;
-                                                payButton.innerHTML = 'Proceed to Payment (Midtrans)';
+                                                payButton.innerHTML = 'Proceed to Payment';
                                             }
                                         })
                                         .catch(error => {
                                             console.error('Error:', error);
                                             payButton.disabled = false;
-                                            payButton.innerHTML = 'Proceed to Payment (Midtrans)';
+                                            payButton.innerHTML = 'Proceed to Payment';
                                         });
                                 });
                             }

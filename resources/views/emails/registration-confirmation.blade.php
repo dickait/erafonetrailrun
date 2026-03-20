@@ -198,14 +198,14 @@
                 @if (optional($latestPayment)->payment_method === 'midtrans')
                   <!-- Midtrans Payment Instruction -->
                   <p style="margin-top:20px;">
-                    Silakan lakukan pembayaran melalui tombol di bawah ini menggunakan <strong>Midtrans</strong>. Anda dapat
+                    Silakan lakukan pembayaran melalui tombol di bawah ini. Anda dapat
                     memilih berbagai metode pembayaran seperti Virtual Account, Kartu Kredit, atau E-Wallet.
                   </p>
 
                   <div style="margin-top: 25px; text-align: center;">
                     <a href="{{ $latestPayment->payment_link ?? route('registration.payment', ['email' => $participant->email]) }}" target="_blank"
                       style="background-color: #E02534; color: #ffffff; padding: 14px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
-                      Bayar Sekarang (Midtrans)
+                      Bayar Sekarang
                     </a>
                   </div>
 
@@ -283,7 +283,7 @@
 
                 if ($finalAmount > 0) {
                   if (optional($latestPayment)->payment_method === 'midtrans') {
-                    $waMessage .= "Saya akan melakukan pembayaran melalui Midtrans Snap.\n\n";
+                    $waMessage .= "Saya akan segera melakukan pembayaran.\n\n";
                   } else {
                     $waMessage .= '*Total Pembayaran:* Rp ' . number_format($finalAmount, 0, ',', '.') . "\n\n" . "Berikut bukti pembayaran melalui QRIS yang terlampir.\n\n";
                   }

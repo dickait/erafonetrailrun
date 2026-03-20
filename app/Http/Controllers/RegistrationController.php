@@ -23,6 +23,9 @@ class RegistrationController extends Controller
 {
     public function create()
     {
+        // Clear captcha from session to avoid "Invalid Captcha" on first submit
+        request()->session()->forget('captcha');
+
         $event = Event::with('categories')->where('is_active', true)->latest('event_date')->first();
 
         if (!$event || !$event->isRegistrationOpen()) {
@@ -343,7 +346,7 @@ class RegistrationController extends Controller
             }
 
             return redirect()->route('registration.payment', ['email' => $participant->email])
-                ->with('success', 'Registration successful! Please complete your payment via Midtrans.');
+                ->with('success', 'Registration successful! Please complete your payment.');
         }
 
         $mobile = $participant->phone;
@@ -453,6 +456,10 @@ class RegistrationController extends Controller
 
     public function checkStatus(Request $request)
     {
+        if ($request->isMethod('get')) {
+            $request->session()->forget('captcha');
+        }
+
         $participant = null;
 
         if ($request->has('email')) {
