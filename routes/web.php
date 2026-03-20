@@ -73,10 +73,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/payments/{payment}/update-status', [AdminController::class, 'updatePaymentStatus'])->name('payments.update-status');
     Route::get('/export-csv', [AdminController::class, 'exportCsv'])->name('export-csv');
     Route::post('/generate-bibs', [AdminController::class, 'generateBibs'])->name('generate-bibs');
-    Route::get('/email-blast', [AdminController::class, 'emailBlastForm'])->name('email-blast');
+    Route::get('/email-blast', [AdminController::class, 'emailBlast'])->name('email-blast');
     Route::post('/email-blast', [AdminController::class, 'sendEmailBlast'])->name('email-blast.send');
-    Route::get('/checkin', [AdminController::class, 'checkinPage'])->name('checkin');
-    Route::post('/checkin', [AdminController::class, 'checkin'])->name('checkin.process');
+    Route::get('/checkin', [AdminController::class, 'checkin'])->name('checkin');
+    Route::post('/checkin', [AdminController::class, 'processCheckin'])->name('checkin.process');
+    Route::resource('promotions', \App\Http\Controllers\Admin\PromotionController::class);
 });
 
 /*
