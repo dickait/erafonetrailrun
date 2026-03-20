@@ -33,10 +33,14 @@ class MidtransController extends Controller
             return response()->json(['error' => 'Payment record not found'], 404);
         }
 
+        $paymentType = $request->input('payment_type');
+        $fee = $this->calculateFee($payment->final_amount, $paymentType);
+        $grossAmount = (int) ($payment->final_amount + $fee);
+
         $params = [
             'transaction_details' => [
                 'order_id' => $payment->order_id . '-' . time(),
-                'gross_amount' => (int) $payment->final_amount,
+                'gross_amount' => $grossAmount,
             ],
             'customer_details' => [
                 'first_name' => $participant->full_name,
@@ -49,6 +53,12 @@ class MidtransController extends Controller
                     'price' => (int) $payment->final_amount,
                     'quantity' => 1,
                     'name' => $participant->category->name,
+                ],
+                [
+                    'id' => 'fee',
+                    'price' => (int) $fee,
+                    'quantity' => 1,
+                    'name' => 'Payment Service Fee',
                 ]
             ],
             'callbacks' => [
@@ -58,17 +68,73 @@ class MidtransController extends Controller
             ]
         ];
 
+        // Restrict to selected payment method if provided
+        if ($paymentType) {
+            $params['enabled_payments'] = $this->getEnabledPayments($paymentType);
+        }
+
         try {
             $snapToken = Snap::getSnapToken($params);
-            
+
             $payment->update([
-                'gateway_id' => $snapToken, // Store token as gateway_id for later use
+                'fee_amount' => $fee,
+                'gateway_id' => $snapToken,
             ]);
 
             return response()->json(['token' => $snapToken]);
         } catch (\Exception $e) {
             Log::error('Midtrans Snap Error: ' . $e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    private function calculateFee($amount, $type)
+    {
+        $fee = 0;
+        switch ($type) {
+            case 'qris':
+                $fee = $amount * 0.007;
+                break;
+            case 'bank_transfer':
+                $fee = 4000;
+                break;
+            case 'credit_card':
+                $fee = ($amount * 0.029) + 2000;
+                break;
+            case 'shopeepay':
+            case 'gopay':
+                $fee = $amount * 0.02;
+                break;
+            case 'cstore':
+                $fee = 5000;
+                break;
+        }
+
+        if ($fee > 0) {
+            // Add 11% PPN to the fee
+            $fee = $fee + ($fee * 0.11);
+        }
+
+        return ceil($fee);
+    }
+
+    private function getEnabledPayments($type)
+    {
+        switch ($type) {
+            case 'qris':
+                return ['qris'];
+            case 'bank_transfer':
+                return ['bank_transfer', 'mandiri_va', 'permata_va', 'bca_va', 'bni_va', 'bri_va', 'other_va'];
+            case 'credit_card':
+                return ['credit_card'];
+            case 'shopeepay':
+                return ['shopeepay'];
+            case 'gopay':
+                return ['gopay'];
+            case 'cstore':
+                return ['alfamart', 'indomaret'];
+            default:
+                return null;
         }
     }
 
@@ -143,7 +209,7 @@ class MidtransController extends Controller
             // If paid, update participant status and handle promotion
             if ($paymentStatus === 'paid' && $oldStatus !== 'paid') {
                 $payment->participant->update(['payment_status' => 'paid']);
-                
+
                 if ($payment->promotion_id) {
                     $promo = $payment->promotion;
                     $promo->increment('used_count');
@@ -151,7 +217,7 @@ class MidtransController extends Controller
                         $promo->decrement('quota');
                     }
                 }
-                
+
                 // Optional: Send payment confirmation email
                 try {
                     \Illuminate\Support\Facades\Mail::to($payment->participant->email)

@@ -200,12 +200,22 @@
                     </td>
                   </tr>
                 @endif
+                @if (optional($latestPayment)->fee_amount > 0)
+                  <tr>
+                    <td width="40%" style="background:#F6AE1B; color:#000; padding:10px; border-top: 1px dashed #ca8a04;">
+                      <strong>Biaya Layanan Pembayaran</strong>
+                    </td>
+                    <td style="background:#F6AE1B; text-align:right; padding:10px; border-top: 1px dashed #ca8a04;">
+                      + Rp {{ number_format($latestPayment->fee_amount, 0, ',', '.') }}
+                    </td>
+                  </tr>
+                @endif
                 <tr>
                   <td width="40%" style="background:#495355; color:#ffffff; padding:10px;">
                     <strong>Total Pembayaran</strong>
                   </td>
                   <td style="background:#495355; color:#ffffff; text-align:right; padding:10px;">
-                    <strong>Rp {{ number_format($finalAmount, 0, ',', '.') }}</strong>
+                    <strong>Rp {{ number_format($finalAmount + (optional($latestPayment)->fee_amount ?? 0), 0, ',', '.') }}</strong>
                   </td>
                 </tr>
               </table>

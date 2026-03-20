@@ -10,7 +10,7 @@ class Payment extends Model
         'participant_id', 'order_id', 'invoice_id', 'gateway_id', 'payment_link',
         'amount', 'status', 'payment_method',
         'paid_at', 'webhook_payload',
-        'promotion_id', 'discount_amount', 'final_amount',
+        'promotion_id', 'discount_amount', 'fee_amount', 'final_amount',
     ];
 
     public static function generateOrderId()
@@ -35,6 +35,7 @@ class Payment extends Model
         return [
             'amount' => 'decimal:2',
             'discount_amount' => 'decimal:2',
+            'fee_amount' => 'decimal:2',
             'final_amount' => 'decimal:2',
             'paid_at' => 'datetime',
             'webhook_payload' => 'array',

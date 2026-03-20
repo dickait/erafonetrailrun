@@ -154,11 +154,18 @@
                                 </div>
                             @endif
 
+                            @if($latestPayment && $latestPayment->fee_amount > 0)
+                                <div class="flex justify-between text-sm text-brand-600">
+                                    <span>Payment Service Fee</span>
+                                    <span class="font-medium">+ Rp {{ number_format($latestPayment->fee_amount, 0, ',', '.') }}</span>
+                                </div>
+                            @endif
+
                             <div class="py-2 border-t border-surface-100 mt-2">
                                 <div class="flex justify-between items-baseline">
                                     <span class="text-surface-900 font-bold">{{ __('messages.reg_total') }}</span>
                                     <span class="text-brand-600 text-xl font-bold">Rp
-                                        {{ number_format($finalAmount, 0, ',', '.') }}</span>
+                                        {{ number_format($finalAmount + ($latestPayment->fee_amount ?? 0), 0, ',', '.') }}</span>
                                 </div>
                                 @if(config('services.payment') === 'manual' && $finalAmount > 0)
                                     <p style="font-size: 8px;"
