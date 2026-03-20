@@ -98,15 +98,8 @@ class MidtransController extends Controller
             case 'bank_transfer':
                 $fee = 4000;
                 break;
-            case 'credit_card':
-                $fee = ($amount * 0.029) + 2000;
-                break;
-            case 'shopeepay':
             case 'gopay':
                 $fee = $amount * 0.02;
-                break;
-            case 'cstore':
-                $fee = 5000;
                 break;
         }
 
@@ -122,18 +115,21 @@ class MidtransController extends Controller
     {
         switch ($type) {
             case 'qris':
-                return ['qris'];
+                // Midtrans menggunakan 'gopay' untuk QRIS GoPay 
+                // dan 'qris' untuk QRIS umum (AirPay/ShopeePay dkk)
+                return ['other_qris'];
+
             case 'bank_transfer':
-                return ['bank_transfer', 'mandiri_va', 'permata_va', 'bca_va', 'bni_va', 'bri_va', 'other_va'];
-            case 'credit_card':
-                return ['credit_card'];
-            case 'shopeepay':
-                return ['shopeepay'];
+                // 'mandiri' di Midtrans (Snap) ID-nya adalah 'echannel' 
+                // atau 'mandiri_va' (tergantung versi SDK, tapi 'echannel' paling umum)
+                // Namun untuk BCA harus 'bca_va'
+                return ['echannel', 'permata_va', 'bni_va', 'bca_va', 'bri_va'];
+
             case 'gopay':
                 return ['gopay'];
-            case 'cstore':
-                return ['alfamart', 'indomaret'];
+
             default:
+                // Jika null, Midtrans akan menampilkan SEMUA metode yang aktif di dashboard
                 return null;
         }
     }

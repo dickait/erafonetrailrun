@@ -241,7 +241,7 @@
                                                         <span class="font-bold text-surface-900">QRIS</span>
                                                         <span class="text-[10px] text-brand-600 bg-brand-100 px-1.5 py-0.5 rounded font-bold">0.7% Fee</span>
                                                     </div>
-                                                    <p class="text-xs text-surface-500">GoPay, OVO, ShopeePay, Dana, LinkAja</p>
+                                                    <p class="text-xs text-surface-500">GoPay Dynamic QRIS</p>
                                                 </div>
                                             </label>
 
@@ -253,43 +253,19 @@
                                                         <span class="font-bold text-surface-900">Virtual Account</span>
                                                         <span class="text-[10px] text-brand-600 bg-brand-100 px-1.5 py-0.5 rounded font-bold">Rp 4.000 Fee</span>
                                                     </div>
-                                                    <p class="text-xs text-surface-500">BCA, Mandiri, BNI, BRI, Permata</p>
+                                                    <p class="text-xs text-surface-500">Bank Mandiri, BNI, Permata</p>
                                                 </div>
                                             </label>
 
-                                            <!-- Credit Card -->
-                                            <label class="payment-method-tile cursor-pointer group">
-                                                <input type="radio" name="payment_type" value="credit_card" class="hidden peer">
-                                                <div class="p-4 border border-surface-200 rounded-xl transition-all peer-checked:border-brand-500 peer-checked:bg-brand-50 hover:border-brand-300">
-                                                    <div class="flex justify-between items-center mb-1">
-                                                        <span class="font-bold text-surface-900">Kartu Kredit</span>
-                                                        <span class="text-[10px] text-brand-600 bg-brand-100 px-1.5 py-0.5 rounded font-bold">2.9% + Rp 2k</span>
-                                                    </div>
-                                                    <p class="text-xs text-surface-500">Visa, Mastercard, JCB, AMEX</p>
-                                                </div>
-                                            </label>
-
-                                            <!-- E-Wallet -->
+                                            <!-- GoPay -->
                                             <label class="payment-method-tile cursor-pointer group">
                                                 <input type="radio" name="payment_type" value="gopay" class="hidden peer">
                                                 <div class="p-4 border border-surface-200 rounded-xl transition-all peer-checked:border-brand-500 peer-checked:bg-brand-50 hover:border-brand-300">
                                                     <div class="flex justify-between items-center mb-1">
-                                                        <span class="font-bold text-surface-900">E-Wallet</span>
+                                                        <span class="font-bold text-surface-900">GoPay</span>
                                                         <span class="text-[10px] text-brand-600 bg-brand-100 px-1.5 py-0.5 rounded font-bold">2% Fee</span>
                                                     </div>
-                                                    <p class="text-xs text-surface-500">GoPay, ShopeePay direct</p>
-                                                </div>
-                                            </label>
-
-                                            <!-- Convenience Store -->
-                                            <label class="payment-method-tile cursor-pointer group">
-                                                <input type="radio" name="payment_type" value="cstore" class="hidden peer">
-                                                <div class="p-4 border border-surface-200 rounded-xl transition-all peer-checked:border-brand-500 peer-checked:bg-brand-50 hover:border-brand-300">
-                                                    <div class="flex justify-between items-center mb-1">
-                                                        <span class="font-bold text-surface-900">Gerai Retail</span>
-                                                        <span class="text-[10px] text-brand-600 bg-brand-100 px-1.5 py-0.5 rounded font-bold">Rp 5.000 Fee</span>
-                                                    </div>
-                                                    <p class="text-xs text-surface-500">Alfamart, Indomaret</p>
+                                                    <p class="text-xs text-surface-500">GoPay direct payment</p>
                                                 </div>
                                             </label>
                                         </div>
@@ -341,9 +317,7 @@
                                     switch (selectedMethod) {
                                         case 'qris': baseFee = subtotal * 0.007; break;
                                         case 'bank_transfer': baseFee = 4000; break;
-                                        case 'credit_card': baseFee = (subtotal * 0.029) + 2000; break;
-                                        case 'gopay': case 'shopeepay': baseFee = subtotal * 0.02; break;
-                                        case 'cstore': baseFee = 5000; break;
+                                        case 'gopay': baseFee = subtotal * 0.02; break;
                                     }
 
                                     const feeWithPpn = Math.ceil(baseFee + (baseFee * 0.11));
