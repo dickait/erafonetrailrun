@@ -270,6 +270,22 @@
                   <strong>Pendaftaran Berhasil!</strong><br>
                   Pendaftaran Anda telah terkonfirmasi secara otomatis karena total biaya adalah Rp 0.
                 </p>
+
+                <p style="margin-top:30px;">
+                  Selanjutnya, informasi penting terkait acara seperti <i>race pack collection</i>, <i>technical
+                    meeting</i>,
+                  serta update lainnya akan kami sampaikan melalui email berikutnya dan juga melalui instagram <a
+                    href="https://www.instagram.com/erafonestores_bogor/" target="_blank"
+                    style="color: #E02534; text-decoration: underline;">Erafone Store Bogor</a>.
+                </p>
+
+                <p>
+                  Pastikan Anda terus memantau email dan media sosial kami agar tidak ketinggalan informasi terbaru.
+                </p>
+
+                <p>
+                  Kami tidak sabar menyambut Anda di lintasan!
+                </p>
               @endif
 
               @php
