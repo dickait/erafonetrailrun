@@ -288,7 +288,8 @@
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <div>
-                                <label class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_full_name') }}
+                                <label
+                                    class="block text-sm font-medium text-surface-800 mb-1.5">{{ __('messages.reg_full_name') }}
                                     *</label>
                                 <input type="text" name="full_name" value="{{ old('full_name') }}" required
                                     class="w-full px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
@@ -433,15 +434,22 @@
                                     class="block text-sm font-medium text-surface-800">{{ __('messages.reg_jersey_size') }}</label>
                                 <button type="button"
                                     onclick="document.getElementById('sizeChartCollapse').classList.toggle('hidden')"
-                                    class="text-xs text-brand-500 hover:text-brand-600 underline font-medium cursor-pointer">Panduan /
+                                    class="text-xs text-brand-500 hover:text-brand-600 underline font-medium cursor-pointer">Panduan
+                                    /
                                     Size
                                     Chart</button>
                             </div>
-                            <div id="sizeChartCollapse" class="hidden mb-6 p-4 bg-surface-50 border border-surface-200 rounded-2xl overflow-hidden shadow-inner">
+                            <div id="sizeChartCollapse"
+                                class="hidden mb-6 p-4 bg-surface-50 border border-surface-200 rounded-2xl overflow-hidden shadow-inner">
                                 <div class="flex justify-between items-center mb-4">
                                     <h4 class="font-display font-bold text-surface-900 text-sm">Panduan Ukuran (Unisex)</h4>
-                                    <button type="button" onclick="document.getElementById('sizeChartCollapse').classList.add('hidden')" class="text-surface-500 hover:text-surface-700">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                    <button type="button"
+                                        onclick="document.getElementById('sizeChartCollapse').classList.add('hidden')"
+                                        class="text-surface-500 hover:text-surface-700">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
                                     </button>
                                 </div>
                                 <div class="overflow-x-auto">
@@ -454,17 +462,18 @@
                                             </tr>
                                         </thead>
                                         <tbody class="divide-y divide-surface-200">
-                                            @foreach(['XS'=>[46,66], 'S'=>[48,68], 'M'=>[50,70], 'L'=>[52,72], 'XL'=>[54,74], 'XXL'=>[56,76]] as $sz => $dims)
-                                            <tr class="hover:bg-surface-100">
-                                                <td class="px-2 py-1.5 font-bold text-surface-900">{{ $sz }}</td>
-                                                <td class="px-2 py-1.5">{{ $dims[0] }}</td>
-                                                <td class="px-2 py-1.5">{{ $dims[1] }}</td>
-                                            </tr>
+                                            @foreach(['XS' => [46, 66], 'S' => [48, 68], 'M' => [50, 70], 'L' => [52, 72], 'XL' => [54, 74], 'XXL' => [56, 76]] as $sz => $dims)
+                                                <tr class="hover:bg-surface-100">
+                                                    <td class="px-2 py-1.5 font-bold text-surface-900">{{ $sz }}</td>
+                                                    <td class="px-2 py-1.5">{{ $dims[0] }}</td>
+                                                    <td class="px-2 py-1.5">{{ $dims[1] }}</td>
+                                                </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
                                 </div>
-                                <p class="text-[9px] text-surface-500 mt-2 italic text-center">* Toleransi perbedaan 1-2 cm.</p>
+                                <p class="text-[9px] text-surface-500 mt-2 italic text-center">* Toleransi perbedaan 1-2 cm.
+                                </p>
                             </div>
                             <div class="mb-3 p-4 bg-surface-50 rounded-xl flex items-center gap-4 text-center">
                                 <div class="flex-shrink-0 w-16 h-16 text-brand-400">
@@ -621,9 +630,14 @@
                         </div>
                     </div>
 
-                    <div class="mb-6 flex flex-col items-center gap-3">
-                        <div class="captcha-img-container flex items-center gap-2">
-                            {!! captcha_img('flat') !!}
+                    <div class="mb-6 flex flex-row items-center gap-2">
+                        <input type="text" name="captcha" placeholder="Enter Captcha" required value="{{ old('captcha') }}"
+                            class="flex-1 min-w-0 px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-left text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+
+                        <div class="captcha-img-container flex items-center gap-2 shrink-0">
+                            <div class="overflow-hidden rounded-lg border border-surface-200">
+                                {!! captcha_img('flat') !!}
+                            </div>
                             <button type="button"
                                 class="p-2 bg-surface-100 rounded-lg hover:bg-surface-200 transition-colors"
                                 onclick="refreshCaptcha()">
@@ -633,9 +647,6 @@
                                 </svg>
                             </button>
                         </div>
-                        <input type="text" name="captcha" placeholder="Enter Captcha Code" required
-                            value="{{ old('captcha') }}"
-                            class="w-full max-w-[200px] px-4 py-3 bg-surface-50 border border-surface-300 rounded-xl text-center text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                     </div>
                     <button type="submit" id="btn-submit"
                         class="w-full py-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold rounded-2xl shadow-xl shadow-brand-500/25 hover:shadow-brand-500/40 transition-all duration-200 text-lg cursor-pointer">
@@ -1269,21 +1280,21 @@
                 participantsData.forEach((p, index) => {
                     let title = isFamily ? `Peserta ${index + 1} ${index === 0 ? '(Team Leader)' : '(Family Member)'}` : 'Data Peserta';
                     html += `<div class="p-4 border border-surface-200 rounded-xl mb-4 bg-surface-50">
-                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="flex justify-between items-start mb-2">
-                                                                                                                                                                                                                                                                                                                                                                                                                                            <h4 class="font-bold text-brand-600">${title}</h4>
-                                                                                                                                                                                                                                                                                                                                                                                                                                            <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
-                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                                                                                                                                                                                                                                                                                                                                                                                                                                            ${isFamily ? `<p><span class="text-surface-600">{{ __('messages.reg_role') }}:</span> <br><span class="font-medium text-surface-900 capitalize">${p.role || '-'}</span></p>` : ''}
-                                                                                                                                                                                                                                                                                                                                                                                                                                            <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                            <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                            <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900 break-all">${p.email || '-'}</span></p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                            <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                            <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900 break-all">${p.identity_number || '-'}</span></p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                            <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                            <p><span class="text-surface-600">{{ __('messages.reg_blood_type') }}:</span> <br><span class="font-medium text-surface-900">${p.blood_type || '-'}</span></p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>`;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="flex justify-between items-start mb-2">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    <h4 class="font-bold text-brand-600">${title}</h4>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    <button type="button" onclick="editParticipant(${index})" class="text-xs px-3 py-1 bg-brand-50 text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-100 transition-colors font-medium">✏️ Edit</button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    ${isFamily ? `<p><span class="text-surface-600">{{ __('messages.reg_role') }}:</span> <br><span class="font-medium text-surface-900 capitalize">${p.role || '-'}</span></p>` : ''}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    <p><span class="text-surface-600">Nama:</span> <br><span class="font-medium text-surface-900">${p.full_name || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    <p><span class="text-surface-600">Tanggal Lahir:</span> <br><span class="font-medium text-surface-900">${p.date_of_birth || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    <p><span class="text-surface-600">Email:</span> <br><span class="font-medium text-surface-900 break-all">${p.email || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    <p><span class="text-surface-600">Telepon:</span> <br><span class="font-medium text-surface-900">${p.phone || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    <p><span class="text-surface-600">Identitas:</span> <br><span class="font-medium text-surface-900 break-all">${p.identity_number || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    <p><span class="text-surface-600">Jersey:</span> <br><span class="font-medium text-surface-900">${p.jersey_size || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    <p><span class="text-surface-600">{{ __('messages.reg_blood_type') }}:</span> <br><span class="font-medium text-surface-900">${p.blood_type || '-'}</span></p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>`;
 
                     for (let key in p) {
                         let input = document.createElement('input');
@@ -1353,7 +1364,7 @@
                             errList.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         }
                     @endif
-                                                                                                                                                            } else {
+                                                                                                                                                                    } else {
                     updateCategoryDetails();
                 }
             })();

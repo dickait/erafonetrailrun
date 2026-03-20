@@ -21,18 +21,22 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('registration.status') }}" class="mb-8">
+            <form method="POST" action="{{ route('registration.status') }}" class="mb-8 space-y-4">
                 @csrf
-                <div class="flex flex-col sm:flex-row gap-3 mb-4">
+                <div>
                     <input type="email" name="email" value="{{ old('email', request('email')) }}"
                         placeholder="{{ __('messages.status_placeholder') }}" required
-                        class="flex-1 w-full px-4 py-3 bg-white border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
-                    <button type="submit"
-                        class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-brand-500 to-brand-600 text-white font-semibold rounded-xl hover:from-brand-600 hover:to-brand-700 transition-all shadow-md whitespace-nowrap cursor-pointer">{{ __('messages.status_check') }}</button>
+                        class="w-full px-4 py-3 bg-white border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                 </div>
-                <div class="flex flex-col items-center sm:items-start gap-3 mb-6">
-                    <div class="captcha-img-container flex items-center gap-2">
-                        {!! captcha_img('flat') !!}
+                
+                <div class="flex flex-row items-center gap-2">
+                    <input type="text" name="captcha" placeholder="Enter Captcha" required value="{{ old('captcha') }}"
+                        class="flex-1 min-w-0 px-4 py-3 bg-white border border-surface-300 rounded-xl text-left text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                    
+                    <div class="captcha-img-container flex items-center gap-2 shrink-0">
+                        <div class="overflow-hidden rounded-lg border border-surface-200">
+                            {!! captcha_img('flat') !!}
+                        </div>
                         <button type="button" class="p-2 bg-surface-100 rounded-lg hover:bg-surface-200 transition-colors"
                             onclick="refreshCaptcha()">
                             <svg class="w-5 h-5 text-surface-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -41,9 +45,10 @@
                             </svg>
                         </button>
                     </div>
-                    <input type="text" name="captcha" placeholder="Enter Captcha Code" required value="{{ old('captcha') }}"
-                        class="w-full max-w-[200px] px-4 py-3 bg-white border border-surface-300 rounded-xl text-center text-surface-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
                 </div>
+
+                <button type="submit"
+                    class="w-full px-6 py-3 bg-gradient-to-r from-brand-500 to-brand-600 text-white font-semibold rounded-xl hover:from-brand-600 hover:to-brand-700 transition-all shadow-md cursor-pointer">{{ __('messages.status_check') }}</button>
             </form>
             @if(isset($participant))
                 <div class="bg-white rounded-2xl border border-surface-300 p-6 shadow-sm">
