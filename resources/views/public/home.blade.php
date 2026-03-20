@@ -31,13 +31,6 @@
                 <span class="text-accent-300">{{ __('messages.hero_location') }}</span><br>
                 {{ \Carbon\Carbon::parse($event->event_date)->locale(app()->getLocale())->translatedFormat('l, d F Y') }}
             </p>
-            <!-- <p class="text-white/80 text-lg max-w-2xl mx-auto mb-6">
-                                                                                                                                                                {{ __('messages.hero_desc') }}
-                                                                                                                                                            </p> -->
-            <!-- <p
-                                                                                                                                                        class="text-white/90 text-lg max-w-2xl mx-auto mb-10 font-bold bg-white/10 inline-block px-4 py-2 rounded-xl backdrop-blur-sm border border-white/10">
-                                                                                                                                                        {{ __('messages.hero_categories_label') }} 5K &bull; 10K &bull; 15K
-                                                                                                                                                    </p> -->
             <!-- Countdown -->
             @if($event && $event->event_date->isFuture())
                 <div class="flex justify-center gap-4 md:gap-6 mb-10" id="countdown"
@@ -115,8 +108,6 @@
                             style="object-position: 50% 60%;"
                             loading="lazy"
                             class="w-full h-full object-cover object-center transition-transform duration-700 hover:scale-110" />
-                        {{-- Ganti 'object-center' di atas dengan 'object-top' atau 'object-bottom' untuk
-                        menaikkan/menurunkan fokus gambar --}}
                         <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                     </div>
                 </div>
@@ -151,12 +142,11 @@
                         $catTitle = $cat->slug == '5k-family-fun-trail' ? '5K Family Fun Trail' : $cat->name;
                     @endphp
                     <div
-                        class="category-card bg-white border {{ $colors[5] }} rounded-2xl p-6 md:p-8 hover:border-{{ $colors[2] }}/50 transition-all duration-300 hover:-translate-y-2 group relative overflow-hidden shadow-sm hover:shadow-xl cursor-pointer md:cursor-default"
-                        onclick="toggleCategory(this)">
+                        class="category-card bg-white border {{ $colors[5] }} rounded-2xl p-6 md:p-8 hover:border-{{ $colors[2] }}/50 transition-all duration-300 hover:-translate-y-2 group relative overflow-hidden shadow-sm hover:shadow-xl">
                         <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r {{ $colors[1] }}"></div>
                         
                         <!-- Header (Icon and Title) -->
-                        <div class="flex items-center justify-between">
+                        <div class="category-header flex items-center justify-between md:cursor-default cursor-pointer">
                             <div class="flex items-center gap-4">
                                 <div class="w-12 h-12 md:w-16 md:h-16 {{ $colors[6] }} rounded-2xl flex items-center justify-center shrink-0">
                                     <span class="font-display text-base md:text-xl font-bold {{ $colors[4] }}">
@@ -176,7 +166,7 @@
                         </div>
 
                         <!-- Content (Collapsible) -->
-                        <div class="category-body hidden md:block mt-6">
+                        <div class="category-body mt-6">
                             <p class="text-surface-700 text-sm mb-6">{{ __('messages.cat_' . $cat->slug . '_desc') }}</p>
                             <div class="space-y-3 mb-6">
                                 <div class="flex justify-between text-sm"><span
@@ -461,23 +451,54 @@
             }
 
             function toggleCategory(card) {
-                if (window.innerWidth >= 768) return;
-
                 const body = card.querySelector('.category-body');
                 const arrow = card.querySelector('.arrow-icon');
                 const label = card.querySelector('.btn-label');
-                const isHidden = body.classList.contains('hidden');
-
-                if (isHidden) {
-                    body.classList.remove('hidden');
-                    arrow.classList.add('rotate-180');
-                    label.innerText = 'Tutup Detail';
-                } else {
-                    body.classList.add('hidden');
-                    arrow.classList.remove('rotate-180');
+                
+                body.classList.toggle('hidden');
+                arrow.classList.toggle('rotate-180');
+                
+                if (body.classList.contains('hidden')) {
                     label.innerText = 'Lihat Detail';
+                } else {
+                    label.innerText = 'Tutup Detail';
                 }
             }
+
+            // Attach toggle handler hanya di mobile (md breakpoint Tailwind = 768px)
+            function initCategoryToggle() {
+                const isMobile = window.innerWidth < 768;
+                document.querySelectorAll('.category-card').forEach(function(card) {
+                    const header = card.querySelector('.category-header');
+                    const body = card.querySelector('.category-body');
+                    const arrow = card.querySelector('.arrow-icon');
+                    const label = card.querySelector('.btn-label');
+
+                    if (header._toggleHandler) {
+                        header.removeEventListener('click', header._toggleHandler);
+                    }
+                    
+                    if (isMobile) {
+                        body.classList.add('hidden');
+                        arrow.classList.remove('rotate-180');
+                        label.innerText = 'Lihat Detail';
+
+                        header._toggleHandler = function() {
+                            toggleCategory(card);
+                        };
+                        header.addEventListener('click', header._toggleHandler);
+                        header.style.cursor = 'pointer';
+                    } else {
+                        body.classList.remove('hidden');
+                        arrow.classList.remove('rotate-180');
+                        header.style.cursor = 'default';
+                        header._toggleHandler = null;
+                    }
+                });
+            }
+
+            initCategoryToggle();
+            window.addEventListener('resize', initCategoryToggle);
 
             // Smooth scrolling for anchor links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
