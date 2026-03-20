@@ -8,7 +8,7 @@ return [
         'height' => 36,
         'quality' => 90,
         'math' => false,
-        'expire' => 60,
+        'expire' => 600,
         'encrypt' => false,
     ],
     'flat' => [
@@ -21,6 +21,7 @@ return [
         'bgColor' => '#ecf2f4',
         'fontColors' => ['#2c3e50', '#c0392b', '#16a085', '#c0392b', '#8e44ad', '#303f9f', '#f57c00', '#795548'],
         'contrast' => -5,
+        'expire' => 600,
     ],
     'mini' => [
         'length' => 3,

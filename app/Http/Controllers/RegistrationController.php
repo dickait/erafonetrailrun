@@ -23,8 +23,10 @@ class RegistrationController extends Controller
 {
     public function create()
     {
-        // Clear captcha from session to avoid "Invalid Captcha" on first submit
-        request()->session()->forget('captcha');
+        // Ensure session is started and clear any existing captcha from session 
+        // to avoid "Invalid Captcha" on first submit due to stale data.
+        session()->put('registration_visit', now()->timestamp);
+        session()->forget('captcha');
 
         $event = Event::with('categories')->where('is_active', true)->latest('event_date')->first();
 
