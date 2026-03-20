@@ -193,15 +193,15 @@
                             </div>
                         </div>
 
-                        <div class="flex flex-col sm:flex-row justify-between py-1 gap-2">
+                        <div class="flex justify-between items-start sm:items-center py-1 gap-2">
                             <span class="text-surface-700 text-sm mt-1 sm:mt-0">{{ __('messages.part_payment_status') }}</span>
-                            <div class="flex flex-wrap items-center gap-x-2 gap-y-1 sm:justify-end">
+                            <div class="flex flex-col sm:flex-row items-end sm:items-center gap-1 sm:gap-2">
                                 <span
-                                    class="px-3 py-1 rounded-full text-xs font-semibold {{ $participant->payment_status == 'paid' ? 'bg-emerald-50 text-emerald-600' : ($participant->payment_status == 'pending' ? 'bg-accent-50 text-accent-600' : 'bg-brand-50 text-brand-500') }}">
+                                    class="px-3 py-1 rounded-full text-xs sm:text-sm font-semibold {{ $participant->payment_status == 'paid' ? 'bg-emerald-50 text-emerald-600' : ($participant->payment_status == 'pending' ? 'bg-accent-50 text-accent-600' : 'bg-brand-50 text-brand-500') }}">
                                     {{ $participant->payment_status == 'paid' ? __('messages.status_paid') : ($participant->payment_status == 'pending' ? __('messages.status_pending') : __('messages.status_failed')) }}
                                 </span>
                                 @if($participant->payment_status == 'paid' && $participant->latestPayment && $participant->latestPayment->paid_at)
-                                    <span class="text-sm text-surface-600 font-medium">
+                                    <span class="text-[10px] sm:text-sm text-surface-500 font-medium text-right sm:text-left">
                                         {{ $participant->latestPayment->payment_method ?? 'Manual' }} &bull;
                                         {{ $participant->latestPayment->paid_at->format('d M Y, H:i:s') }} WIB
                                     </span>
@@ -281,7 +281,7 @@
                                     </div>
                                 </div>
                             @else
-                                <a href="{{ $latestPayment->payment_link ?? '#' }}" target="_blank"
+                                <a href="{{ route('registration.payment', ['email' => $participant->email]) }}"
                                     class="block w-full py-3 text-center bg-gradient-to-r from-accent-500 to-accent-600 text-white font-semibold rounded-xl shadow-md cursor-pointer">{{ __('messages.status_complete_payment') }}</a>
                             @endif
                         </div>

@@ -307,6 +307,8 @@ return [
     'part_medical' => 'Kondisi Medis',
     'part_update' => 'Perbarui Profil',
     'part_payment_title' => 'Status Pembayaran',
+    'part_subtotal' => 'Subtotal Pembayaran',
+    'part_total' => 'Total Pembayaran',
     'part_payment_pending' => 'Menunggu Pembayaran',
     'part_payment_confirmed' => 'Pembayaran Dikonfirmasi',
     'part_payment_failed' => 'Pembayaran Gagal',

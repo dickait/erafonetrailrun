@@ -120,7 +120,7 @@
                         @endif
 
                         <div class="mt-2 border-t border-surface-200 pt-4 space-y-1">
-                            <div class="flex justify-between text-sm gap-2">
+                            <div class="flex justify-between items-start text-sm gap-2">
                                 <span class="text-surface-600">{{ __('messages.reg_fee') }}</span>
                                 <span class="text-surface-900 font-medium shrink-0 text-right">
                                     @if($discountAmount > 0)<strike class="opacity-50">@endif
@@ -130,7 +130,7 @@
                             </div>
 
                             @if($discountAmount > 0)
-                                <div class="flex justify-between text-sm text-emerald-600 gap-2">
+                                <div class="flex justify-between items-start text-sm text-emerald-600 gap-2">
                                     <span>{{ __('messages.reg_discount') }}
                                         ({{ optional($latestPayment->promotion)->code ?? optional($latestPayment->promotion)->name ?? 'PROMO' }})</span>
                                     <span class="font-medium shrink-0 text-right">- Rp {{ number_format($discountAmount, 0, ',', '.') }}</span>
@@ -138,7 +138,11 @@
                             @endif
 
                             @if(($latestPayment->fee_amount ?? 0) > 0)
-                                <div class="flex justify-between text-sm text-surface-600 gap-2">
+                                <div class="flex justify-between items-start text-sm text-surface-900 font-semibold gap-2 py-1 border-t border-surface-100 mt-2">
+                                    <span>{{ __('messages.part_subtotal') }}</span>
+                                    <span class="shrink-0 text-right">Rp {{ number_format($finalAmount, 0, ',', '.') }}</span>
+                                </div>
+                                <div class="flex justify-between items-start text-sm text-surface-600 gap-2 pb-1">
                                     <span>Biaya Layanan Pembayaran (+11% PPN)</span>
                                     <span class="font-medium shrink-0 text-right">+ Rp
                                         {{ number_format($latestPayment->fee_amount, 0, ',', '.') }}</span>
@@ -147,7 +151,9 @@
 
                             <div class="py-2 border-t border-surface-100 mt-2">
                                 <div class="flex justify-between items-baseline gap-2">
-                                    <span class="text-surface-900 font-bold">Total Pembayaran</span>
+                                    <span class="text-surface-900 font-bold">
+                                        {{ $participant->payment_status == 'paid' ? __('messages.part_total') : (($latestPayment->fee_amount ?? 0) > 0 ? __('messages.part_total') : __('messages.part_subtotal')) }}
+                                    </span>
                                     <span class="text-brand-600 text-xl font-bold shrink-0 text-right">Rp
                                         {{ number_format($finalAmount + ($latestPayment->fee_amount ?? 0), 0, ',', '.') }}</span>
                                 </div>
@@ -160,15 +166,15 @@
                         </div>
 
 
-                            <div class="flex flex-col sm:flex-row justify-between py-1 gap-2">
+                            <div class="flex justify-between items-start sm:items-center py-1 gap-2">
                                 <span class="text-surface-700 text-sm mt-1 sm:mt-0">{{ __('messages.part_payment_status') }}</span>
-                                <div class="flex flex-wrap items-center gap-x-2 gap-y-1 sm:justify-end">
+                                <div class="flex flex-col sm:flex-row items-end sm:items-center gap-1 sm:gap-2">
                                     <span
-                                        class="px-3 py-1 rounded-full text-xs font-semibold {{ $participant->payment_status == 'paid' ? 'bg-emerald-50 text-emerald-600' : ($participant->payment_status == 'pending' ? 'bg-accent-50 text-accent-600' : 'bg-brand-50 text-brand-500') }}">
+                                        class="px-3 py-1 rounded-full text-xs sm:text-sm font-semibold {{ $participant->payment_status == 'paid' ? 'bg-emerald-50 text-emerald-600' : ($participant->payment_status == 'pending' ? 'bg-accent-50 text-accent-600' : 'bg-brand-50 text-brand-500') }}">
                                         {{ $participant->payment_status == 'paid' ? __('messages.status_paid') : ($participant->payment_status == 'pending' ? __('messages.status_pending') : __('messages.status_failed')) }}
                                     </span>
                                     @if($participant->payment_status == 'paid' && $participant->latestPayment && $participant->latestPayment->paid_at)
-                                        <span class="text-sm text-surface-600 font-medium">
+                                        <span class="text-[10px] sm:text-sm text-surface-500 font-medium text-right sm:text-left">
                                             {{ $participant->latestPayment->payment_method ?? 'Manual' }} &bull;
                                             {{ $participant->latestPayment->paid_at->format('d M Y, H:i:s') }} WIB
                                         </span>
@@ -301,18 +307,18 @@
                                 </div>
 
                                 <div class="bg-brand-50 p-4 rounded-xl border border-brand-100 mb-6">
-                                    <div class="flex justify-between items-center text-sm mb-1 text-surface-600">
-                                        <span>Subtotal Pembayaran</span>
-                                        <span id="display-subtotal" data-val="{{ (int) $finalAmount }}">Rp
+                                    <div class="flex justify-between items-start text-sm mb-1 text-surface-600 gap-2">
+                                        <span>{{ __('messages.part_subtotal') }}</span>
+                                        <span id="display-subtotal" data-val="{{ (int) $finalAmount }}" class="text-surface-900 font-medium shrink-0 text-right">Rp
                                             {{ number_format($finalAmount, 0, ',', '.') }}</span>
                                     </div>
-                                    <div class="flex justify-between items-center text-sm mb-2 text-surface-600">
+                                    <div class="flex justify-between items-start text-sm mb-2 text-surface-600 gap-2">
                                         <span>Biaya Layanan Pembayaran (+11% PPN)</span>
-                                        <span id="display-fee" class="font-medium text-brand-600">Rp 0</span>
+                                        <span id="display-fee" class="font-medium text-brand-600 shrink-0 text-right">Rp 0</span>
                                     </div>
-                                    <div class="flex justify-between items-center pt-2 border-t border-brand-200">
-                                        <span class="font-bold text-surface-900">Total Pembayaran</span>
-                                        <span id="display-grandtotal" class="font-bold text-brand-600 text-lg">Rp
+                                    <div class="flex justify-between items-baseline pt-2 border-t border-brand-200 gap-2">
+                                        <span class="font-bold text-surface-900">{{ __('messages.part_total') }}</span>
+                                        <span id="display-grandtotal" class="font-bold text-brand-600 text-lg shrink-0 text-right">Rp
                                             {{ number_format($finalAmount, 0, ',', '.') }}</span>
                                     </div>
                                 </div>
@@ -354,7 +360,7 @@
 
                                 const feeWithPpn = Math.ceil(baseFee + (baseFee * 0.11));
 
-                                feeEl.innerText = formatIDR(feeWithPpn);
+                                feeEl.innerText = '+ ' + formatIDR(feeWithPpn);
                                 grandTotalEl.innerText = formatIDR(subtotal + feeWithPpn);
                             }
 

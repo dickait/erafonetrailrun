@@ -306,6 +306,8 @@ return [
     'part_medical' => 'Medical Conditions',
     'part_update' => 'Update Profile',
     'part_payment_title' => 'Payment Status',
+    'part_subtotal' => 'Payment Subtotal',
+    'part_total' => 'Total Payment',
     'part_payment_pending' => 'Pending Payment',
     'part_payment_confirmed' => 'Payment Confirmed',
     'part_payment_failed' => 'Payment Failed',
