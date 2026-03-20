@@ -63,20 +63,33 @@
                             $discountAmount = $latestPayment ? $latestPayment->discount_amount : 0;
                             $finalAmount = $latestPayment ? ($latestPayment->final_amount ?? ($baseAmount - $discountAmount)) : ($baseAmount - $discountAmount);
 
+                            $categoryName = $participant->category->name ?? '-';
+                            if ($participant->category && !str_contains(strtolower($categoryName), 'family') && $participant->date_of_birth) {
+                                $regYear = $participant->created_at->year;
+                                $birthYear = $participant->date_of_birth->year;
+                                $ageAtReg = $regYear - $birthYear;
+
+                                if ($ageAtReg >= 40) {
+                                    $categoryName .= ' (Master)';
+                                } elseif ($ageAtReg >= 17) {
+                                    $categoryName .= ' (Open)';
+                                }
+                            }
+
                             $fields = [
                                 'Order ID' => $latestPayment->order_id ?? '-',
                                 __('messages.status_name') . ($isFamily ? ' (Leader)' : '') => $participant->full_name,
                                 __('messages.status_email') => $participant->email,
-                                __('messages.status_category') => $participant->category->name ?? '-',
+                                __('messages.status_category') => $categoryName,
                                 __('messages.status_event') => $participant->event->name ?? '-',
                                 __('messages.status_registered') => $participant->created_at->format('d M Y H:i:s') . ' WIB',
                                 __('messages.status_bib') => $participant->bib_number ?? __('messages.status_bib_pending'),
                             ];
 
-                            if ($discountAmount > 0) {
-                                $promoLabel = optional($latestPayment->promotion)->code ?? optional($latestPayment->promotion)->name ?? 'PROMO';
-                                $fields[__('messages.reg_discount')] = $promoLabel . ' (- Rp ' . number_format($discountAmount, 0, ',', '.') . ')';
-                                $fields[__('messages.reg_total')] = 'Rp ' . number_format($finalAmount, 0, ',', '.');
+
+
+                            if ($participant->payment_status == 'paid' && $latestPayment && $latestPayment->paid_at) {
+                                $fields['Status Pembayaran Lunas'] = $latestPayment->paid_at->format('d M Y H:i:s') . ' WIB';
                             }
 
                             if (!$isFamily) {
@@ -155,9 +168,10 @@
                             @endif
 
                             @if($latestPayment && $latestPayment->fee_amount > 0)
-                                <div class="flex justify-between text-sm text-brand-600">
-                                    <span>Payment Service Fee</span>
-                                    <span class="font-medium">+ Rp {{ number_format($latestPayment->fee_amount, 0, ',', '.') }}</span>
+                                <div class="flex justify-between text-sm text-surface-600">
+                                    <span>Biaya Layanan Transaksi (+PPN 11%)</span>
+                                    <span class="font-medium">+ Rp
+                                        {{ number_format($latestPayment->fee_amount, 0, ',', '.') }}</span>
                                 </div>
                             @endif
 

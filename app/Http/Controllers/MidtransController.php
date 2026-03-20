@@ -77,8 +77,10 @@ class MidtransController extends Controller
             $snapToken = Snap::getSnapToken($params);
 
             $payment->update([
+                'payment_method' => $paymentType,
                 'fee_amount' => $fee,
                 'gateway_id' => $snapToken,
+                'webhook_payload' => null,
             ]);
 
             return response()->json(['token' => $snapToken]);
@@ -123,7 +125,7 @@ class MidtransController extends Controller
                 // 'mandiri' di Midtrans (Snap) ID-nya adalah 'echannel' 
                 // atau 'mandiri_va' (tergantung versi SDK, tapi 'echannel' paling umum)
                 // Namun untuk BCA harus 'bca_va'
-                return ['echannel', 'permata_va', 'bni_va', 'bca_va', 'bri_va'];
+                return ['echannel', 'permata_va', 'bni_va', 'bca_va', 'bri_va', 'bsi_va'];
 
             case 'gopay':
                 return ['gopay'];
@@ -172,6 +174,13 @@ class MidtransController extends Controller
 
         DB::transaction(function () use ($payment, $transaction, $fraud, $type, $notif, $request) {
             $oldStatus = $payment->status;
+
+            // Jika status sudah 'paid', jangan update lagi dari webhook attempt lama
+            if ($oldStatus === 'paid') {
+                Log::info('Payment already paid, ignoring webhook for Order ID: ' . $notif->order_id);
+                return;
+            }
+
             $paymentStatus = 'pending';
 
             if ($transaction == 'capture') {
