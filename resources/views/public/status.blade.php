@@ -53,7 +53,7 @@
                         </div>
                         <h3 class="font-display font-semibold text-lg text-surface-900">{{ __('messages.status_found') }}</h3>
                     </div>
-                    <div class="space-y-4">
+                    <div class="space-y-1">
                         @php
                             $isFamily = $participant->familyMembers && $participant->familyMembers->count() > 0;
                             $latestPayment = $participant->latestPayment;
@@ -99,7 +99,7 @@
 
                         @foreach($fields as $label => $val)
                             <div
-                                class="flex flex-col sm:flex-row justify-between py-2 border-b border-surface-100 last:border-0 gap-1 sm:gap-4">
+                                class="flex flex-col sm:flex-row justify-between py-1 border-b border-surface-100 last:border-0 gap-1 sm:gap-4">
                                 <span class="text-surface-700 text-sm whitespace-nowrap">{{ $label }}</span>
                                 <span class="text-surface-900 text-sm font-medium sm:text-right">{{ $val }}</span>
                             </div>
@@ -115,31 +115,31 @@
                                     <table class="w-full text-sm text-left">
                                         <thead class="bg-surface-50 text-surface-600 text-xs uppercase">
                                             <tr>
-                                                <th class="px-4 py-3 font-medium">{{ __('messages.status_name') }}</th>
-                                                <th class="px-4 py-3 font-medium">Email</th>
-                                                <th class="px-4 py-3 font-medium">{{ __('messages.status_blood_type') }}</th>
-                                                <th class="px-4 py-3 font-medium">{{ __('messages.status_jersey_size') }}</th>
+                                                <th class="px-4 py-2 font-medium">{{ __('messages.status_name') }}</th>
+                                                <th class="px-4 py-2 font-medium">Email</th>
+                                                <th class="px-4 py-2 font-medium">{{ __('messages.status_blood_type') }}</th>
+                                                <th class="px-4 py-2 font-medium">{{ __('messages.status_jersey_size') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody class="divide-y divide-surface-100">
                                             <tr class="bg-white">
-                                                <td class="px-4 py-3 font-medium text-surface-900 whitespace-nowrap">
+                                                <td class="px-4 py-2 font-medium text-surface-900 whitespace-nowrap">
                                                     {{ $participant->full_name }} <span
                                                         class="text-xs text-brand-600 bg-brand-50 px-2 py-0.5 rounded-full ml-1 capitalize">{{ $participant->role ? __('messages.role_' . $participant->role) : 'Leader' }}</span>
                                                 </td>
-                                                <td class="px-4 py-3 text-surface-600">{{ $participant->email }}</td>
-                                                <td class="px-4 py-3 text-surface-600">{{ $participant->blood_type ?? '-' }}</td>
-                                                <td class="px-4 py-3 text-surface-600">{{ $participant->jersey_size ?? '-' }}</td>
+                                                <td class="px-4 py-2 text-surface-600">{{ $participant->email }}</td>
+                                                <td class="px-4 py-2 text-surface-600">{{ $participant->blood_type ?? '-' }}</td>
+                                                <td class="px-4 py-2 text-surface-600">{{ $participant->jersey_size ?? '-' }}</td>
                                             </tr>
                                             @foreach($participant->familyMembers as $member)
                                                 <tr class="bg-white">
-                                                    <td class="px-4 py-3 font-medium text-surface-900 whitespace-nowrap">
+                                                    <td class="px-4 py-2 font-medium text-surface-900 whitespace-nowrap">
                                                         {{ $member->full_name }} <span
                                                             class="text-xs text-surface-500 bg-surface-100 px-2 py-0.5 rounded-full ml-1 capitalize">{{ $member->role ? __('messages.role_' . $member->role) : 'Member' }}</span>
                                                     </td>
-                                                    <td class="px-4 py-3 text-surface-600">{{ $member->email ?? '-' }}</td>
-                                                    <td class="px-4 py-3 text-surface-600">{{ $member->blood_type ?? '-' }}</td>
-                                                    <td class="px-4 py-3 text-surface-600">{{ $member->jersey_size ?? '-' }}</td>
+                                                    <td class="px-4 py-2 text-surface-600">{{ $member->email ?? '-' }}</td>
+                                                    <td class="px-4 py-2 text-surface-600">{{ $member->blood_type ?? '-' }}</td>
+                                                    <td class="px-4 py-2 text-surface-600">{{ $member->jersey_size ?? '-' }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -148,10 +148,10 @@
                             </div>
                         @endif
 
-                        <div class="mt-4 border-t border-surface-200 pt-4 space-y-2">
-                            <div class="flex justify-between text-sm">
+                        <div class="mt-2 border-t border-surface-200 pt-4 space-y-1">
+                            <div class="flex justify-between text-sm gap-2">
                                 <span class="text-surface-600">{{ __('messages.reg_fee') }}</span>
-                                <span class="text-surface-900 font-medium">
+                                <span class="text-surface-900 font-medium shrink-0 text-right">
                                     @if($discountAmount > 0)<strike class="opacity-50">@endif
                                         Rp {{ number_format($baseAmount, 0, ',', '.') }}
                                         @if($discountAmount > 0)</strike>@endif
@@ -159,25 +159,25 @@
                             </div>
 
                             @if($discountAmount > 0)
-                                <div class="flex justify-between text-sm text-emerald-600">
+                                <div class="flex justify-between text-sm text-emerald-600 gap-2">
                                     <span>{{ __('messages.reg_discount') }}
                                         ({{ optional($latestPayment->promotion)->code ?? optional($latestPayment->promotion)->name ?? 'PROMO' }})</span>
-                                    <span class="font-medium">- Rp {{ number_format($discountAmount, 0, ',', '.') }}</span>
+                                    <span class="font-medium shrink-0 text-right">- Rp {{ number_format($discountAmount, 0, ',', '.') }}</span>
                                 </div>
                             @endif
 
                             @if($latestPayment && $latestPayment->fee_amount > 0)
-                                <div class="flex justify-between text-sm text-surface-600">
+                                <div class="flex justify-between text-sm text-surface-600 gap-2">
                                     <span>Biaya Layanan Transaksi (+PPN 11%)</span>
-                                    <span class="font-medium">+ Rp
+                                    <span class="font-medium shrink-0 text-right">+ Rp
                                         {{ number_format($latestPayment->fee_amount, 0, ',', '.') }}</span>
                                 </div>
                             @endif
 
                             <div class="py-2 border-t border-surface-100 mt-2">
-                                <div class="flex justify-between items-baseline">
+                                <div class="flex justify-between items-baseline gap-2">
                                     <span class="text-surface-900 font-bold">{{ __('messages.reg_total') }}</span>
-                                    <span class="text-brand-600 text-xl font-bold">Rp
+                                    <span class="text-brand-600 text-xl font-bold shrink-0 text-right">Rp
                                         {{ number_format($finalAmount + ($latestPayment->fee_amount ?? 0), 0, ',', '.') }}</span>
                                 </div>
                                 @if(config('services.payment') === 'manual' && $finalAmount > 0)
@@ -188,9 +188,9 @@
                             </div>
                         </div>
 
-                        <div class="flex flex-col sm:flex-row justify-between py-2 gap-2">
+                        <div class="flex flex-col sm:flex-row justify-between py-1 gap-2">
                             <span class="text-surface-700 text-sm mt-1 sm:mt-0">{{ __('messages.part_payment_status') }}</span>
-                            <div class="flex items-center gap-2">
+                            <div class="flex flex-wrap items-center gap-x-2 gap-y-1 sm:justify-end">
                                 <span
                                     class="px-3 py-1 rounded-full text-xs font-semibold {{ $participant->payment_status == 'paid' ? 'bg-emerald-50 text-emerald-600' : ($participant->payment_status == 'pending' ? 'bg-accent-50 text-accent-600' : 'bg-brand-50 text-brand-500') }}">
                                     {{ $participant->payment_status == 'paid' ? __('messages.status_paid') : ($participant->payment_status == 'pending' ? __('messages.status_pending') : __('messages.status_failed')) }}
