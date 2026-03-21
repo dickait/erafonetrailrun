@@ -39,7 +39,7 @@ return [
      |
      */
 
-    'debug' => (bool)env('APP_DEBUG', false),
+    'debug' => (bool) env('APP_DEBUG', false),
 
     /*
      |--------------------------------------------------------------------------
@@ -52,7 +52,7 @@ return [
      |
      */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://eratrailrun.id'),
 
     /*
      |--------------------------------------------------------------------------
@@ -103,8 +103,8 @@ return [
 
     'previous_keys' => [
         ...array_filter(
-        explode(',', (string)env('APP_PREVIOUS_KEYS', ''))
-    ),
+            explode(',', (string) env('APP_PREVIOUS_KEYS', ''))
+        ),
     ],
 
     /*
