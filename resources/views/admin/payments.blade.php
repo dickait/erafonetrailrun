@@ -119,9 +119,11 @@
                             <label class="text-[9px] font-bold text-surface-400 uppercase tracking-tight block mb-1 ml-1">Status</label>
                             <select name="status" class="w-full px-3 py-2 bg-white border border-surface-300 rounded-xl text-sm h-[38px] cursor-pointer">
                                 <option value="">Semua</option>
-                                <option value="paid" {{ request('status') == 'paid' ? 'selected' : '' }}>Lunas</option>
-                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>Gagal</option>
+                                <option value="paid" {{ request('status') == 'paid' ? 'selected' : '' }}>PAID</option>
+                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>PENDING</option>
+                                <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>FAILED</option>
+                                <option value="expired" {{ request('status') == 'expired' ? 'selected' : '' }}>EXPIRED</option>
+                                <option value="refunded" {{ request('status') == 'refunded' ? 'selected' : '' }}>REFUNDED</option>
                             </select>
                         </div>
                         <div class="flex-1 lg:max-w-[80px]">
@@ -194,7 +196,17 @@
                                                 {{ $pay->invoice_id ?? $pay->mayar_invoice_id ?? '-' }}
                                             </span>
                                         @elseif($col == 'status')
-                                            <span class="px-2 py-1 text-[11px] font-bold rounded-full {{ $pay->status == 'paid' ? 'bg-brand-50 text-brand-500' : ($pay->status == 'pending' ? 'bg-amber-50 text-amber-600' : 'bg-red-50 text-red-600') }}">
+                                            @php
+                                                $statusClasses = match($pay->status) {
+                                                    'paid' => 'bg-emerald-50 text-emerald-600',
+                                                    'pending' => 'bg-amber-50 text-amber-600',
+                                                    'expired' => 'bg-zinc-800 text-white',
+                                                    'failed' => 'bg-rose-50 text-rose-600',
+                                                    'refunded' => 'bg-blue-50 text-blue-600',
+                                                    default => 'bg-surface-100 text-surface-600',
+                                                };
+                                            @endphp
+                                            <span class="px-2 py-1 text-[11px] font-bold rounded-full {{ $statusClasses }}">
                                                 {{ strtoupper($pay->status) }}
                                             </span>
                                         @elseif(in_array($col, ['amount', 'discount_amount', 'fee_amount', 'final_amount']))

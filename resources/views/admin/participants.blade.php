@@ -138,10 +138,11 @@
                             <select name="payment_status"
                                 class="w-full px-3 py-2 bg-white border border-surface-300 rounded-xl text-sm h-[38px] cursor-pointer">
                                 <option value="">Semua</option>
-                                <option value="paid" {{ request('payment_status') == 'paid' ? 'selected' : '' }}>Lunas
-                                </option>
-                                <option value="pending" {{ request('payment_status') == 'pending' ? 'selected' : '' }}>Pending
-                                </option>
+                                <option value="paid" {{ request('payment_status') == 'paid' ? 'selected' : '' }}>PAID</option>
+                                <option value="pending" {{ request('payment_status') == 'pending' ? 'selected' : '' }}>PENDING</option>
+                                <option value="expired" {{ request('payment_status') == 'expired' ? 'selected' : '' }}>EXPIRED</option>
+                                <option value="failed" {{ request('payment_status') == 'failed' ? 'selected' : '' }}>FAILED</option>
+                                <option value="refunded" {{ request('payment_status') == 'refunded' ? 'selected' : '' }}>REFUNDED</option>
                             </select>
                         </div>
                         <div class="flex-1 lg:max-w-[80px]">
@@ -216,8 +217,18 @@
                                         @elseif($col == 'bib_number') <span
                                             class="text-brand-500 font-mono">{{ $p->bib_number ?? '-' }}</span>
                                         @elseif($col == 'category_id') <span>{{ $p->category->name ?? '-' }}</span>
-                                        @elseif($col == 'payment_status') <span
-                                            class="{{ $p->payment_status == 'paid' ? 'text-brand-500' : 'text-red-600' }}">{{ $p->payment_status == 'paid' ? 'Lunas' : 'Pending' }}</span>
+                                        @elseif($col == 'payment_status')
+                                            @php
+                                                $statusClasses = match($p->payment_status) {
+                                                    'paid' => 'bg-emerald-50 text-emerald-600',
+                                                    'pending' => 'bg-amber-50 text-amber-600',
+                                                    'expired' => 'bg-zinc-800 text-white',
+                                                    'failed' => 'bg-rose-50 text-rose-600',
+                                                    'refunded' => 'bg-blue-50 text-blue-600',
+                                                    default => 'bg-surface-100 text-surface-600',
+                                                };
+                                            @endphp
+                                            <span class="px-2 py-0.5 text-[10px] font-bold rounded-full {{ $statusClasses }}">{{ strtoupper($p->payment_status) }}</span>
                                         @elseif($col == 'checked_in') {!! $p->checked_in ? '✓' : '—' !!}
                                         @elseif($col == 'created_at') {{ $p->created_at->format('d/m/y H:i') }}
                                         @else {{ $p->{$col} ?? '-' }}
