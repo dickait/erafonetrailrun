@@ -13,7 +13,6 @@
 
         .admin-main-wrapper {
             max-width: 100%;
-            overflow: hidden;
         }
 
         .table-card {
@@ -66,9 +65,29 @@
         }
     </style>
 
+    @php
+        $labelMap = [
+            'id' => 'ID',
+            'participant_id' => 'Peserta',
+            'order_id' => 'Order ID',
+            'invoice_id' => 'Invoice',
+            'amount' => 'Amount',
+            'status' => 'Status',
+            'payment_method' => 'Method',
+            'paid_at' => 'Tgl Bayar',
+            'created_at' => 'Tgl Daftar',
+            'discount_amount' => 'Diskon',
+            'fee_amount' => 'Biaya',
+            'final_amount' => 'Total',
+            'gateway_id' => 'Gateway ID',
+            'payment_link' => 'Link',
+        ];
+        $displayCols = $requestedCols ?? ['invoice_id', 'participant_id', 'amount', 'status', 'payment_method', 'created_at', 'paid_at'];
+    @endphp
+
     <div class="admin-main-wrapper">
         {{-- Filter Section --}}
-        <div class="bg-white border border-surface-300 rounded-xl mb-6 shadow-sm p-4 md:p-6 overflow-hidden">
+        <div class="bg-white border border-surface-300 rounded-xl mb-6 shadow-sm p-4 md:p-6 relative">
             <form id="filterForm" method="GET" class="space-y-4">
                 <div class="flex flex-col lg:flex-row gap-4">
                     <div class="flex-1">
@@ -113,6 +132,27 @@
                                 <option value="all" {{ request('per_page') == 'all' ? 'selected' : '' }}>Semua</option>
                             </select>
                         </div>
+                        {{-- Dropdown Kolom --}}
+                        <div class="relative flex-1 md:flex-none self-end">
+                            <label class="text-[9px] font-bold text-surface-400 uppercase tracking-tight block mb-1 ml-1">Tampilan</label>
+                            <button type="button" onclick="document.getElementById('colDropdown').classList.toggle('hidden')" class="w-full px-4 py-2 bg-white border border-surface-300 hover:bg-surface-50 text-sm font-medium rounded-xl h-[38px] flex items-center justify-center gap-2 cursor-pointer">
+                                Kolom
+                            </button>
+                            <div id="colDropdown" class="hidden absolute right-0 top-full mt-2 w-max min-w-[250px] bg-white border border-surface-300 rounded-xl shadow-xl z-[100] p-4">
+                                <div class="space-y-1 max-h-[300px] overflow-y-auto">
+                                    @foreach($allColumns as $col)
+                                        <label class="flex items-center gap-3 px-2 py-1 hover:bg-surface-50 rounded italic cursor-pointer">
+                                            <input type="checkbox" name="cols[]" value="{{ $col }}" {{ in_array($col, $displayCols) ? 'checked' : '' }} class="col-checkbox cursor-pointer">
+                                            <span class="text-xs">{{ $labelMap[$col] ?? $col }}</span>
+                                        </label>
+                                    @endforeach
+                                </div>
+                                <div class="mt-3 pt-2 border-t flex justify-between px-2">
+                                    <button type="button" onclick="resetColumns()" class="text-[10px] text-surface-400 underline cursor-pointer">Reset</button>
+                                    <button type="submit" class="text-[10px] text-brand-500 font-bold cursor-pointer">Apply</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="flex gap-2 w-full md:w-auto">
@@ -129,49 +169,54 @@
                 <table id="paymentsTable" class="display compact hover stripe">
                     <thead>
                         <tr>
-                            <th>Invoice</th>
-                            <th>Peserta</th>
-                            <th>BIB</th>
-                            <th>Kategori</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th>Method</th>
-                            <th>Tgl Daftar</th>
-                            <th>Tgl Bayar</th>
-                            <th>Aksi</th>
+                            @foreach($displayCols as $col)
+                                <th>{{ $labelMap[$col] ?? $col }}</th>
+                            @endforeach
+                            {{-- <th>Aksi</th> --}}
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($payments as $pay)
                             <tr>
-                                <td class="font-mono text-[11px] text-surface-700">
-                                    {{ $pay->invoice_id ?? $pay->mayar_invoice_id ?? '-' }}
-                                </td>
-                                <td class="font-medium text-surface-900">{{ $pay->participant->full_name ?? '-' }}</td>
-                                <td class="text-brand-500 font-mono font-medium">{{ $pay->participant->bib_number ?? '-' }}</td>
-                                <td>
-                                    <span class="px-2 py-0.5 bg-surface-100 rounded text-[11px]">{{ $pay->participant->category->name ?? '-' }}</span>
-                                </td>
-                                <td class="font-bold text-surface-900">
-                                    Rp {{ number_format($pay->final_amount ?? $pay->amount, 0, ',', '.') }}
-                                </td>
-                                <td>
-                                    <span class="px-2 py-1 text-[11px] font-bold rounded-full {{ $pay->status == 'paid' ? 'bg-brand-50 text-brand-500' : ($pay->status == 'pending' ? 'bg-amber-50 text-amber-600' : 'bg-red-50 text-red-600') }}">
-                                        {{ strtoupper($pay->status) }}
-                                    </span>
-                                </td>
-                                <td class="text-surface-600">{{ $pay->payment_method ?? '-' }}</td>
-                                <td class="font-mono text-[11px]">{{ $pay->created_at->format('d/m/y H:i') }}</td>
-                                <td class="font-mono text-[11px]">
-                                    {{ $pay->paid_at ? $pay->paid_at->format('d/m/y H:i') : '-' }}
-                                </td>
-                                <td>
+                                @foreach($displayCols as $col)
+                                    <td>
+                                        @if($col == 'participant_id')
+                                            <div class="flex flex-col">
+                                                <span class="font-medium text-surface-900">{{ $pay->participant->full_name ?? '-' }}</span>
+                                                <div class="flex gap-2 items-center text-[10px] text-surface-500">
+                                                    <span class="font-mono text-brand-500">{{ $pay->participant->bib_number ?? '-' }}</span>
+                                                    <span>•</span>
+                                                    <span>{{ $pay->participant->category->name ?? '-' }}</span>
+                                                </div>
+                                            </div>
+                                        @elseif($col == 'invoice_id')
+                                            <span class="font-mono text-[11px] text-surface-700">
+                                                {{ $pay->invoice_id ?? $pay->mayar_invoice_id ?? '-' }}
+                                            </span>
+                                        @elseif($col == 'status')
+                                            <span class="px-2 py-1 text-[11px] font-bold rounded-full {{ $pay->status == 'paid' ? 'bg-brand-50 text-brand-500' : ($pay->status == 'pending' ? 'bg-amber-50 text-amber-600' : 'bg-red-50 text-red-600') }}">
+                                                {{ strtoupper($pay->status) }}
+                                            </span>
+                                        @elseif(in_array($col, ['amount', 'discount_amount', 'fee_amount', 'final_amount']))
+                                            <span class="font-bold text-surface-900">
+                                                Rp {{ number_format($pay->{$col}, 0, ',', '.') }}
+                                            </span>
+                                        @elseif(in_array($col, ['created_at', 'paid_at']))
+                                            <span class="font-mono text-[11px]">
+                                                {{ $pay->{$col} ? $pay->{$col}->format('d/m/y H:i') : '-' }}
+                                            </span>
+                                        @else
+                                            {{ $pay->{$col} ?? '-' }}
+                                        @endif
+                                    </td>
+                                @endforeach
+                                {{-- <td>
                                     <button type="button"
                                         onclick="openEditModal('{{ $pay->id }}', '{{ $pay->status }}', '{{ $pay->paid_at ? $pay->paid_at->format('Y-m-d') : now()->format('Y-m-d') }}', '{{ $pay->paid_at ? $pay->paid_at->format('H:i:s') : now()->format('H:i:s') }}')"
                                         class="px-3 py-1 bg-surface-100 hover:bg-surface-200 border border-surface-300 rounded-lg text-xs font-bold transition-colors cursor-pointer">
                                         EDIT
                                     </button>
-                                </td>
+                                </td> --}}
                             </tr>
                         @endforeach
                     </tbody>
@@ -247,6 +292,7 @@
                 }
             });
 
+            function resetColumns() { $('.col-checkbox').prop('checked', false); }
             function exportPayments() {
                 const params = $('#filterForm').serialize();
                 window.location.href = "{{ route('admin.payments.export') }}?" + params;
@@ -255,13 +301,9 @@
             function openEditModal(id, status, date, time) {
                 document.getElementById('editForm').action = '/admin/payments/' + id + '/update-status';
                 document.getElementById('modalStatus').value = status;
-                
-                // Using standard HTML5 inputs for better UI
                 document.getElementById('modalPaidDateRaw').value = date;
                 document.getElementById('modalPaidTimeRaw').value = time;
-                
                 syncInputs();
-
                 document.getElementById('editModal').classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
             }
@@ -284,6 +326,25 @@
             });
 
             document.getElementById('editForm').addEventListener('submit', syncInputs);
+
+            // LocalStorage Persistence for columns
+            document.addEventListener('DOMContentLoaded', function () {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (!urlParams.has('cols[]')) {
+                    const saved = localStorage.getItem('admin_payments_cols_v1');
+                    if (saved) {
+                        const cols = JSON.parse(saved);
+                        if (cols.length > 0) {
+                            cols.forEach(c => urlParams.append('cols[]', c));
+                            window.location.search = urlParams.toString();
+                        }
+                    }
+                }
+            });
+            $('#filterForm').on('submit', function () {
+                const cols = $('.col-checkbox:checked').map(function () { return $(this).val(); }).get();
+                localStorage.setItem('admin_payments_cols_v1', JSON.stringify(cols));
+            });
         </script>
     @endpush
 @endsection

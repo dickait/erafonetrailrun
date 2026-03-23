@@ -284,17 +284,23 @@ class AdminController extends Controller
         if ($request->filled('end_date')) $query->where('created_at', '<=', $request->end_date);
         else $query->where('created_at', '<=', $endDate);
 
+        // Column selection logic
+        $allColumns = DB::getSchemaBuilder()->getColumnListing('payments');
+        $defaultCols = ['invoice_id', 'participant_id', 'amount', 'status', 'payment_method', 'created_at', 'paid_at'];
+        $requestedCols = $request->input('cols', $defaultCols);
+        
+        // Ensure some critical data are always fetched if selected
+        $finalCols = array_intersect(array_unique(array_merge(['id', 'participant_id'], $requestedCols)), $allColumns);
+
         $perPageInput = $request->input('per_page', 20);
         if ($perPageInput === 'all') {
-            $payments = $query->latest()->get();
-            // Create a simple length aware paginator for compatibility with links() if needed, 
-            // or just handle it in the view.
-            $payments = new \Illuminate\Pagination\LengthAwarePaginator($payments, $payments->count(), 1000000);
+            $paymentsResult = $query->latest()->get($finalCols);
+            $payments = new \Illuminate\Pagination\LengthAwarePaginator($paymentsResult, $paymentsResult->count(), 1000000);
         } else {
-            $payments = $query->latest()->paginate((int)$perPageInput)->withQueryString();
+            $payments = $query->latest()->paginate((int)$perPageInput, $finalCols)->withQueryString();
         }
 
-        return view('admin.payments', compact('payments', 'categories', 'startDate', 'endDate'));
+        return view('admin.payments', compact('payments', 'categories', 'startDate', 'endDate', 'allColumns', 'requestedCols'));
     }
 
     public function exportPayments(Request $request)

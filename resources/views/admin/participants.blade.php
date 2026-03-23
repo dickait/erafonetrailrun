@@ -17,8 +17,6 @@
             */
         .admin-main-wrapper {
             max-width: 100%;
-            overflow: hidden;
-            /* Prevent page-level horizontal scroll */
         }
 
         .table-card {
@@ -96,7 +94,7 @@
 
     <div class="admin-main-wrapper">
         {{-- Custom Filter Section --}}
-        <div class="bg-white border border-surface-300 rounded-xl mb-6 shadow-sm p-4 md:p-6 overflow-hidden">
+        <div class="bg-white border border-surface-300 rounded-xl mb-6 shadow-sm p-4 md:p-6 relative">
             <form id="filterForm" method="GET" class="space-y-4">
                 <div class="flex flex-col lg:flex-row gap-4">
                     <div class="flex-1">
@@ -166,7 +164,7 @@
                                 Kolom
                             </button>
                             <div id="colDropdown"
-                                class="hidden absolute right-0 top-full mt-2 w-max min-w-[250px] bg-white border border-surface-300 rounded-xl shadow-xl z-50 p-3">
+                                class="hidden absolute right-0 top-full mt-2 w-max min-w-[250px] bg-white border border-surface-300 rounded-xl shadow-xl z-[100] p-4">
                                 <div class="space-y-1 max-h-[300px] overflow-y-auto">
                                     @foreach($allColumns as $col)
                                         @if(!in_array($col, ['id', 'event_id', 'user_id']))
