@@ -277,6 +277,8 @@ return [
     'admin_checkin_failed' => 'Check-in Gagal',
     'admin_no_event' => 'Tidak ada acara aktif. Silakan buat acara terlebih dahulu.',
     'admin_no_data' => 'Tidak ada data.',
+    'admin_reg_stats' => 'Statistik Pendaftaran (14 Hari Terakhir)',
+    'admin_total_participants' => 'Total Pendaftar',
     'admin_quota' => 'Kuota',
 
     // Participant

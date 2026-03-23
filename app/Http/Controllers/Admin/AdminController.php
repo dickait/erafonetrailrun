@@ -33,11 +33,93 @@ class AdminController extends Controller
             'total_participants' => Participant::where('event_id', $event->id)->count(),
             'paid_participants' => Participant::where('event_id', $event->id)->where('payment_status', 'paid')->count(),
             'pending_participants' => Participant::where('event_id', $event->id)->where('payment_status', 'pending')->count(),
-            'total_revenue' => Payment::whereHas('participant', fn($q) => $q->where('event_id', $event->id))->where('status', 'paid')->sum('amount'),
+            'total_revenue' => Payment::whereHas('participant', fn($q) => $q->where('event_id', $event->id))->where('status', 'paid')->sum('final_amount'),
             'categories' => $cats,
         ];
 
-        return view('admin.dashboard', compact('event', 'stats'));
+        // Prepare Chart Data
+        $startDate = now()->subDays(14)->startOfDay();
+        $endDate = now()->endOfDay();
+
+        $dailyStats = Participant::where('event_id', $event->id)
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->select(
+                DB::raw('DATE(created_at) as date'),
+                DB::raw('COUNT(*) as total'),
+                DB::raw('SUM(CASE WHEN payment_status = "paid" THEN 1 ELSE 0 END) as paid'),
+                DB::raw('SUM(CASE WHEN payment_status = "pending" THEN 1 ELSE 0 END) as pending')
+            )
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->keyBy('date');
+
+        $categoryStats = Participant::where('event_id', $event->id)
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->select(
+                DB::raw('DATE(created_at) as date'),
+                'category_id',
+                DB::raw('COUNT(*) as count')
+            )
+            ->groupBy('date', 'category_id')
+            ->get();
+
+        $dates = [];
+        $current = $startDate->copy();
+        while ($current <= $endDate) {
+            $dates[] = $current->format('Y-m-d');
+            $current->addDay();
+        }
+
+        $chartData = [
+            'labels' => array_map(fn($d) => Carbon::parse($d)->format('d M'), $dates),
+            'datasets' => [
+                [
+                    'label' => __('messages.admin_total_reg'),
+                    'data' => array_map(fn($date) => $dailyStats->get($date)->total ?? 0, $dates),
+                    'borderColor' => '#334155',
+                    'backgroundColor' => 'rgba(51, 65, 85, 0.1)',
+                    'tension' => 0.4,
+                    'fill' => true
+                ],
+                [
+                    'label' => __('messages.admin_paid'),
+                    'data' => array_map(fn($date) => $dailyStats->get($date)->paid ?? 0, $dates),
+                    'borderColor' => '#22c55e',
+                    'backgroundColor' => 'transparent',
+                    'tension' => 0.4,
+                ],
+                [
+                    'label' => __('messages.admin_pending'),
+                    'data' => array_map(fn($date) => $dailyStats->get($date)->pending ?? 0, $dates),
+                    'borderColor' => '#eab308',
+                    'backgroundColor' => 'transparent',
+                    'tension' => 0.4,
+                ],
+            ]
+        ];
+
+        foreach ($cats as $cat) {
+            $catData = $categoryStats->where('category_id', $cat->id)->keyBy('date');
+            $color = match(true) {
+                str_contains($cat->slug, '21k') => '#ef4444', // Red
+                str_contains($cat->slug, '15k') => '#8b5cf6', // Purple
+                str_contains($cat->slug, '10k') => '#ec4899', // Pink
+                str_contains($cat->slug, '5k') => '#06b6d4',  // Cyan
+                default => '#94a3b8', // Slate focus
+            };
+            
+            $chartData['datasets'][] = [
+                'label' => __('messages.admin_category') . ' ' . $cat->name,
+                'data' => array_map(fn($date) => $catData->get($date)->count ?? 0, $dates),
+                'borderColor' => $color,
+                'backgroundColor' => 'transparent',
+                'borderDash' => [5, 5],
+                'tension' => 0.4,
+            ];
+        }
+
+        return view('admin.dashboard', compact('event', 'stats', 'chartData'));
     }
 
     public function participants(Request $request)
@@ -197,17 +279,45 @@ class AdminController extends Controller
     public function exportCsv()
     {
         $event = Event::latest()->first();
-        $participants = Participant::with(['category', 'event'])
+        $participants = Participant::with(['category', 'event', 'province', 'city', 'country', 'latestPayment'])
             ->where('event_id', optional($event)->id)
             ->orderBy('created_at')
             ->get();
 
-        $headers = ['Content-Type' => 'text/csv', 'Content-Disposition' => 'attachment; filename=participants.csv'];
-        $callback = function () use ($participants) {
+        $pCols = DB::getSchemaBuilder()->getColumnListing('participants');
+        $payCols = DB::getSchemaBuilder()->getColumnListing('payments');
+        
+        // Add relation names for convenience
+        $extraCols = ['category_name', 'event_name', 'province_name', 'city_name', 'country_name'];
+        $header = array_merge($pCols, $extraCols, array_map(fn($c) => 'payment_' . $c, $payCols));
+
+        $headers = ['Content-Type' => 'text/csv', 'Content-Disposition' => 'attachment; filename=participants_complete.csv'];
+        $callback = function () use ($participants, $pCols, $payCols, $header) {
             $file = fopen('php://output', 'w');
-            fputcsv($file, ['BIB', 'Name', 'Email', 'Phone', 'Gender', 'DOB', 'Category', 'Payment Status', 'Jersey Size', 'Community', 'Registered At']);
+            fputcsv($file, $header);
+            
             foreach ($participants as $p) {
-                fputcsv($file, [$p->bib_number, $p->full_name, $p->email, $p->phone, $p->gender, $p->date_of_birth?->format('Y-m-d'), $p->category->name ?? '', $p->payment_status, $p->jersey_size, $p->community, $p->created_at->format('Y-m-d H:i')]);
+                $row = [];
+                // Participant columns
+                foreach ($pCols as $col) {
+                    $row[] = $p->{$col};
+                }
+                
+                // Extra relations
+                $row[] = $p->category->name ?? '';
+                $row[] = $p->event->name ?? '';
+                $row[] = $p->province->name ?? '';
+                $row[] = $p->city->name ?? '';
+                $row[] = $p->country->name ?? '';
+                
+                // Payment columns
+                $payment = $p->latestPayment;
+                foreach ($payCols as $col) {
+                    $val = $payment ? $payment->{$col} : '';
+                    $row[] = is_array($val) || is_object($val) ? json_encode($val) : $val;
+                }
+                
+                fputcsv($file, $row);
             }
             fclose($file);
         };

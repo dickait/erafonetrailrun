@@ -29,6 +29,16 @@
     @endforeach
 </div>
 
+<!-- Line Chart -->
+<div class="bg-white border border-surface-300 rounded-xl p-6 mb-8">
+    <div class="flex justify-between items-center mb-6">
+        <h3 class="font-display font-semibold text-lg text-surface-900">{{ __('messages.admin_reg_stats') }}</h3>
+    </div>
+    <div class="h-[350px]">
+        <canvas id="registrationChart"></canvas>
+    </div>
+</div>
+
 <!-- Category Breakdown -->
 <div class="bg-white border border-surface-300 rounded-xl p-6 mb-8">
     <h3 class="font-display font-semibold text-lg text-surface-900 mb-4">{{ __('messages.admin_category_breakdown') }}</h3>
@@ -38,6 +48,7 @@
         $dotColor = match(true) {
             str_contains($cat->slug, '10k') => 'bg-amber-500',
             str_contains($cat->slug, '21k') => 'bg-red-500',
+            str_contains($cat->slug, '5k') => 'bg-cyan-500',
             default => 'bg-brand-500',
         };
         @endphp
@@ -79,3 +90,71 @@
 </div>
 @endif
 @endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('registrationChart').getContext('2d');
+    const data = @json($chartData);
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                intersect: false,
+                mode: 'index',
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    },
+                    grid: {
+                        drawBorder: false,
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    align: 'end',
+                    labels: {
+                        usePointStyle: true,
+                        boxWidth: 6,
+                        boxHeight: 6,
+                        padding: 20,
+                        font: {
+                            size: 11
+                        }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: '#1e293b',
+                    padding: 12,
+                    titleFont: {
+                        size: 13,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        size: 12
+                    },
+                    cornerRadius: 8,
+                    displayColors: true
+                }
+            }
+        }
+    });
+});
+</script>
+@endpush
