@@ -189,6 +189,66 @@ class AdminController extends Controller
         return view('admin.participants', compact('participants', 'categories', 'allColumns', 'requestedCols', 'startDate', 'endDate'));
     }
 
+    public function exportParticipants(Request $request)
+    {
+        $event = Event::latest()->first();
+        $query = Participant::with(['category'])->where('event_id', optional($event)->id);
+
+        // Apply same filters as main table
+        if ($request->filled('search')) {
+            $s = $request->search;
+            $query->where(function ($q) use ($s) {
+                $q->where('full_name', 'like', "%$s%")->orWhere('email', 'like', "%$s%")->orWhere('bib_number', 'like', "%$s%");
+            });
+        }
+        if ($request->filled('category')) $query->where('category_id', $request->category);
+        if ($request->filled('payment_status')) $query->where('payment_status', $request->payment_status);
+        if ($request->filled('start_date')) $query->where('created_at', '>=', $request->start_date);
+        if ($request->filled('end_date')) $query->where('created_at', '<=', $request->end_date);
+
+        // Column selection
+        $allColumns = DB::getSchemaBuilder()->getColumnListing('participants');
+        $requestedCols = $request->input('cols', ['full_name', 'email', 'phone', 'age', 'shirt_size', 'payment_status', 'created_at']);
+        $finalCols = array_intersect(array_unique(array_merge(['id'], $requestedCols)), $allColumns);
+
+        $participants = $query->latest()->get($finalCols);
+
+        $headers = [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=participants_' . date('Y-m-d_H-i') . '.csv',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0'
+        ];
+
+        $callback = function() use ($participants, $requestedCols) {
+            $file = fopen('php://output', 'w');
+            
+            // BOM for Excel UTF-8
+            fputs($file, "\xEF\xBB\xBF");
+            
+            // Header
+            fputcsv($file, $requestedCols);
+
+            foreach ($participants as $p) {
+                $row = [];
+                foreach ($requestedCols as $col) {
+                    if ($col == 'category_id') {
+                        $row[] = $p->category->name ?? '-';
+                    } elseif ($col == 'created_at') {
+                        $row[] = $p->created_at->format('Y-m-d H:i:s');
+                    } else {
+                        $row[] = $p->{$col};
+                    }
+                }
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
     public function payments(Request $request)
     {
         $event = Event::latest()->first();

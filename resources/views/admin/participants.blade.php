@@ -27,10 +27,10 @@
     @media (min-width: 768px) { .mobile-view { display: none !important; } }
 </style>
 
-<div class="bg-white border border-surface-300 rounded-xl mb-6">
+<div class="bg-white border border-surface-300 rounded-xl mb-6 shadow-sm">
     <div class="p-4 md:p-6">
         <form id="filterForm" method="GET" class="space-y-4">
-            {{-- Primary Row --}}
+            {{-- Primary Row: Search and Date Range --}}
             <div class="flex flex-col lg:flex-row gap-4">
                 <div class="flex-1">
                     <label class="text-[10px] font-bold text-surface-400 uppercase tracking-widest block mb-1.5 ml-1">Pencarian</label>
@@ -48,7 +48,7 @@
                 </div>
             </div>
 
-            {{-- Secondary Row --}}
+            {{-- Secondary Row: Dropdowns and Action Buttons --}}
             <div class="flex flex-col md:flex-row items-end gap-3 pt-2 border-t border-surface-100">
                 <div class="grid grid-cols-2 lg:flex gap-3 flex-1 w-full">
                     <div class="flex-1">
@@ -82,7 +82,7 @@
                             <svg class="w-4 h-4 text-surface-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
                             Kolom
                         </button>
-                        <div id="colDropdown" class="hidden absolute right-0 bottom-full md:bottom-auto md:top-full mb-2 md:mb-0 md:mt-2 w-max min-w-[280px] max-w-[90vw] bg-white border border-surface-300 rounded-xl shadow-2xl z-50 p-3">
+                        <div id="colDropdown" class="hidden absolute right-0 bottom-full md:bottom-auto md:top-full mb-2 md:mb-0 md:mt-2 w-max min-w-[280px] max-w-[95vw] bg-white border border-surface-300 rounded-xl shadow-2xl z-50 p-3">
                             <div class="mb-2 px-2 border-b border-surface-100 pb-2 flex justify-between">
                                 <h4 class="text-[10px] font-bold text-surface-400 uppercase tracking-widest">Tampilkan Kolom</h4>
                                 <button type="button" onclick="document.getElementById('colDropdown').classList.add('hidden')" class="text-surface-400 hover:text-surface-600">✕</button>
@@ -107,8 +107,13 @@
                 </div>
                 
                 <div class="flex gap-2 w-full md:w-auto">
-                    <button type="submit" class="w-full md:px-8 py-2 bg-brand-500 hover:bg-brand-600 text-white text-sm font-bold rounded-xl transition-colors cursor-pointer h-[38px]">
-                        FILTER
+                    <button type="button" onclick="exportData()" class="flex-1 md:flex-none px-6 py-2 bg-surface-100 border border-surface-300 hover:bg-surface-200 text-surface-900 text-sm font-bold rounded-xl transition-colors cursor-pointer h-[38px] flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4 text-surface-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        EXPORT
+                    </button>
+                    <button type="submit" class="flex-1 md:flex-none px-8 py-2 bg-brand-500 hover:bg-brand-600 text-white text-sm font-bold rounded-xl transition-colors cursor-pointer h-[38px] flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        CARI
                     </button>
                 </div>
             </div>
@@ -116,7 +121,7 @@
     </div>
 </div>
 
-<div class="bg-white border border-surface-300 rounded-xl overflow-hidden">
+<div class="bg-white border border-surface-300 rounded-xl overflow-hidden shadow-sm">
     <!-- Desktop View -->
     <div class="desktop-view overflow-x-auto">
         <table class="w-full text-sm">
@@ -159,11 +164,10 @@
         </table>
     </div>
 
-    <!-- Mobile View (Dynamic Cards) -->
+    <!-- Mobile View -->
     <div class="mobile-view p-4 space-y-4">
         @forelse($participants as $p)
         <div class="bg-surface-50 rounded-xl p-4 border border-surface-300">
-            {{-- Priority Header: Name & Status --}}
             <div class="flex justify-between items-start mb-4">
                 <div class="max-w-[70%]">
                     <p class="font-display font-semibold text-surface-900 truncate">{{ $p->full_name }}</p>
@@ -178,10 +182,8 @@
                 @endif
             </div>
 
-            {{-- Dynamic Grid for other selected columns --}}
             <div class="grid grid-cols-2 gap-x-4 gap-y-3 text-xs">
                 @foreach($displayCols as $col)
-                    {{-- Skip header columns and email (already on header) --}}
                     @if(!in_array($col, ['full_name', 'payment_status', 'email']))
                     <div class="overflow-hidden">
                         <p class="text-[9px] font-bold text-surface-400 uppercase tracking-tight mb-0.5">{{ $labelMap[$col] ?? $col }}</p>
@@ -227,6 +229,16 @@ function saveColumnsToLocal() {
     const checkboxes = document.querySelectorAll('.col-checkbox:checked');
     const cols = Array.from(checkboxes).map(cb => cb.value);
     localStorage.setItem(COL_STORAGE_KEY, JSON.stringify(cols));
+}
+
+function exportData() {
+    saveColumnsToLocal(); // Save latest selections before export
+    const form = document.getElementById('filterForm');
+    const formData = new FormData(form);
+    const params = new URLSearchParams(formData).toString();
+    
+    // Redirect to export route with current params
+    window.location.href = "{{ route('admin.participants.export') }}?" + params;
 }
 
 document.getElementById('filterForm').addEventListener('submit', function() {
