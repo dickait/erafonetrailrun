@@ -163,10 +163,31 @@ class AdminController extends Controller
         if ($request->filled('category')) $query->where('category_id', $request->category);
         if ($request->filled('payment_status')) $query->where('payment_status', $request->payment_status);
 
-        $perPage = $request->input('per_page', 20);
-        $participants = $query->latest()->paginate($perPage)->withQueryString();
+        // Date Range Filter (Default: Last 14 days)
+        $now = now();
+        $startDate = $request->input('start_date', $now->copy()->subDays(14)->format('Y-m-d\TH:i'));
+        $endDate = $request->input('end_date', $now->format('Y-m-d\TH:i'));
 
-        return view('admin.participants', compact('participants', 'categories', 'allColumns', 'requestedCols'));
+        $query->where('created_at', '>=', $startDate);
+        $query->where('created_at', '<=', $endDate);
+
+        $perPageInput = $request->input('per_page', 20);
+        if ($perPageInput === 'all') {
+            $participants = $query->latest()->get();
+            // Create a fake length aware paginator or just pass the collection
+            // but the view expects links(). We'll wrap in a custom paginator with one page.
+            $participants = new \Illuminate\Pagination\LengthAwarePaginator(
+                $participants, 
+                $participants->count(), 
+                max(1, $participants->count()), 
+                1, 
+                ['path' => $request->url(), 'query' => $request->query()]
+            );
+        } else {
+            $participants = $query->latest()->paginate((int)$perPageInput)->withQueryString();
+        }
+
+        return view('admin.participants', compact('participants', 'categories', 'allColumns', 'requestedCols', 'startDate', 'endDate'));
     }
 
     public function payments(Request $request)
