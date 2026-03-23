@@ -140,7 +140,8 @@ class AdminController extends Controller
         if ($request->filled('category')) $query->where('category_id', $request->category);
         if ($request->filled('payment_status')) $query->where('payment_status', $request->payment_status);
 
-        $participants = $query->latest()->paginate(20)->withQueryString();
+        $perPage = $request->input('per_page', 20);
+        $participants = $query->latest()->paginate($perPage)->withQueryString();
 
         return view('admin.participants', compact('participants', 'categories'));
     }
