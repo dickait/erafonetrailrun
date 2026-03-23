@@ -260,7 +260,8 @@ class AdminController extends Controller
             $s = $request->search;
             $query->whereHas('participant', function ($q) use ($s) {
                 $q->where('full_name', 'like', "%$s%")
-                  ->orWhere('email', 'like', "%$s%");
+                  ->orWhere('email', 'like', "%$s%")
+                  ->orWhere('bib_number', 'like', "%$s%");
             });
         }
 
@@ -274,9 +275,79 @@ class AdminController extends Controller
             $query->where('status', $request->status);
         }
 
-        $payments = $query->latest()->paginate(20)->withQueryString();
+        $startDate = $request->input('start_date', now()->subDays(14)->startOfDay()->toDateTimeString());
+        $endDate = $request->input('end_date', now()->endOfDay()->toDateTimeString());
 
-        return view('admin.payments', compact('payments', 'categories'));
+        if ($request->filled('start_date')) $query->where('created_at', '>=', $request->start_date);
+        else $query->where('created_at', '>=', $startDate);
+
+        if ($request->filled('end_date')) $query->where('created_at', '<=', $request->end_date);
+        else $query->where('created_at', '<=', $endDate);
+
+        $perPageInput = $request->input('per_page', 20);
+        if ($perPageInput === 'all') {
+            $payments = $query->latest()->get();
+            // Create a simple length aware paginator for compatibility with links() if needed, 
+            // or just handle it in the view.
+            $payments = new \Illuminate\Pagination\LengthAwarePaginator($payments, $payments->count(), 1000000);
+        } else {
+            $payments = $query->latest()->paginate((int)$perPageInput)->withQueryString();
+        }
+
+        return view('admin.payments', compact('payments', 'categories', 'startDate', 'endDate'));
+    }
+
+    public function exportPayments(Request $request)
+    {
+        $query = Payment::with(['participant.category']);
+
+        if ($request->filled('search')) {
+            $s = $request->search;
+            $query->whereHas('participant', function ($q) use ($s) {
+                $q->where('full_name', 'like', "%$s%")->orWhere('email', 'like', "%$s%")->orWhere('bib_number', 'like', "%$s%");
+            });
+        }
+        if ($request->filled('category')) {
+            $query->whereHas('participant', function ($q) use ($request) {
+                $q->where('category_id', $request->category);
+            });
+        }
+        if ($request->filled('status')) $query->where('status', $request->status);
+        if ($request->filled('start_date')) $query->where('created_at', '>=', $request->start_date);
+        if ($request->filled('end_date')) $query->where('created_at', '<=', $request->end_date);
+
+        $payments = $query->latest()->get();
+
+        $headers = [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=payments_' . date('Y-m-d_H-i') . '.csv',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0'
+        ];
+
+        $callback = function() use ($payments) {
+            $file = fopen('php://output', 'w');
+            fputs($file, "\xEF\xBB\xBF");
+            fputcsv($file, ['ID Invoice', 'Nama Peserta', 'BIB', 'Kategori', 'Amount', 'Status', 'Method', 'Tgl Daftar', 'Tgl Bayar']);
+
+            foreach ($payments as $pay) {
+                fputcsv($file, [
+                    $pay->invoice_id ?? $pay->mayar_invoice_id ?? '-',
+                    $pay->participant->full_name ?? '-',
+                    $pay->participant->bib_number ?? '-',
+                    $pay->participant->category->name ?? '-',
+                    $pay->final_amount ?? $pay->amount,
+                    $pay->status,
+                    $pay->payment_method ?? '-',
+                    $pay->created_at->format('Y-m-d H:i:s'),
+                    $pay->paid_at ? $pay->paid_at->format('Y-m-d H:i:s') : '-'
+                ]);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     public function updatePaymentStatus(Request $request, Payment $payment)
