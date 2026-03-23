@@ -10,6 +10,7 @@
         'email' => 'Email',
         'phone' => 'No. Telp',
         'gender' => 'L/P',
+        'age' => 'Umur',
         'category_id' => 'Kategori',
         'payment_status' => 'Status',
         'checked_in' => 'Check-in',
@@ -18,7 +19,7 @@
         'blood_type' => 'Gol. Darah',
     ];
 
-    $displayCols = $requestedCols ?? ['bib_number', 'full_name', 'email', 'category_id', 'payment_status', 'checked_in', 'created_at'];
+    $displayCols = $requestedCols ?? ['full_name', 'email', 'phone', 'age', 'shirt_size', 'payment_status', 'created_at'];
 @endphp
 
 <style>
@@ -29,7 +30,7 @@
 <div class="bg-white border border-surface-300 rounded-xl mb-6">
     <div class="p-4 md:p-6">
         <form id="filterForm" method="GET" class="space-y-4">
-            {{-- Primary Row: Search and Date Range --}}
+            {{-- Primary Row --}}
             <div class="flex flex-col lg:flex-row gap-4">
                 <div class="flex-1">
                     <label class="text-[10px] font-bold text-surface-400 uppercase tracking-widest block mb-1.5 ml-1">Pencarian</label>
@@ -47,7 +48,7 @@
                 </div>
             </div>
 
-            {{-- Secondary Row: Selects and Column Toggler --}}
+            {{-- Secondary Row --}}
             <div class="flex flex-col md:flex-row items-end gap-3 pt-2 border-t border-surface-100">
                 <div class="grid grid-cols-2 lg:flex gap-3 flex-1 w-full">
                     <div class="flex-1">
@@ -76,7 +77,7 @@
                         </select>
                     </div>
                     <div class="relative flex-1 md:flex-none self-end">
-                        <label class="text-[9px] font-bold text-surface-400 uppercase tracking-tight block mb-1 ml-1 text-surface-400">Tampilan</label>
+                        <label class="text-[9px] font-bold text-surface-400 uppercase tracking-tight block mb-1 ml-1">Tampilan</label>
                         <button type="button" onclick="document.getElementById('colDropdown').classList.toggle('hidden')" class="w-full px-4 py-2 bg-white border border-surface-300 hover:bg-surface-50 text-surface-900 text-sm font-medium rounded-xl transition-colors flex items-center justify-center gap-2 cursor-pointer h-[38px]">
                             <svg class="w-4 h-4 text-surface-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
                             Kolom
@@ -158,40 +159,52 @@
         </table>
     </div>
 
-    <!-- Mobile View -->
+    <!-- Mobile View (Dynamic Cards) -->
     <div class="mobile-view p-4 space-y-4">
         @forelse($participants as $p)
         <div class="bg-surface-50 rounded-xl p-4 border border-surface-300">
+            {{-- Priority Header: Name & Status --}}
             <div class="flex justify-between items-start mb-4">
                 <div class="max-w-[70%]">
                     <p class="font-display font-semibold text-surface-900 truncate">{{ $p->full_name }}</p>
+                    @if(in_array('email', $displayCols))
                     <p class="text-[11px] text-surface-700 truncate">{{ $p->email }}</p>
+                    @endif
                 </div>
+                @if(in_array('payment_status', $displayCols))
                 <span class="px-2 py-1 text-[10px] rounded-full {{ $p->payment_status == 'paid' ? 'bg-brand-50 text-brand-500' : 'bg-accent-50 text-accent-600' }}">
                     {{ $p->payment_status == 'paid' ? 'Lunas' : ($p->payment_status == 'pending' ? 'Pending' : 'Gagal') }}
                 </span>
+                @endif
             </div>
-            <div class="grid grid-cols-2 gap-4 text-xs">
-                <div>
-                    <p class="text-surface-700 uppercase tracking-tight text-[10px] mb-1">BIB</p>
-                    <p class="font-mono text-brand-500 font-medium">{{ $p->bib_number ?? '-' }}</p>
-                </div>
-                <div>
-                    <p class="text-surface-700 uppercase tracking-tight text-[10px] mb-1">Kategori</p>
-                    <p class="text-surface-900 font-medium">{{ $p->category->name ?? '-' }}</p>
-                </div>
-                <div>
-                    <p class="text-surface-700 uppercase tracking-tight text-[10px] mb-1">Check-in</p>
-                    <p class="text-surface-900 font-medium text-xs">{!! $p->checked_in ? '<span class="text-brand-500">Sudah</span>' : '<span class="text-gray-400">Belum</span>' !!}</p>
-                </div>
-                <div>
-                    <p class="text-surface-700 uppercase tracking-tight text-[10px] mb-1">Tgl Daftar</p>
-                    <p class="text-surface-900 font-medium text-[11px]">{{ $p->created_at->format('d M Y H:i:s') }}</p>
-                </div>
+
+            {{-- Dynamic Grid for other selected columns --}}
+            <div class="grid grid-cols-2 gap-x-4 gap-y-3 text-xs">
+                @foreach($displayCols as $col)
+                    {{-- Skip header columns and email (already on header) --}}
+                    @if(!in_array($col, ['full_name', 'payment_status', 'email']))
+                    <div class="overflow-hidden">
+                        <p class="text-[9px] font-bold text-surface-400 uppercase tracking-tight mb-0.5">{{ $labelMap[$col] ?? $col }}</p>
+                        <div class="text-surface-900 font-medium truncate">
+                            @if($col == 'bib_number')
+                                <span class="font-mono text-brand-500">{{ $p->bib_number ?? '-' }}</span>
+                            @elseif($col == 'category_id')
+                                <span>{{ $p->category->name ?? '-' }}</span>
+                            @elseif($col == 'checked_in')
+                                {!! $p->checked_in ? '<span class="text-brand-500">Sudah</span>' : '<span class="text-gray-400">Belum</span>' !!}
+                            @elseif($col == 'created_at')
+                                <span class="text-[10px]">{{ $p->created_at->format('d/m/y H:i') }}</span>
+                            @else
+                                {{ $p->{$col} ?? '-' }}
+                            @endif
+                        </div>
+                    </div>
+                    @endif
+                @endforeach
             </div>
         </div>
         @empty
-        <div class="py-8 text-center text-surface-700">Tidak ada data peserta ditemukan.</div>
+        <div class="py-8 text-center text-surface-700 font-medium">Tidak ada data peserta ditemukan.</div>
         @endforelse
     </div>
 
@@ -203,12 +216,23 @@
 
 @push('scripts')
 <script>
+const COL_STORAGE_KEY = 'admin_participants_cols_v2';
+
 function resetColumns() {
     const checkboxes = document.querySelectorAll('.col-checkbox');
-    checkboxes.forEach(cb => {
-        cb.checked = false;
-    });
+    checkboxes.forEach(cb => { cb.checked = false; });
 }
+
+function saveColumnsToLocal() {
+    const checkboxes = document.querySelectorAll('.col-checkbox:checked');
+    const cols = Array.from(checkboxes).map(cb => cb.value);
+    localStorage.setItem(COL_STORAGE_KEY, JSON.stringify(cols));
+}
+
+document.getElementById('filterForm').addEventListener('submit', function() {
+    saveColumnsToLocal();
+});
+
 document.addEventListener('click', function(event) {
     const dropdown = document.getElementById('colDropdown');
     const button = event.target.closest('button');
@@ -216,6 +240,20 @@ document.addEventListener('click', function(event) {
     if (button.onclick && button.onclick.toString().includes('colDropdown')) return;
     if (!dropdown.contains(event.target)) {
         dropdown.classList.add('hidden');
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (!urlParams.has('cols[]')) {
+        const saved = localStorage.getItem(COL_STORAGE_KEY);
+        if (saved) {
+            const cols = JSON.parse(saved);
+            if (cols.length > 0) {
+                cols.forEach(c => urlParams.append('cols[]', c));
+                window.location.search = urlParams.toString();
+            }
+        }
     }
 });
 </script>
