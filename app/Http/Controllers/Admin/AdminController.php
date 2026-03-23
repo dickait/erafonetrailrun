@@ -127,11 +127,34 @@ class AdminController extends Controller
         $event = Event::latest()->first();
         $categories = $event ? $event->categories : collect();
 
-        $query = Participant::with(['category', 'event'])->where('event_id', optional($event)->id);
+        $allColumns = DB::getSchemaBuilder()->getColumnListing('participants');
+        
+        // Define essential columns for relations, mobile view, and core UI logic
+        // This prevents errors when these fields are used in templates but not selected in the table
+        $essentialCols = [
+            'id', 'category_id', 'event_id', 'full_name', 
+            'email', 'bib_number', 'payment_status', 'checked_in', 'created_at'
+        ];
+        
+        $requestedCols = $request->input('cols', []);
+        
+        // If no columns requested, use a default set for the table headers
+        if (empty($requestedCols)) {
+            $requestedCols = ['bib_number', 'full_name', 'email', 'category_id', 'payment_status', 'checked_in', 'created_at'];
+        }
+
+        $finalCols = array_unique(array_merge($essentialCols, $requestedCols));
+        // Filter out columns that don't exist in DB
+        $finalCols = array_intersect($finalCols, $allColumns);
+
+        $query = Participant::with(['category', 'event'])
+            ->where('event_id', optional($event)->id)
+            ->select($finalCols);
 
         if ($request->filled('search')) {
             $s = $request->search;
             $query->where(function ($q) use ($s) {
+                // Only search in selected columns or core identification columns
                 $q->where('full_name', 'like', "%$s%")
                   ->orWhere('email', 'like', "%$s%")
                   ->orWhere('bib_number', 'like', "%$s%");
@@ -143,7 +166,7 @@ class AdminController extends Controller
         $perPage = $request->input('per_page', 20);
         $participants = $query->latest()->paginate($perPage)->withQueryString();
 
-        return view('admin.participants', compact('participants', 'categories'));
+        return view('admin.participants', compact('participants', 'categories', 'allColumns', 'requestedCols'));
     }
 
     public function payments(Request $request)
