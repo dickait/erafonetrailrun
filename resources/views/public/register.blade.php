@@ -196,7 +196,7 @@
                                                     </div>
                                                     <p class="text-[10px] text-brand-400 italic mt-2">
                                                         {{ __('messages.categories_early_bird_ends') }}:
-                                                        {{ $earlyBird->end_date ? $earlyBird->end_date->format('d M Y') : '-' }}
+                                                        {{ $earlyBird->end_date ? $earlyBird->end_date->translatedFormat('d F Y, H:i:s') . ' WIB' : '-' }}
                                                     </p>
                                                 </div>
                                             @endif

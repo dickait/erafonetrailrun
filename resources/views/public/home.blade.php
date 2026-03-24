@@ -242,9 +242,9 @@
                                         @endif
                                     </div>
 
-                                    <div class="text-[10px] text-surface-500 text-center italic mt-1">
+                                    <div class="text-[9px] sm:text-[10px] text-surface-500 text-center italic mt-1 leading-tight">
                                         {{ __('messages.categories_early_bird_ends') }}:
-                                        {{ $earlyBird->end_date ? $earlyBird->end_date->format('d M') : '-' }}
+                                        {{ $earlyBird->end_date ? $earlyBird->end_date->translatedFormat('d F Y, H:i:s') . ' WIB' : '-' }}
                                     </div>
                                 @endif
                                 @if($cat->slug != '5k-family-fun-trail')
