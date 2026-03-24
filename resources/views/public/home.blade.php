@@ -74,33 +74,33 @@
                             class="text-brand-500">{{ __('messages.about_title_highlight') }}</span>
                     </h2>
                     <p class="text-surface-700 leading-relaxed text-sm md:text-lg mb-8">{{ __('messages.about_description') }}</p>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-3 gap-2 md:gap-4">
                         <div
-                            class="bg-surface-50 border border-surface-300 rounded-xl p-4 flex flex-col items-center justify-center text-center">
-                            <svg class="w-8 h-8 text-brand-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            class="bg-surface-50 border border-surface-300 rounded-xl p-2 md:p-4 flex flex-col items-center justify-center text-center">
+                            <svg class="w-6 h-6 md:w-8 md:h-8 text-brand-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M13 10V3L4 14h7v7l9-11h-7z" />
                             </svg>
                             <span
-                                class="font-display font-bold text-surface-900 leading-tight">{{ __('messages.about_highlight_1') }}</span>
+                                class="font-display font-bold text-surface-900 leading-tight text-[10px] md:text-base">{{ __('messages.about_highlight_1') }}</span>
                         </div>
                         <div
-                            class="bg-surface-50 border border-surface-300 rounded-xl p-4 flex flex-col items-center justify-center text-center">
-                            <svg class="w-8 h-8 text-brand-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            class="bg-surface-50 border border-surface-300 rounded-xl p-2 md:p-4 flex flex-col items-center justify-center text-center">
+                            <svg class="w-6 h-6 md:w-8 md:h-8 text-brand-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <span
-                                class="font-display font-bold text-surface-900 leading-tight">{{ __('messages.about_highlight_2') }}</span>
+                                class="font-display font-bold text-surface-900 leading-tight text-[10px] md:text-base">{{ __('messages.about_highlight_2') }}</span>
                         </div>
                         <div
-                            class="bg-surface-50 border border-surface-300 rounded-xl p-4 flex flex-col items-center justify-center text-center">
-                            <svg class="w-8 h-8 text-brand-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            class="bg-surface-50 border border-surface-300 rounded-xl p-2 md:p-4 flex flex-col items-center justify-center text-center">
+                            <svg class="w-6 h-6 md:w-8 md:h-8 text-brand-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143z" />
                             </svg>
                             <span
-                                class="font-display font-bold text-surface-900 leading-tight">{{ __('messages.about_highlight_3') }}</span>
+                                class="font-display font-bold text-surface-900 leading-tight text-[10px] md:text-base">{{ __('messages.about_highlight_3') }}</span>
                         </div>
                     </div>
                 </div>

@@ -34,7 +34,7 @@ class RegistrationController extends Controller
             return redirect()->route('home')->with('error', 'Registration is currently closed.');
         }
 
-        $categories = $event->categories;
+        $categories = $event->categories->sortBy('distance_km');
         $countries = Cache::remember('countries_list', 86400, function () {
             return Country::orderBy('name')->get();
         });

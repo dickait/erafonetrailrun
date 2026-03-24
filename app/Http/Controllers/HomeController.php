@@ -10,7 +10,7 @@ class HomeController extends Controller
     public function index()
     {
         $event = Event::with('categories')->where('is_active', true)->latest('event_date')->first();
-        $categories = $event ? $event->categories : collect();
+        $categories = $event ? $event->categories->sortBy('distance_km') : collect();
 
         return view('public.home', compact('event', 'categories'));
     }
@@ -18,7 +18,7 @@ class HomeController extends Controller
     public function raceCourse()
     {
         $event = Event::with('categories')->where('is_active', true)->latest('event_date')->first();
-        $categories = $event ? $event->categories : collect();
+        $categories = $event ? $event->categories->sortBy('distance_km') : collect();
 
         return view('public.race-course', compact('event', 'categories'));
     }

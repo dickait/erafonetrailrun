@@ -45,8 +45,16 @@
                                     class="category-radio hidden peer" {{ old('category_id', request('category')) == $cat->id ? 'checked' : '' }}>
                                 <div
                                     class="border border-surface-300 rounded-xl p-4 text-center transition-all peer-checked:border-brand-500 peer-checked:bg-brand-50 hover:border-brand-300">
+                                    @php
+                                        $textColor = match($cat->slug) {
+                                            '10k' => 'text-accent-600',
+                                            '15k' => 'text-brand-500',
+                                            '5k-family-fun-trail' => 'text-emerald-600',
+                                            default => 'text-emerald-600'
+                                        };
+                                    @endphp
                                     <p
-                                        class="font-display font-bold text-xl {{ $loop->index == 0 ? 'text-accent-600' : ($loop->index == 1 ? 'text-brand-500' : 'text-emerald-600') }}">
+                                        class="font-display font-bold text-xl {{ $textColor }}">
                                         {{ strtoupper(explode(' ', $cat->name)[0]) }}
                                     </p>
                                     <p class="text-sm text-surface-700">{{ $cat->name }}</p>
