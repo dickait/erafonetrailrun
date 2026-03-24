@@ -38,13 +38,13 @@
                     <h3 class="font-display font-semibold text-lg text-surface-900 mb-4">
                         {{ __('messages.reg_select_category') }}
                     </h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-3 gap-2 sm:gap-4">
                         @foreach($categories as $cat)
                             <label class="cursor-pointer">
                                 <input type="radio" name="category_id" value="{{ $cat->id }}" data-slug="{{ $cat->slug }}"
                                     class="category-radio hidden peer" {{ old('category_id', request('category')) == $cat->id ? 'checked' : '' }}>
                                 <div
-                                    class="border border-surface-300 rounded-xl p-4 text-center transition-all peer-checked:border-brand-500 peer-checked:bg-brand-50 hover:border-brand-300">
+                                    class="border border-surface-300 rounded-xl p-2 sm:p-4 text-center transition-all peer-checked:border-brand-500 peer-checked:bg-brand-50 hover:border-brand-300 h-full flex flex-col justify-center">
                                     @php
                                         $textColor = match($cat->slug) {
                                             '10k' => 'text-accent-600',
@@ -54,35 +54,35 @@
                                         };
                                     @endphp
                                     <p
-                                        class="font-display font-bold text-xl {{ $textColor }}">
+                                        class="font-display font-bold text-base sm:text-2xl {{ $textColor }}">
                                         {{ strtoupper(explode(' ', $cat->name)[0]) }}
                                     </p>
-                                    <p class="text-sm text-surface-700">{{ $cat->name }}</p>
-                                    <div class="text-[10px] text-brand-500 font-bold mt-1 leading-tight">
+                                    <p class="text-[10px] sm:text-sm text-surface-700 leading-tight mb-1">{{ $cat->name }}</p>
+                                    <div class="text-[8px] sm:text-[10px] text-brand-500 font-bold mt-auto leading-tight">
                                         @if($cat->slug == '5k-family-fun-trail')
                                             @foreach($cat->prices->sortBy('pax') as $cp)
                                                 @php $hasPromo = $cat->isEarlyBirdActive(); @endphp
-                                                <div class="{{ $hasPromo ? 'opacity-50 text-[8px]' : '' }}">
+                                                <div class="{{ $hasPromo ? 'opacity-50 text-[7px] sm:text-[8px]' : '' }}">
                                                     @if($hasPromo)<strike>@endif
-                                                        {{ $cp->pax }} Pax: Rp {{ number_format($cp->price, 0, ',', '.') }}
+                                                        {{ $cp->pax }}P: Rp{{ number_format($cp->price/1000, 0, ',', '.') }}k
                                                         @if($hasPromo)</strike>@endif
                                                 </div>
                                                 @if($hasPromo)
-                                                    <div class="text-[10px] text-brand-600 font-black">{{ $cp->pax }} Pax: Rp
-                                                        {{ number_format($cat->getCurrentPrice($cp->pax), 0, ',', '.') }}
+                                                    <div class="text-[8px] sm:text-[10px] text-brand-600 font-black">{{ $cp->pax }}P: Rp
+                                                        {{ number_format($cat->getCurrentPrice($cp->pax)/1000, 0, ',', '.') }}k
                                                     </div>
                                                 @endif
                                             @endforeach
                                         @else
                                             @php $hasPromo = $cat->isEarlyBirdActive(); @endphp
-                                            <p class="text-sm {{ $hasPromo ? 'opacity-50 text-xs' : '' }}">
+                                            <p class="{{ $hasPromo ? 'opacity-50 text-[7px] sm:text-xs' : 'text-[8px] sm:text-sm' }}">
                                                 @if($hasPromo)<strike>@endif
-                                                    Rp {{ number_format($cat->getBasePrice(), 0, ',', '.') }}
+                                                    Rp{{ number_format($cat->getBasePrice()/1000, 0, ',', '.') }}k
                                                     @if($hasPromo)</strike>@endif
                                             </p>
                                             @if($hasPromo)
-                                                <p class="text-sm text-brand-600 font-black">Rp
-                                                    {{ number_format($cat->getCurrentPrice(), 0, ',', '.') }}
+                                                <p class="text-[9px] sm:text-sm text-brand-600 font-black">Rp
+                                                    {{ number_format($cat->getCurrentPrice()/1000, 0, ',', '.') }}k
                                                 </p>
                                             @endif
                                         @endif
