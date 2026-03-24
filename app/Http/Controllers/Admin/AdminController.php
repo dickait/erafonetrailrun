@@ -427,6 +427,29 @@ class AdminController extends Controller
         return redirect()->route('admin.email-blast')->with('success', 'Email blast has been queued for delivery.');
     }
 
+    public function sendSingleEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'subject' => 'required|string|max:255',
+            'body' => 'required|string'
+        ]);
+
+        try {
+            // Find participant to get name, or just use email if not found
+            $participant = Participant::where('email', $request->email)->first();
+            $name = $participant ? $participant->full_name : $request->email;
+
+            Mail::to($request->email)->send(
+                new \App\Mail\EventBlast($request->subject, $request->body, $name)
+            );
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to send email: ' . $e->getMessage());
+        }
+
+        return redirect()->route('admin.email-blast')->with('success', 'Email sent to ' . $request->email);
+    }
+
     public function generateBibs()
     {
         $event = Event::with('categories')->latest()->first();

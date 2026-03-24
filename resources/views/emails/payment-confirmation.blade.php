@@ -24,12 +24,12 @@
               <table align="center" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
                 <tr>
                   <td style="vertical-align: middle; padding-right: 15px;">
-                    <img src="{{ $message->embed(public_path('erafone-icon-01.png')) }}" alt="Logo" width="50"
+                    <img src="{{ asset('erafone-icon-01.png') }}" alt="Logo" width="50"
                       height="50"
                       style="display: block; border: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic;">
                   </td>
                   <td style="vertical-align: middle; padding-right: 15px;">
-                    <img src="{{ $message->embed(public_path('eratrailrun-putih.png')) }}" alt="Era Trail Run"
+                    <img src="{{ asset('eratrailrun-putih.png') }}" alt="Era Trail Run"
                       width="50" height="50"
                       style="display: block; border: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic;">
                   </td>
