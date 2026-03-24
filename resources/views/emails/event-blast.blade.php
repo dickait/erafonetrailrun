@@ -55,7 +55,7 @@
               </div>
 
               <p style="margin-top:20px;">
-                Terima kasih dan sampai jumpa di garis start! 🏃‍♂️
+                Terima kasih dan sampai jumpa di garis start!
               </p>
 
               <hr style="border: 0; border-top: 1px solid #eeeeee; margin: 30px 0;">

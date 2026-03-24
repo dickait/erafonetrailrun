@@ -252,7 +252,7 @@
               </p>
 
               <p style="margin-top:30px;">
-                Sampai jumpa di garis start! 🏃‍♂️
+                Sampai jumpa di garis start!
               </p>
 
               <p>
