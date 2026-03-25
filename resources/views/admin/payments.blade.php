@@ -299,7 +299,8 @@
             $(document).ready(function () {
                 if ($.fn.DataTable) {
                     $('#paymentsTable').DataTable({
-                        paging: false, searching: true, info: true, ordering: true, autoWidth: false
+                        paging: false, searching: true, info: true, ordering: true, autoWidth: false,
+                        order: []
                     });
                 }
             });

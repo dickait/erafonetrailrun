@@ -254,7 +254,8 @@
         $(document).ready(function () {
             if ($.fn.DataTable) {
                 $('#participantsTable').DataTable({
-                    paging: false, searching: true, info: true, ordering: true, autoWidth: false
+                    paging: false, searching: true, info: true, ordering: true, autoWidth: false,
+                    order: []
                 });
             }
         });
