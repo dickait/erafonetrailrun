@@ -31,8 +31,29 @@
 
 <!-- Line Chart -->
 <div class="bg-white border border-surface-300 rounded-xl p-6 mb-8">
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <h3 class="font-display font-semibold text-lg text-surface-900">{{ __('messages.admin_reg_stats') }}</h3>
+        
+        <form action="{{ route('admin.dashboard') }}" method="GET" class="flex flex-wrap items-center gap-2">
+            <div class="flex items-center gap-2">
+                <input type="datetime-local" 
+                       name="start_date" 
+                       value="{{ $startDate->format('Y-m-d\TH:i') }}" 
+                       class="text-xs border-surface-300 rounded-lg focus:ring-accent-500 focus:border-accent-500 bg-surface-50">
+                <span class="text-surface-400">to</span>
+                <input type="datetime-local" 
+                       name="end_date" 
+                       value="{{ $endDate->format('Y-m-d\TH:i') }}" 
+                       class="text-xs border-surface-300 rounded-lg focus:ring-accent-500 focus:border-accent-500 bg-surface-50">
+            </div>
+            <button type="submit" class="inline-flex items-center gap-2 px-3 py-1.5 bg-accent-600 hover:bg-accent-500 rounded-lg text-xs font-medium text-white transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                Cari
+            </button>
+            @if(request('start_date') || request('end_date'))
+            <a href="{{ route('admin.dashboard') }}" class="text-xs text-surface-500 hover:text-accent-600 underline">Reset</a>
+            @endif
+        </form>
     </div>
     <div class="h-[350px]">
         <canvas id="registrationChart"></canvas>
@@ -61,7 +82,7 @@
                 <div><span class="text-surface-700">{{ __('messages.admin_registered') }}:</span> <span class="text-surface-900">{{ $cat->participants_count }}</span></div>
                 <div><span class="text-surface-700">{{ __('messages.admin_paid') }}:</span> <span class="text-brand-500">{{ $cat->paid_count }}</span></div>
                 <div><span class="text-surface-700">{{ __('messages.admin_quota') }}:</span> <span class="text-surface-900">{{ $cat->quota }}</span></div>
-                <div><span class="text-surface-700">{{ __('messages.admin_available') }}:</span> <span class="text-surface-900">{{ $cat->quota - $cat->participants_count }}</span></div>
+                <div><span class="text-surface-700">{{ __('messages.admin_available') }}:</span> <span class="text-surface-900">{{ max(0, $cat->quota - $cat->paid_count) }}</span></div>
             </div>
         </div>
         @endforeach

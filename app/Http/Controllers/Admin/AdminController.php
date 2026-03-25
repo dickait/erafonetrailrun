@@ -38,8 +38,8 @@ class AdminController extends Controller
         ];
 
         // Prepare Chart Data
-        $startDate = now()->subDays(14)->startOfDay();
-        $endDate = now()->endOfDay();
+        $startDate = request('start_date') ? Carbon::parse(request('start_date')) : now()->subDays(14)->startOfDay();
+        $endDate = request('end_date') ? Carbon::parse(request('end_date')) : now()->endOfDay();
 
         $dailyStats = Participant::where('event_id', $event->id)
             ->whereBetween('created_at', [$startDate, $endDate])
@@ -119,7 +119,7 @@ class AdminController extends Controller
             ];
         }
 
-        return view('admin.dashboard', compact('event', 'stats', 'chartData'));
+        return view('admin.dashboard', compact('event', 'stats', 'chartData', 'startDate', 'endDate'));
     }
 
     public function participants(Request $request)

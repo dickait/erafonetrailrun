@@ -280,7 +280,7 @@ return [
     'admin_checkin_failed' => 'Check-in Failed',
     'admin_no_event' => 'No active event found. Please create an event first.',
     'admin_no_data' => 'No data.',
-    'admin_reg_stats' => 'Registration Statistics (Last 14 Days)',
+    'admin_reg_stats' => 'Registration Statistics',
     'admin_total_participants' => 'Total Registrants',
     'admin_quota' => 'Quota',
 
