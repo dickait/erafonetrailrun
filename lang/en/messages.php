@@ -91,7 +91,7 @@ return [
     'cta_register' => 'Register Now',
 
     // Footer
-    'footer_description' => 'Experience the ultimate trail running adventure through the stunning landscapes of Indonesia. Challenge yourself, connect with nature.',
+    'footer_description' => 'Explore the best trail running routes in Bogor, surrounded by stunning natural landscapes. Challenge yourself and reconnect with nature.',
     'footer_quick_links' => 'Quick Links',
     'footer_contact' => 'Contact',
     'footer_register' => 'Register',

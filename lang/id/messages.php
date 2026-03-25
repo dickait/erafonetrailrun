@@ -92,7 +92,7 @@ return [
     'cta_register' => 'Daftar Sekarang',
 
     // Footer
-    'footer_description' => 'Rasakan petualangan trail running terbaik melewati lanskap Indonesia yang menakjubkan. Tantang dirimu, terhubung dengan alam.',
+    'footer_description' => 'Jelajahi jalur trail running terbaik di Bogor dengan lanskap alam yang memukau. Tantang dirimu, rasakan koneksi dengan alam',
     'footer_quick_links' => 'Tautan Cepat',
     'footer_contact' => 'Kontak',
     'footer_register' => 'Daftar',
