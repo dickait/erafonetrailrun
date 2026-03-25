@@ -20,7 +20,6 @@
                 <a href="{{ route('home') }}" class="flex items-center gap-3 group">
                     <img src="{{ asset('erafone-icon-00.webp') }}" class="h-10 md:h-12 w-auto" alt="ERA TRAIL RUN" />
                     <img src="{{ asset('eratrailrun-hitam.webp') }}" class="h-10 md:h-12 w-auto" alt="ERA TRAIL RUN" />
-                    <img src="{{ asset('erafone-bg-teks.webp') }}" class="h-10 md:h-12 w-auto" alt="ERA TRAIL RUN" />
                 </a>
                 <div class="hidden md:flex items-center gap-8">
                     <a href="{{ route('home') }}"
@@ -133,8 +132,6 @@
                         <img src="{{ asset('erafone-icon-00.webp') }}" class="h-10 md:h-12 w-auto"
                             alt="ERA TRAIL RUN" />
                         <img src="{{ asset('eratrailrun-putih.webp') }}" class="h-10 md:h-12 w-auto"
-                            alt="ERA TRAIL RUN" />
-                        <img src="{{ asset('erafone-bg-teks.webp') }}" class="h-10 md:h-12 w-auto"
                             alt="ERA TRAIL RUN" />
                     </div>
                     <p class="text-surface-400 text-sm max-w-md">{{ __('messages.footer_description') }}</p>

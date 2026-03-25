@@ -399,9 +399,6 @@
                 <div class="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20 shadow-xl hover:bg-white/20 transition-all duration-300 transform hover:-translate-y-2">
                     <img src="{{ asset('eratrailrun-putih.webp') }}" class="h-14 md:h-20 w-auto" alt="Era Trail Run" />
                 </div>
-                <div class="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20 shadow-xl hover:bg-white/20 transition-all duration-300 transform hover:-translate-y-2">
-                    <img src="{{ asset('erafone-bg-teks.webp') }}" class="h-14 md:h-20 w-auto" alt="Erafone Text" />
-                </div>
             </div>
         </div>
     </section>
