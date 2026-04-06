@@ -3,6 +3,7 @@
 @section('meta_description', __('messages.race_course_subtitle'))
 
 @section('content')
+    {{--
     <!-- Main Content -->
     <section class="pt-28 pb-20 bg-surface-50 min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -183,6 +184,13 @@
                     <p class="text-surface-500 text-lg">{{ __('messages.admin_no_data') }}</p>
                 </div>
             @endif
+        </div>
+    </section>
+    --}}
+
+    <section class="pt-28 pb-20 bg-surface-50 min-h-screen">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-2xl font-bold text-surface-900">Race Course Information coming soon</h1>
         </div>
     </section>
 

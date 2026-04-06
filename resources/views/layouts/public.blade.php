@@ -27,8 +27,8 @@
                         class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_home') }}</a>
                     <a href="{{ route('home') }}#categories"
                         class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_categories') }}</a>
-                    <a href="{{ route('race_course') }}"
-                        class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_race_course') }}</a>
+                    <!-- <a href="{{ route('race_course') }}"
+                        class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_race_course') }}</a> -->
                     <a href="{{ route('gallery') }}"
                         class="text-sm font-medium text-surface-800 hover:text-brand-500 transition-colors">{{ __('messages.nav_gallery') }}</a>
                     <a href="{{ route('results') }}"
@@ -89,8 +89,8 @@
             <div class="px-4 py-4 space-y-2">
                 <a href="{{ route('home') }}"
                     class="block px-4 py-2.5 rounded-lg text-sm font-medium text-surface-800 hover:text-brand-500 hover:bg-surface-100 transition-colors">{{ __('messages.nav_home') }}</a>
-                <a href="{{ route('race_course') }}"
-                    class="block px-4 py-2.5 rounded-lg text-sm font-medium text-surface-800 hover:text-brand-500 hover:bg-surface-100 transition-colors">{{ __('messages.nav_race_course') }}</a>
+                <!-- <a href="{{ route('race_course') }}"
+                    class="block px-4 py-2.5 rounded-lg text-sm font-medium text-surface-800 hover:text-brand-500 hover:bg-surface-100 transition-colors">{{ __('messages.nav_race_course') }}</a> -->
                 <a href="{{ route('gallery') }}"
                     class="block px-4 py-2.5 rounded-lg text-sm font-medium text-surface-800 hover:text-brand-500 hover:bg-surface-100 transition-colors">{{ __('messages.nav_gallery') }}</a>
                 <a href="{{ route('results') }}"
