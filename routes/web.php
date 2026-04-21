@@ -78,6 +78,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/email-blast', [AdminController::class, 'emailBlast'])->name('email-blast');
     Route::post('/email-blast', [AdminController::class, 'sendEmailBlast'])->name('email-blast.send');
     Route::post('/email-single', [AdminController::class, 'sendSingleEmail'])->name('email-single.send');
+    Route::get('/email-preview', [AdminController::class, 'previewEmail'])->name('email-preview');
     Route::get('/checkin', [AdminController::class, 'checkin'])->name('checkin');
     Route::post('/checkin', [AdminController::class, 'processCheckin'])->name('checkin.process');
     Route::resource('promotions', \App\Http\Controllers\Admin\PromotionController::class);

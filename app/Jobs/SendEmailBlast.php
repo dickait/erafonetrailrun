@@ -17,9 +17,10 @@ class SendEmailBlast implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(
-        public Event $event,
+        public \App\Models\Event $event,
         public string $subject,
         public string $body,
+        public string $template = 'EventBlast',
     ) {}
 
     public function handle(): void
@@ -28,10 +29,16 @@ class SendEmailBlast implements ShouldQueue
             ->where('payment_status', 'paid')
             ->get();
 
+        $class = "App\\Mail\\" . $this->template;
+
         foreach ($participants as $participant) {
-            Mail::to($participant->email)->send(
-                new EventBlast($this->subject, $this->body, $participant->full_name)
-            );
+            if ($this->template == 'EventBlast') {
+                Mail::to($participant->email)->send(
+                    new $class($this->subject, $this->body, $participant->full_name)
+                );
+            } else {
+                Mail::to($participant->email)->send(new $class($participant));
+            }
         }
     }
 }

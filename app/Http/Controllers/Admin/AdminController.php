@@ -449,15 +449,67 @@ class AdminController extends Controller
     {
         $event = Event::latest()->first();
         $paidCount = $event ? Participant::where('event_id', $event->id)->where('payment_status', 'paid')->count() : 0;
-        return view('admin.email-blast', compact('paidCount'));
+        
+        // List templates from app/Mail
+        $mailPath = app_path('Mail');
+        $templates = [];
+        if (file_exists($mailPath)) {
+            $files = scandir($mailPath);
+            foreach ($files as $file) {
+                if (str_ends_with($file, '.php')) {
+                    $templates[] = str_replace('.php', '', $file);
+                }
+            }
+        }
+
+        return view('admin.email-blast', compact('paidCount', 'templates'));
+    }
+
+    public function previewEmail(Request $request)
+    {
+        $template = $request->template ?? 'EventBlast';
+        $class = "App\\Mail\\" . $template;
+
+        if (!class_exists($class)) {
+            return "Email class $class not found.";
+        }
+
+        $participant = Participant::with(['category', 'event', 'latestPayment', 'familyMembers'])->latest()->first();
+        
+        if (!$participant) {
+            return "No participant found to generate preview.";
+        }
+
+        try {
+            if ($template == 'EventBlast') {
+                $subject = $request->subject ?? 'Sample Subject';
+                $body = $request->body ?? 'Sample Message Body';
+                return new $class($subject, $body, $participant->full_name);
+            }
+            
+            // For other templates that might need Participant $p
+            return new $class($participant);
+        } catch (\Exception $e) {
+            return "Error generating preview: " . $e->getMessage();
+        }
     }
 
     public function sendEmailBlast(Request $request)
     {
-        $request->validate(['subject' => 'required|string|max:255', 'body' => 'required|string']);
+        $request->validate([
+            'subject' => 'required|string|max:255', 
+            'body' => 'required|string',
+            'template' => 'required|string'
+        ]);
+
         $event = Event::latest()->first();
         if ($event) {
-            SendEmailBlast::dispatch($event, $request->subject, $request->body);
+            \App\Jobs\SendEmailBlast::dispatch(
+                $event, 
+                $request->subject, 
+                $request->body, 
+                $request->template
+            );
         }
         return redirect()->route('admin.email-blast')->with('success', 'Email blast has been queued for delivery.');
     }
@@ -467,17 +519,30 @@ class AdminController extends Controller
         $request->validate([
             'email' => 'required|email',
             'subject' => 'required|string|max:255',
-            'body' => 'required|string'
+            'body' => 'required|string',
+            'template' => 'required|string'
         ]);
 
         try {
-            // Find participant to get name, or just use email if not found
             $participant = Participant::where('email', $request->email)->first();
-            $name = $participant ? $participant->full_name : $request->email;
+            $template = $request->template;
+            $class = "App\\Mail\\" . $template;
 
-            Mail::to($request->email)->send(
-                new \App\Mail\EventBlast($request->subject, $request->body, $name)
-            );
+            if (!class_exists($class)) {
+                throw new \Exception("Template $template not found.");
+            }
+
+            if ($template == 'EventBlast') {
+                $name = $participant ? $participant->full_name : $request->email;
+                Mail::to($request->email)->send(
+                    new $class($request->subject, $request->body, $name)
+                );
+            } else {
+                if (!$participant) {
+                    throw new \Exception("Participant with email " . $request->email . " not found for this template.");
+                }
+                Mail::to($request->email)->send(new $class($participant));
+            }
         } catch (\Exception $e) {
             return back()->with('error', 'Failed to send email: ' . $e->getMessage());
         }
