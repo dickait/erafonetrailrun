@@ -143,10 +143,15 @@
                             <div id="colDropdown" class="hidden absolute right-0 top-full mt-2 w-max min-w-[250px] bg-white border border-surface-300 rounded-xl shadow-xl z-[100] p-4">
                                 <div class="space-y-1 max-h-[300px] overflow-y-auto">
                                     @foreach($allColumns as $col)
-                                        <label class="flex items-center gap-3 px-2 py-1 hover:bg-surface-50 rounded italic cursor-pointer">
-                                            <input type="checkbox" name="cols[]" value="{{ $col }}" {{ in_array($col, $displayCols) ? 'checked' : '' }} class="col-checkbox cursor-pointer">
-                                            <span class="text-xs">{{ $labelMap[$col] ?? $col }}</span>
-                                        </label>
+                                        @php
+                                            $excluded = ['id', 'order_id', 'gateway_id', 'webhook_payload', 'updated_at'];
+                                        @endphp
+                                        @if(!in_array($col, $excluded))
+                                            <label class="flex items-center gap-3 px-2 py-1 hover:bg-surface-50 rounded italic cursor-pointer">
+                                                <input type="checkbox" name="cols[]" value="{{ $col }}" {{ in_array($col, $displayCols) ? 'checked' : '' }} class="col-checkbox cursor-pointer">
+                                                <span class="text-xs">{{ $labelMap[$col] ?? $col }}</span>
+                                            </label>
+                                        @endif
                                     @endforeach
                                 </div>
                                 <div class="mt-3 pt-2 border-t flex justify-between px-2">
@@ -218,7 +223,11 @@
                                                 {{ $pay->{$col} ? $pay->{$col}->format('d/m/y H:i') : '-' }}
                                             </span>
                                         @else
-                                            {{ $pay->{$col} ?? '-' }}
+                                            @if(is_array($pay->{$col}))
+                                                {{ json_encode($pay->{$col}) }}
+                                            @else
+                                                {{ $pay->{$col} ?? '-' }}
+                                            @endif
                                         @endif
                                     </td>
                                 @endforeach

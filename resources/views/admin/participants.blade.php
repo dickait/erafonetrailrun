@@ -168,7 +168,10 @@
                                 class="hidden absolute right-0 top-full mt-2 w-max min-w-[250px] bg-white border border-surface-300 rounded-xl shadow-xl z-[100] p-4">
                                 <div class="space-y-1 max-h-[300px] overflow-y-auto">
                                     @foreach($allColumns as $col)
-                                        @if(!in_array($col, ['id', 'event_id', 'user_id']))
+                                        @php
+                                            $excluded = ['id', 'event_id', 'user_id', 'updated_at', 'webhook_payload'];
+                                        @endphp
+                                        @if(!in_array($col, $excluded))
                                             <label
                                                 class="flex items-center gap-3 px-2 py-1 hover:bg-surface-50 rounded italic cursor-pointer">
                                                 <input type="checkbox" name="cols[]" value="{{ $col }}" {{ in_array($col, $displayCols) ? 'checked' : '' }} class="col-checkbox cursor-pointer">
@@ -210,32 +213,80 @@
                     </thead>
                     <tbody>
                         @foreach($participants as $p)
-                            <tr>
+                            <tr class="hover:bg-surface-50 transition-colors">
                                 @foreach($displayCols as $col)
                                     <td>
-                                        @if($col == 'full_name') {{ $p->full_name }}
-                                        @elseif($col == 'bib_number') <span
-                                            class="text-brand-500 font-mono">{{ $p->bib_number ?? '-' }}</span>
+                                        @if($col == 'full_name') 
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span>
+                                                <span class="font-semibold">{{ $p->full_name }}</span>
+                                            </div>
+                                        @elseif($col == 'bib_number') <span class="text-brand-500 font-mono font-bold">{{ $p->bib_number ?? '-' }}</span>
                                         @elseif($col == 'category_id') <span>{{ $p->category->name ?? '-' }}</span>
                                         @elseif($col == 'payment_status')
                                             @php
                                                 $statusClasses = match($p->payment_status) {
                                                     'paid' => 'bg-emerald-50 text-emerald-600',
-                                                    'pending' => 'bg-amber-50 text-amber-600',
+                                                    'pending' => 'bg-amber-50 text-amber-600 border-amber-100',
                                                     'expired' => 'bg-zinc-800 text-white',
                                                     'failed' => 'bg-rose-50 text-rose-600',
                                                     'refunded' => 'bg-blue-50 text-blue-600',
                                                     default => 'bg-surface-100 text-surface-600',
                                                 };
                                             @endphp
-                                            <span class="px-2 py-0.5 text-[10px] font-bold rounded-full {{ $statusClasses }}">{{ strtoupper($p->payment_status) }}</span>
-                                        @elseif($col == 'checked_in') {!! $p->checked_in ? '✓' : '—' !!}
+                                            <span class="px-2 py-0.5 text-[10px] font-bold rounded-full border {{ $statusClasses }}">{{ strtoupper($p->payment_status) }}</span>
+                                        @elseif($col == 'checked_in') 
+                                            @if($p->checked_in)
+                                                <span class="text-emerald-500 font-bold">✓</span>
+                                            @else
+                                                <span class="text-surface-300">—</span>
+                                            @endif
                                         @elseif($col == 'created_at') {{ $p->created_at->format('d/m/y H:i') }}
-                                        @else {{ $p->{$col} ?? '-' }}
+                                        @else 
+                                            @if(is_array($p->{$col}))
+                                                {{ json_encode($p->{$col}) }}
+                                            @else
+                                                {{ $p->{$col} ?? '-' }}
+                                            @endif
                                         @endif
                                     </td>
                                 @endforeach
                             </tr>
+                            {{-- Family Members --}}
+                            @foreach($p->familyMembers as $fm)
+                            <tr class="bg-surface-50/50 border-l-2 border-brand-200">
+                                @foreach($displayCols as $col)
+                                    <td class="py-2 opacity-80">
+                                        @if($col == 'full_name')
+                                            <div class="flex items-center gap-2 pl-4">
+                                                <svg class="w-3 h-3 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                                <span class="text-xs font-medium text-surface-700">{{ $fm->full_name }}</span>
+                                                <span class="text-[9px] px-1.5 py-0.5 bg-brand-100 text-brand-600 rounded uppercase font-bold tracking-tighter">Family</span>
+                                            </div>
+                                        @elseif($col == 'bib_number') <span class="text-brand-400 font-mono text-xs">{{ $fm->bib_number ?? '-' }}</span>
+                                        @elseif($col == 'category_id') <span class="text-xs italic">{{ $p->category->name ?? '-' }}</span>
+                                        @elseif($col == 'payment_status') 
+                                            <span class="px-2 py-0.5 text-[9px] font-bold rounded-full border border-surface-200 bg-white text-surface-400">{{ strtoupper($p->payment_status) }}</span>
+                                        @elseif($col == 'checked_in')
+                                            @if($fm->checked_in)
+                                                <span class="text-emerald-400 text-xs">✓</span>
+                                            @else
+                                                <span class="text-surface-200 text-xs">—</span>
+                                            @endif
+                                        @elseif($col == 'created_at') <span class="text-xs text-surface-400 italic">via Leader</span>
+                                        @else 
+                                            <span class="text-xs">
+                                                @if(is_array($fm->{$col} ?? $p->{$col}))
+                                                    {{ json_encode($fm->{$col} ?? $p->{$col}) }}
+                                                @else
+                                                    {{ $fm->{$col} ?? $p->{$col} ?? '-' }}
+                                                @endif
+                                            </span>
+                                        @endif
+                                    </td>
+                                @endforeach
+                            </tr>
+                            @endforeach
                         @endforeach
                     </tbody>
                 </table>

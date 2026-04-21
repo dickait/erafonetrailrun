@@ -151,7 +151,7 @@ class AdminController extends Controller
         // Filter out columns that don't exist in DB
         $finalCols = array_intersect($finalCols, $allColumns);
 
-        $query = Participant::with(['category', 'event'])
+        $query = Participant::with(['category', 'event', 'familyMembers'])
             ->where('event_id', optional($event)->id)
             ->select($finalCols);
 
@@ -161,7 +161,12 @@ class AdminController extends Controller
                 // Only search in selected columns or core identification columns
                 $q->where('full_name', 'like', "%$s%")
                   ->orWhere('email', 'like', "%$s%")
-                  ->orWhere('bib_number', 'like', "%$s%");
+                  ->orWhere('bib_number', 'like', "%$s%")
+                  ->orWhereHas('familyMembers', function($query) use ($s) {
+                      $query->where('full_name', 'like', "%$s%")
+                            ->orWhere('email', 'like', "%$s%")
+                            ->orWhere('bib_number', 'like', "%$s%");
+                  });
             });
         }
         if ($request->filled('category')) $query->where('category_id', $request->category);
