@@ -259,50 +259,21 @@
                                     <h4 class="font-display font-bold text-surface-900 mb-4 text-sm uppercase tracking-wider">
                                         {{ __('messages.part_payment_complete_title') }}
                                     </h4>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="payment-methods">
-                                        <!-- QRIS -->
-                                        <label class="payment-method-tile cursor-pointer group">
-                                            <input type="radio" name="payment_type" value="qris" class="hidden peer" checked>
-                                            <div
-                                                class="p-4 border border-surface-200 rounded-xl transition-all peer-checked:border-brand-500 peer-checked:bg-brand-50 hover:border-brand-300">
-                                                <div class="flex justify-between items-center mb-1">
-                                                    <span class="font-bold text-surface-900">QRIS</span>
-                                                    <span
-                                                        class="text-[10px] text-brand-600 bg-brand-100 px-1.5 py-0.5 rounded font-bold">0.7%
-                                                        Fee</span>
+                                    <div class="space-y-3" id="payment-methods">
+                                        <!-- BNI Virtual Account -->
+                                        <div class="p-4 border-2 border-brand-500 bg-brand-50 rounded-xl flex items-center justify-between">
+                                            <div class="flex items-center gap-4">
+                                                <div class="w-12 h-12 bg-white rounded-lg border border-surface-200 flex items-center justify-center p-2">
+                                                    <img src="https://upload.wikimedia.org/wikipedia/id/thumb/5/55/BNI_logo.svg/1200px-BNI_logo.svg.png" alt="BNI" class="w-full h-auto">
+                                                </div>
+                                                <div>
+                                                    <span class="font-bold text-surface-900 block">BNI Virtual Account</span>
+                                                    <p class="text-xs text-surface-500">Pembayaran otomatis via Virtual Account BNI</p>
                                                 </div>
                                             </div>
-                                        </label>
-
-                                        <!-- Bank Transfer -->
-                                        <label class="payment-method-tile cursor-pointer group">
-                                            <input type="radio" name="payment_type" value="bank_transfer" class="hidden peer">
-                                            <div
-                                                class="p-4 border border-surface-200 rounded-xl transition-all peer-checked:border-brand-500 peer-checked:bg-brand-50 hover:border-brand-300">
-                                                <div class="flex justify-between items-center mb-1">
-                                                    <span class="font-bold text-surface-900">Virtual Account</span>
-                                                    <span
-                                                        class="text-[10px] text-brand-600 bg-brand-100 px-1.5 py-0.5 rounded font-bold">Rp
-                                                        4.000 Fee</span>
-                                                </div>
-                                                <p class="text-xs text-surface-500">Bank Mandiri, BNI, Permata</p>
-                                            </div>
-                                        </label>
-
-                                        <!-- GoPay -->
-                                        <label class="payment-method-tile cursor-pointer group">
-                                            <input type="radio" name="payment_type" value="gopay" class="hidden peer">
-                                            <div
-                                                class="p-4 border border-surface-200 rounded-xl transition-all peer-checked:border-brand-500 peer-checked:bg-brand-50 hover:border-brand-300">
-                                                <div class="flex justify-between items-center mb-1">
-                                                    <span class="font-bold text-surface-900">GoPay</span>
-                                                    <span
-                                                        class="text-[10px] text-brand-600 bg-brand-100 px-1.5 py-0.5 rounded font-bold">2%
-                                                        Fee</span>
-                                                </div>
-                                                <p class="text-xs text-surface-500">GoPay direct payment</p>
-                                            </div>
-                                        </label>
+                                            <span class="text-[10px] text-brand-600 bg-brand-100 px-2 py-1 rounded font-bold">Rp 4.000 Fee</span>
+                                        </div>
+                                        <input type="hidden" name="payment_type" value="bank_transfer">
                                     </div>
                                 </div>
 
@@ -349,24 +320,13 @@
                             }
 
                             function updateCalculation() {
-                                let selectedMethod = document.querySelector('input[name="payment_type"]:checked').value;
-                                let baseFee = 0;
-
-                                switch (selectedMethod) {
-                                    case 'qris': baseFee = subtotal * 0.007; break;
-                                    case 'bank_transfer': baseFee = 4000; break;
-                                    case 'gopay': baseFee = subtotal * 0.02; break;
-                                }
-
+                                // BNI VA Fee: 4000 + 11% PPN = 4440
+                                const baseFee = 4000;
                                 const feeWithPpn = Math.ceil(baseFee + (baseFee * 0.11));
 
                                 feeEl.innerText = '+ ' + formatIDR(feeWithPpn);
                                 grandTotalEl.innerText = formatIDR(subtotal + feeWithPpn);
                             }
-
-                            methodRadios.forEach(radio => {
-                                radio.addEventListener('change', updateCalculation);
-                            });
 
                             // Init
                             updateCalculation();
@@ -387,7 +347,7 @@
                                         },
                                         body: JSON.stringify({
                                             participant_id: '{{ $participant->id }}',
-                                            payment_type: selectedMethod
+                                            payment_type: 'bank_transfer'
                                         })
                                     })
                                         .then(response => response.json())

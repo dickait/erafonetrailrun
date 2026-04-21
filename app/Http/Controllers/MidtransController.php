@@ -33,7 +33,7 @@ class MidtransController extends Controller
             return response()->json(['error' => 'Payment record not found'], 404);
         }
 
-        $paymentType = $request->input('payment_type');
+        $paymentType = 'bank_transfer'; // Forced to BNI VA
         $fee = $this->calculateFee($payment->final_amount, $paymentType);
         $grossAmount = (int) ($payment->final_amount + $fee);
 
@@ -115,25 +115,8 @@ class MidtransController extends Controller
 
     private function getEnabledPayments($type)
     {
-        switch ($type) {
-            case 'qris':
-                // Midtrans menggunakan 'gopay' untuk QRIS GoPay 
-                // dan 'qris' untuk QRIS umum (AirPay/ShopeePay dkk)
-                return ['other_qris'];
-
-            case 'bank_transfer':
-                // 'mandiri' di Midtrans (Snap) ID-nya adalah 'echannel' 
-                // atau 'mandiri_va' (tergantung versi SDK, tapi 'echannel' paling umum)
-                // Namun untuk BCA harus 'bca_va'
-                return ['echannel', 'permata_va', 'bni_va', 'bca_va', 'bri_va', 'bsi_va'];
-
-            case 'gopay':
-                return ['gopay'];
-
-            default:
-                // Jika null, Midtrans akan menampilkan SEMUA metode yang aktif di dashboard
-                return null;
-        }
+        // Force to ONLY BNI Virtual Account
+        return ['bni_va'];
     }
 
     /**
