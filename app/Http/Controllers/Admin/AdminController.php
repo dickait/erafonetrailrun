@@ -29,10 +29,15 @@ class AdminController extends Controller
             'participants as paid_count' => function ($q) { $q->where('payment_status', 'paid'); }
         ])->get();
 
+        $totalFamilyMembers = \App\Models\FamilyMember::whereHas('participant', fn($q) => $q->where('event_id', $event->id))->count();
+        $paidFamilyMembers = \App\Models\FamilyMember::whereHas('participant', fn($q) => $q->where('event_id', $event->id)->where('payment_status', 'paid'))->count();
+
         $stats = [
             'total_participants' => Participant::where('event_id', $event->id)->count(),
             'paid_participants' => Participant::where('event_id', $event->id)->where('payment_status', 'paid')->count(),
             'pending_participants' => Participant::where('event_id', $event->id)->where('payment_status', 'pending')->count(),
+            'total_people' => Participant::where('event_id', $event->id)->count() + $totalFamilyMembers,
+            'total_paid_people' => Participant::where('event_id', $event->id)->where('payment_status', 'paid')->count() + $paidFamilyMembers,
             'total_revenue' => Payment::whereHas('participant', fn($q) => $q->where('event_id', $event->id))->where('status', 'paid')->sum('final_amount'),
             'categories' => $cats,
         ];
@@ -192,7 +197,7 @@ class AdminController extends Controller
     public function exportParticipants(Request $request)
     {
         $event = Event::latest()->first();
-        $query = Participant::with(['category'])->where('event_id', optional($event)->id);
+        $query = Participant::with(['category', 'familyMembers'])->where('event_id', optional($event)->id);
 
         // Apply same filters as main table
         if ($request->filled('search')) {
@@ -209,9 +214,12 @@ class AdminController extends Controller
         // Column selection
         $allColumns = DB::getSchemaBuilder()->getColumnListing('participants');
         $requestedCols = $request->input('cols', ['full_name', 'email', 'phone', 'age', 'shirt_size', 'payment_status', 'created_at']);
+        
+        // Add member_type column for clarity
+        $finalHeader = array_merge(['member_type'], $requestedCols);
         $finalCols = array_intersect(array_unique(array_merge(['id'], $requestedCols)), $allColumns);
 
-        $participants = $query->latest()->get($finalCols);
+        $participants = $query->latest()->get();
 
         $headers = [
             'Content-type' => 'text/csv',
@@ -221,27 +229,49 @@ class AdminController extends Controller
             'Expires' => '0'
         ];
 
-        $callback = function() use ($participants, $requestedCols) {
+        $callback = function() use ($participants, $requestedCols, $finalHeader) {
             $file = fopen('php://output', 'w');
-            
-            // BOM for Excel UTF-8
             fputs($file, "\xEF\xBB\xBF");
-            
-            // Header
-            fputcsv($file, $requestedCols);
+            fputcsv($file, $finalHeader);
 
             foreach ($participants as $p) {
-                $row = [];
+                // 1. Participant Row
+                $pRow = ['Primary'];
                 foreach ($requestedCols as $col) {
                     if ($col == 'category_id') {
-                        $row[] = $p->category->name ?? '-';
+                        $pRow[] = $p->category->name ?? '-';
                     } elseif ($col == 'created_at') {
-                        $row[] = $p->created_at->format('Y-m-d H:i:s');
+                        $pRow[] = $p->created_at->format('Y-m-d H:i:s');
                     } else {
-                        $row[] = $p->{$col};
+                        $pRow[] = $p->{$col};
                     }
                 }
-                fputcsv($file, $row);
+                fputcsv($file, $pRow);
+
+                // 2. Family Member Rows
+                foreach ($p->familyMembers as $fm) {
+                    $fmRow = ['Family'];
+                    foreach ($requestedCols as $col) {
+                        if (array_key_exists($col, $fm->getAttributes())) {
+                            if ($col == 'created_at') {
+                                $fmRow[] = $fm->created_at->format('Y-m-d H:i:s');
+                            } else {
+                                $fmRow[] = $fm->{$col};
+                            }
+                        } else {
+                            if ($col == 'category_id') {
+                                $fmRow[] = $p->category->name ?? '-';
+                            } elseif (in_array($col, ['event_id', 'payment_status'])) {
+                                $fmRow[] = $p->{$col};
+                            } elseif ($col == 'created_at') { // If fm doesn't have it, use parent's
+                                $fmRow[] = $p->created_at->format('Y-m-d H:i:s');
+                            } else {
+                                $fmRow[] = '-';
+                            }
+                        }
+                    }
+                    fputcsv($file, $fmRow);
+                }
             }
             fclose($file);
         };
@@ -483,7 +513,7 @@ class AdminController extends Controller
     public function exportCsv()
     {
         $event = Event::latest()->first();
-        $participants = Participant::with(['category', 'event', 'province', 'city', 'country', 'latestPayment'])
+        $participants = Participant::with(['category', 'event', 'province', 'city', 'country', 'latestPayment', 'familyMembers.province', 'familyMembers.city', 'familyMembers.country'])
             ->where('event_id', optional($event)->id)
             ->orderBy('created_at')
             ->get();
@@ -491,37 +521,71 @@ class AdminController extends Controller
         $pCols = DB::getSchemaBuilder()->getColumnListing('participants');
         $payCols = DB::getSchemaBuilder()->getColumnListing('payments');
         
-        // Add relation names for convenience
-        $extraCols = ['category_name', 'event_name', 'province_name', 'city_name', 'country_name'];
+        // Add relation names and member type for convenience
+        $extraCols = ['member_type', 'parent_name', 'category_name', 'event_name', 'province_name', 'city_name', 'country_name'];
         $header = array_merge($pCols, $extraCols, array_map(fn($c) => 'payment_' . $c, $payCols));
 
         $headers = ['Content-Type' => 'text/csv', 'Content-Disposition' => 'attachment; filename=participants_complete.csv'];
         $callback = function () use ($participants, $pCols, $payCols, $header) {
             $file = fopen('php://output', 'w');
+            
+            // BOM for Excel
+            fputs($file, "\xEF\xBB\xBF");
             fputcsv($file, $header);
             
             foreach ($participants as $p) {
-                $row = [];
-                // Participant columns
+                // 1. Participant Row
+                $pRow = [];
                 foreach ($pCols as $col) {
-                    $row[] = $p->{$col};
+                    $pRow[] = $p->{$col};
                 }
                 
-                // Extra relations
-                $row[] = $p->category->name ?? '';
-                $row[] = $p->event->name ?? '';
-                $row[] = $p->province->name ?? '';
-                $row[] = $p->city->name ?? '';
-                $row[] = $p->country->name ?? '';
+                $pRow[] = 'Primary'; // member_type
+                $pRow[] = '-'; // parent_name
+                $pRow[] = $p->category->name ?? '';
+                $pRow[] = $p->event->name ?? '';
+                $pRow[] = $p->province->name ?? '';
+                $pRow[] = $p->city->name ?? '';
+                $pRow[] = $p->country->name ?? '';
                 
-                // Payment columns
                 $payment = $p->latestPayment;
                 foreach ($payCols as $col) {
                     $val = $payment ? $payment->{$col} : '';
-                    $row[] = is_array($val) || is_object($val) ? json_encode($val) : $val;
+                    $pRow[] = is_array($val) || is_object($val) ? json_encode($val) : $val;
                 }
-                
-                fputcsv($file, $row);
+                fputcsv($file, $pRow);
+
+                // 2. Family Member Rows
+                foreach ($p->familyMembers as $fm) {
+                    $fmRow = [];
+                    foreach ($pCols as $col) {
+                        if (array_key_exists($col, $fm->getAttributes())) {
+                            $fmRow[] = $fm->{$col};
+                        } else {
+                            // Inherit some fields from parent if they don't exist in fm
+                            if (in_array($col, ['event_id', 'category_id', 'payment_status'])) {
+                                $fmRow[] = $p->{$col};
+                            } else {
+                                $fmRow[] = '';
+                            }
+                        }
+                    }
+
+                    $fmRow[] = 'Family'; // member_type
+                    $fmRow[] = $p->full_name; // parent_name
+                    $fmRow[] = $p->category->name ?? '';
+                    $fmRow[] = $p->event->name ?? '';
+                    $fmRow[] = $fm->province->name ?? '';
+                    $fmRow[] = $fm->city->name ?? '';
+                    $fmRow[] = $fm->country->name ?? '';
+
+                    // Payment columns from parent
+                    foreach ($payCols as $col) {
+                        $val = $payment ? $payment->{$col} : '';
+                        $fmRow[] = is_array($val) || is_object($val) ? json_encode($val) : $val;
+                    }
+                    fputcsv($file, $fmRow);
+                }
             }
             fclose($file);
         };

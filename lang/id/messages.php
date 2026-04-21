@@ -283,6 +283,8 @@ return [
     'admin_no_data' => 'Tidak ada data.',
     'admin_reg_stats' => 'Statistik Pendaftaran',
     'admin_total_participants' => 'Total Pendaftar',
+    'admin_total_headcount' => 'Total Orang (Inc. Keluarga)',
+    'admin_paid_headcount' => 'Total Lunas (Inc. Keluarga)',
     'admin_quota' => 'Kuota',
 
     // Participant

@@ -282,6 +282,8 @@ return [
     'admin_no_data' => 'No data.',
     'admin_reg_stats' => 'Registration Statistics',
     'admin_total_participants' => 'Total Registrants',
+    'admin_total_headcount' => 'Total Headcount (Inc. Family)',
+    'admin_paid_headcount' => 'Total Paid Headcount',
     'admin_quota' => 'Quota',
 
     // Participant
