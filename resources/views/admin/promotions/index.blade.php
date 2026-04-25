@@ -18,6 +18,7 @@
             <thead class="bg-surface-50 text-surface-600 uppercase text-xs font-bold border-b border-surface-300">
                 <tr>
                     <th class="px-6 py-4">Name & Code</th>
+                    <th class="px-6 py-4">Categories</th>
                     <th class="px-6 py-4">Type</th>
                     <th class="px-6 py-4">Discount</th>
                     <th class="px-6 py-4">Period</th>
@@ -34,6 +35,17 @@
                         <div class="text-xs font-mono text-brand-600 bg-brand-50 px-1.5 py-0.5 rounded inline-block mt-1">{{ $promo->code }}</div>
                         @else
                         <span class="text-xs text-surface-400 italic">No code (Automatic)</span>
+                        @endif
+                    </td>
+                    <td class="px-6 py-4">
+                        @if($promo->categories->count() > 0)
+                            <div class="flex flex-wrap gap-1">
+                                @foreach($promo->categories as $category)
+                                    <span class="px-2 py-0.5 bg-surface-100 text-surface-600 rounded text-[10px] whitespace-nowrap">{{ $category->name }}</span>
+                                @endforeach
+                            </div>
+                        @else
+                            <span class="text-xs text-surface-400 italic">All Categories</span>
                         @endif
                     </td>
                     <td class="px-6 py-4">

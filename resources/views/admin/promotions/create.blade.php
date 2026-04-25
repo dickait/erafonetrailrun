@@ -96,6 +96,20 @@
                 </div>
             </div>
 
+            <div class="space-y-3">
+                <label class="block text-sm font-medium text-surface-800">Applicable Categories <span class="text-surface-400 font-normal italic">(optional)</span></label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    @foreach($categories as $category)
+                        <label class="flex items-center gap-3 p-3 border border-surface-300 rounded-xl bg-surface-50 hover:bg-surface-100 cursor-pointer transition-colors has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50">
+                            <input type="checkbox" name="category_ids[]" value="{{ $category->id }}" {{ in_array($category->id, old('category_ids', [])) ? 'checked' : '' }} class="rounded text-brand-600 focus:ring-brand-500">
+                            <span class="text-sm font-medium text-surface-800">{{ $category->name }}</span>
+                        </label>
+                    @endforeach
+                </div>
+                <p class="text-[10px] text-surface-500 italic">If no categories are selected, the promotion will apply to ALL categories.</p>
+                @error('category_ids')<span class="text-xs text-brand-600 mt-1 font-medium">{{ $message }}</span>@enderror
+            </div>
+
             <div class="pt-6 mt-6 border-t border-surface-100 flex justify-end">
                 <button type="submit" class="px-8 py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl shadow-lg shadow-brand-500/30 transition-all hover:-translate-y-0.5 active:translate-y-0">
                     Create Promotion

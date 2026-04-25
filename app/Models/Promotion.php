@@ -18,6 +18,22 @@ class Promotion extends Model
     ];
 
 
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
+
+    public function isValidForCategory($categoryId)
+    {
+        // If the promotion has no categories associated, it's global
+        if ($this->categories()->count() === 0) {
+            return true;
+        }
+
+        // Otherwise, it must be in the associated categories
+        return $this->categories()->where('categories.id', $categoryId)->exists();
+    }
+
     public function isValid()
     {
         $now = now();

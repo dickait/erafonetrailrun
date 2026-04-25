@@ -118,6 +118,10 @@ class RegistrationController extends Controller
         if ($request->filled('discount_code')) {
             $promo = \App\Models\Promotion::where('code', strtoupper($request->discount_code))->first();
             if ($promo && $promo->isValid()) {
+                if (!$promo->isValidForCategory($category->id)) {
+                    return back()->withInput()->withErrors(['discount_code' => 'This discount code is not applicable for the selected category.']);
+                }
+
                 if ($promo->discount_type == 'fixed') {
                     $discountAmount = (float) $promo->discount_value;
                 } else {

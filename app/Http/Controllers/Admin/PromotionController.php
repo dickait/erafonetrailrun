@@ -10,13 +10,14 @@ class PromotionController extends Controller
 {
     public function index()
     {
-        $promotions = Promotion::latest()->paginate(20);
+        $promotions = Promotion::with('categories')->latest()->paginate(20);
         return view('admin.promotions.index', compact('promotions'));
     }
 
     public function create()
     {
-        return view('admin.promotions.create');
+        $categories = \App\Models\Category::all();
+        return view('admin.promotions.create', compact('categories'));
     }
 
     public function store(Request $request)
@@ -30,16 +31,23 @@ class PromotionController extends Controller
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'quota' => 'nullable|integer|min:0',
+            'category_ids' => 'nullable|array',
+            'category_ids.*' => 'exists:categories,id',
         ]);
 
-        Promotion::create($request->all());
+        $promotion = Promotion::create($request->all());
+        
+        if ($request->has('category_ids')) {
+            $promotion->categories()->sync($request->category_ids);
+        }
 
         return redirect()->route('admin.promotions.index')->with('success', 'Promotion created successfully.');
     }
 
     public function edit(Promotion $promotion)
     {
-        return view('admin.promotions.edit', compact('promotion'));
+        $categories = \App\Models\Category::all();
+        return view('admin.promotions.edit', compact('promotion', 'categories'));
     }
 
     public function update(Request $request, Promotion $promotion)
@@ -53,9 +61,17 @@ class PromotionController extends Controller
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'quota' => 'nullable|integer|min:0',
+            'category_ids' => 'nullable|array',
+            'category_ids.*' => 'exists:categories,id',
         ]);
 
         $promotion->update($request->all());
+        
+        if ($request->has('category_ids')) {
+            $promotion->categories()->sync($request->category_ids);
+        } else {
+            $promotion->categories()->detach();
+        }
 
         return redirect()->route('admin.promotions.index')->with('success', 'Promotion updated successfully.');
     }

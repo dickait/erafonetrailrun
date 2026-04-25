@@ -96,6 +96,21 @@
                 </div>
             </div>
 
+            <div class="space-y-3">
+                <label class="block text-sm font-medium text-surface-800">Applicable Categories <span class="text-surface-400 font-normal italic">(optional)</span></label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    @php $selectedCategories = old('category_ids', $promotion->categories->pluck('id')->toArray()); @endphp
+                    @foreach($categories as $category)
+                        <label class="flex items-center gap-3 p-3 border border-surface-300 rounded-xl bg-surface-50 hover:bg-surface-100 cursor-pointer transition-colors has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50">
+                            <input type="checkbox" name="category_ids[]" value="{{ $category->id }}" {{ in_array($category->id, $selectedCategories) ? 'checked' : '' }} class="rounded text-brand-600 focus:ring-brand-500">
+                            <span class="text-sm font-medium text-surface-800">{{ $category->name }}</span>
+                        </label>
+                    @endforeach
+                </div>
+                <p class="text-[10px] text-surface-500 italic">If no categories are selected, the promotion will apply to ALL categories.</p>
+                @error('category_ids')<span class="text-xs text-brand-600 mt-1 font-medium">{{ $message }}</span>@enderror
+            </div>
+
             <div class="pt-6 mt-6 border-t border-surface-100 flex justify-end gap-4">
                 <button type="button" onclick="history.back()" class="px-8 py-3 bg-surface-100 hover:bg-surface-200 text-surface-700 font-bold rounded-xl transition-all">
                     Cancel

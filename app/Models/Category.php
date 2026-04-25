@@ -60,6 +60,14 @@ class Category extends Model
     {
         return Promotion::where('type', $type)
             ->where(function ($q) {
+                // If the promotion is linked to specific categories, it must include this category.
+                // If it's not linked to any categories, it's global.
+                $q->whereDoesntHave('categories')
+                  ->orWhereHas('categories', function ($sq) {
+                      $sq->where('categories.id', $this->id);
+                  });
+            })
+            ->where(function ($q) {
                 $q->whereNull('start_date')->orWhere('start_date', '<=', now());
             })
             ->where(function ($q) {
