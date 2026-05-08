@@ -232,6 +232,7 @@ return [
     'admin_participants' => 'Peserta',
     'admin_payments' => 'Pembayaran',
     'admin_email_blast' => 'Email Massal',
+    'admin_race_results' => 'Hasil Lomba',
     'admin_qr_checkin' => 'QR Check-in',
     'admin_total_reg' => 'Total Pendaftaran',
     'admin_paid' => 'Lunas',

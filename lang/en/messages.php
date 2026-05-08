@@ -231,6 +231,7 @@ return [
     'admin_participants' => 'Participants',
     'admin_payments' => 'Payments',
     'admin_email_blast' => 'Email Blast',
+    'admin_race_results' => 'Race Results',
     'admin_qr_checkin' => 'QR Check-in',
     'admin_total_reg' => 'Total Registrations',
     'admin_paid' => 'Paid',
