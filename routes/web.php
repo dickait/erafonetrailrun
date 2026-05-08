@@ -24,7 +24,7 @@ Route::get('/lang/{locale}', function (string $locale) {
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // Route::get('/race-course', [HomeController::class, 'raceCourse'])- \u003ename('race_course');
 Route::get('/gallery', [HomeController::class, 'gallery'])->name('gallery');
-Route::get('/results', [HomeController::class, 'results'])->name('results');
+Route::get('/results', [\App\Http\Controllers\ResultsController::class, 'index'])->name('results');
 
 // Registration
 Route::get('/event-register', [RegistrationController::class, 'create'])->name('register.create');
@@ -82,6 +82,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/checkin', [AdminController::class, 'checkin'])->name('checkin');
     Route::post('/checkin', [AdminController::class, 'processCheckin'])->name('checkin.process');
     Route::resource('promotions', \App\Http\Controllers\Admin\PromotionController::class);
+
+    // Race Results
+    Route::get('/race-results', [\App\Http\Controllers\Admin\RaceResultController::class, 'index'])->name('race-results.index');
+    Route::post('/race-results/import', [\App\Http\Controllers\Admin\RaceResultController::class, 'import'])->name('race-results.import');
+    Route::post('/race-results/process', [\App\Http\Controllers\Admin\RaceResultController::class, 'process'])->name('race-results.process');
+    Route::delete('/race-results/clear', [\App\Http\Controllers\Admin\RaceResultController::class, 'clear'])->name('race-results.clear');
 });
 
 /*

@@ -101,4 +101,9 @@ class Participant extends Model
     {
         return $this->hasMany(FamilyMember::class, 'participant_id');
     }
+
+    public function raceResult()
+    {
+        return $this->hasOne(RaceResult::class);
+    }
 }
