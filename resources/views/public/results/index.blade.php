@@ -3,8 +3,11 @@
 @section('title', 'Race Results - ERA TRAIL RUN 2026')
 
 @section('content')
+    <!-- Header Spacer -->
+    <div class="h-16 md:h-20 bg-brand-950"></div>
+
     <!-- Hero Section -->
-    <section class="relative py-20 bg-gradient-to-br from-brand-900 via-brand-800 to-brand-950 overflow-hidden">
+    <section class="relative py-16 md:py-24 bg-gradient-to-br from-brand-900 via-brand-800 to-brand-950 overflow-hidden">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(239,28,36,0.2),transparent_60%)]"></div>
         <div class="relative z-10 max-w-7xl mx-auto px-4 text-center">
             <h1 class="font-display font-black text-4xl md:text-6xl text-white mb-4">
