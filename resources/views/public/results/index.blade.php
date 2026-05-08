@@ -90,33 +90,34 @@
     }">
         <div class="max-w-7xl mx-auto px-4">
             <!-- Tabs Navigation -->
-            <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-10">
+            <div class="flex flex-wrap justify-center gap-3 mb-12">
                 <template x-for="tab in [{id:'5', label:'5K Family'}, {id:'10', label:'10K'}, {id:'15', label:'15K'}]">
                     <button @click="activeTab = tab.id" 
-                            :class="activeTab === tab.id ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/30' : 'bg-surface-100 text-surface-600 hover:bg-surface-200'"
-                            class="px-8 py-3 rounded-xl font-bold transition-all duration-200 flex items-center gap-2">
-                        <span class="text-lg" x-text="tab.label"></span>
+                            :class="activeTab === tab.id ? 'bg-brand-500 text-white shadow-xl shadow-brand-500/30' : 'bg-surface-50 text-surface-600 hover:bg-surface-100 border border-transparent'"
+                            class="px-8 py-4 rounded-2xl font-bold transition-all duration-300 flex items-center gap-2">
+                        <span class="text-base" x-text="tab.label"></span>
                     </button>
                 </template>
             </div>
 
             <!-- Client-side Search -->
             <div class="mb-12 max-w-xl mx-auto">
-                <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-                        <svg class="w-5 h-5 text-surface-400 group-focus-within:text-brand-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <div class="relative flex-1">
+                        <input type="text" x-model="search" placeholder="Cari nomor BIB atau Nama..." 
+                               class="w-full px-4 py-3 bg-white border border-surface-300 rounded-xl text-surface-900 placeholder-surface-700 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors outline-none">
+                        
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                            <button @click="search = ''" x-show="search.length > 0" x-transition class="text-surface-300 hover:text-brand-500 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                    <input type="text" x-model="search" placeholder="Search BIB or Name..." 
-                           class="w-full pl-12 pr-12 py-4 bg-surface-50 border-2 border-surface-100 rounded-2xl focus:bg-white focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 transition-all duration-200 text-surface-700 placeholder-surface-400 font-medium outline-none shadow-sm">
-                    <div class="absolute inset-y-0 right-0 pr-4 flex items-center">
-                        <button @click="search = ''" x-show="search.length > 0" x-transition class="text-surface-300 hover:text-brand-500 transition-colors">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                            </svg>
-                        </button>
-                    </div>
+                    <button class="px-8 py-3 bg-gradient-to-r from-brand-500 to-brand-600 text-white font-semibold rounded-xl hover:from-brand-600 hover:to-brand-700 transition-all shadow-md whitespace-nowrap">
+                        Cari
+                    </button>
                 </div>
             </div>
 
@@ -140,7 +141,12 @@
                                 <tr class="hover:bg-surface-50 transition-colors">
                                     <td class="px-6 py-4 font-display font-bold text-surface-900" x-text="'#' + (result.rank_overall || '-')"></td>
                                     <td class="px-6 py-4">
-                                        <span class="px-2 py-1 bg-brand-50 text-brand-600 rounded font-mono font-bold" x-text="result.bib_number"></span>
+                                        <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-brand-50 text-brand-600 rounded-lg border border-brand-100">
+                                            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                                            </svg>
+                                            <span class="font-mono font-black text-sm" x-text="result.bib_number"></span>
+                                        </div>
                                     </td>
                                     <td class="px-6 py-4 font-bold text-surface-900 uppercase" x-text="result.participant ? result.participant.full_name : '-'"></td>
                                     <td class="px-6 py-4">
