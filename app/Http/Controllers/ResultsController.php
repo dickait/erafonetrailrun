@@ -4,50 +4,47 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\RaceResult;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ResultsController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $query = RaceResult::with(['participant.category'])
-            ->where('status', 'FINISHED');
+        // Cache the entire results for 60 minutes
+        $data = Cache::remember('race_results_public_data', 3600, function () {
+            $allResults = RaceResult::with('participant:id,full_name')
+                ->where('status', 'FINISHED')
+                ->orderBy('rank_overall')
+                ->get();
 
-        if ($request->has('search') && $request->search != '') {
-            $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('bib_number', 'like', "%{$search}%")
-                  ->orWhereHas('participant', function ($pq) use ($search) {
-                      $pq->where('full_name', 'like', "%{$search}%");
-                  });
-            });
-        }
+            // Group by distance for tabs
+            $groupedResults = [
+                '5' => $allResults->where('distance_km', 5)->values(),
+                '10' => $allResults->where('distance_km', 10)->values(),
+                '15' => $allResults->where('distance_km', 15)->values(),
+            ];
 
-        if ($request->filled('distance')) {
-            $query->where('distance_km', $request->get('distance'));
-        }
+            // Podium data
+            $podiums = RaceResult::with('participant:id,full_name')
+                ->where('is_podium', true)
+                ->orderBy('distance_km', 'desc')
+                ->orderBy('age_category')
+                ->orderBy('gender')
+                ->orderBy('rank_group')
+                ->get()
+                ->groupBy(['distance_km', 'age_category', 'gender']);
 
-        if ($request->filled('gender')) {
-            $query->where('gender', $request->get('gender'));
-        }
+            return [
+                'groupedResults' => $groupedResults,
+                'podiums' => $podiums,
+                'totalCount' => $allResults->count()
+            ];
+        });
 
-        if ($request->filled('age_category')) {
-            $query->where('age_category', $request->get('age_category'));
-        }
-
-        $results = $query->orderBy('rank_overall')->paginate(50)->withQueryString();
-
-        // Get podiums for showcase (Top 3 for 10k and 15k)
-        $podiums = RaceResult::where('is_podium', true)
-            ->whereIn('distance_km', [10, 15])
-            ->with(['participant.category'])
-            ->orderBy('distance_km')
-            ->orderBy('age_category')
-            ->orderBy('gender')
-            ->orderBy('rank_group')
-            ->get()
-            ->groupBy(['distance_km', 'age_category', 'gender']);
-
-        return view('public.results.index', compact('results', 'podiums'));
+        return view('public.results.index', [
+            'groupedResults' => $data['groupedResults'],
+            'podiums' => $data['podiums'],
+            'totalCount' => $data['totalCount']
+        ]);
     }
 }

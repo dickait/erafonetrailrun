@@ -7,6 +7,7 @@ use App\Models\Participant;
 use App\Models\RaceResult;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class RaceResultController extends Controller
 {
@@ -56,6 +57,7 @@ class RaceResultController extends Controller
             }
         }
         fclose($handle);
+        Cache::forget('race_results_public_data');
 
         return redirect()->back()->with('success', "Imported {$count} results.");
     }
@@ -114,12 +116,14 @@ class RaceResultController extends Controller
             }
         });
 
+        Cache::forget('race_results_public_data');
         return redirect()->back()->with('success', 'Rankings and podiums calculated successfully.');
     }
 
     public function clear()
     {
         RaceResult::truncate();
+        Cache::forget('race_results_public_data');
         return redirect()->back()->with('success', 'All results cleared.');
     }
 }
