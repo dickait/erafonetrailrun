@@ -4,6 +4,8 @@ return [
     // Navigation
     'nav_home' => 'Beranda',
     'nav_categories' => 'Kategori',
+    'nav_documents' => 'Dokumen',
+    'nav_gpx' => 'Rute GPX',
     'nav_race_course' => 'Rute Lari',
     'nav_gallery' => 'Galeri',
     'nav_results' => 'Hasil',
@@ -332,6 +334,26 @@ return [
     'part_bib_assigned_later' => 'Pembayaranmu telah dikonfirmasi. Nomor BIB akan ditetapkan oleh panitia. Silakan cek kembali nanti.',
     'part_bib_show_qr' => 'Tunjukkan QR code ini di counter check-in',
     'part_kilometers' => 'kilometer',
+
+    // Documents Page
+    'docs_badge' => 'Dokumen',
+    'docs_title' => 'Dokumen Resmi',
+    'docs_subtitle' => 'Unduh panduan resmi (Race Guide) dan surat kuasa untuk keperluan pendaftaran serta pengambilan Race Pack.',
+    'docs_race_guide_title' => 'Race Guide (Panduan Lomba)',
+    'docs_race_guide_desc' => 'Panduan lengkap mengenai tata tertib, jadwal rundown acara, peta rute lari, perlengkapan wajib (mandatory gear), dan informasi penting lainnya untuk seluruh pelari.',
+    'docs_surat_kuasa_title' => 'Surat Kuasa Pengambilan Race Pack',
+    'docs_surat_kuasa_desc' => 'Gunakan dokumen ini jika pengambilan Race Pack Anda diwakilkan oleh orang lain. Wajib diisi lengkap dan disertai tanda tangan di atas meterai beserta lampiran KTP.',
+    'docs_download' => 'Unduh Dokumen',
+    'docs_file_size' => 'Ukuran File',
+
+    // GPX Page
+    'gpx_badge' => 'Rute GPX',
+    'gpx_title' => 'Rute GPX Lomba',
+    'gpx_subtitle' => 'Unduh file GPX rute lari resmi untuk diimpor ke jam olahraga (Garmin, Coros, Suunto) atau aplikasi navigasi favorit Anda (Strava, Komoot).',
+    'gpx_download' => 'Unduh GPX',
+    'gpx_5k_desc' => 'Rute yang ramah pemula dan keluarga, menyajikan jalur hijau indah di kawasan perbukitan Bukit Pupay dan Bukit Wangun.',
+    'gpx_10k_desc' => 'Jalur menengah yang menguji ketahanan, melintasi rute perbukitan hijau, hutan pinus, dan Saung Eling.',
+    'gpx_15k_desc' => 'Tantangan puncak dengan jalur teknikal, elevasi menantang, melewati Mulyaharja hingga Lembah Fatamorgana.',
 
     // Language
     'lang_id' => '🇮🇩 Indonesia',

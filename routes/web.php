@@ -22,9 +22,11 @@ Route::get('/lang/{locale}', function (string $locale) {
 
 /* |-------------------------------------------------------------------------- | Public Routes |-------------------------------------------------------------------------- */
 Route::get('/', [HomeController::class, 'index'])->name('home');
-// Route::get('/race-course', [HomeController::class, 'raceCourse'])- \u003ename('race_course');
+// Route::get('/race-course', [HomeController::class, 'raceCourse'])->name('race_course');
 Route::get('/gallery', [HomeController::class, 'gallery'])->name('gallery');
 Route::get('/results', [\App\Http\Controllers\ResultsController::class, 'index'])->name('results');
+Route::get('/dokumen', [HomeController::class, 'documents'])->name('documents');
+Route::get('/rute-gpx', [HomeController::class, 'gpx'])->name('gpx');
 
 // Registration
 Route::get('/event-register', [RegistrationController::class, 'create'])->name('register.create');

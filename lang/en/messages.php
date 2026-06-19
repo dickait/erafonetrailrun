@@ -4,6 +4,8 @@ return [
     // Navigation
     'nav_home' => 'Home',
     'nav_categories' => 'Categories',
+    'nav_documents' => 'Documents',
+    'nav_gpx' => 'GPX Routes',
     'nav_race_course' => 'Race Course',
     'nav_gallery' => 'Gallery',
     'nav_results' => 'Results',
@@ -331,6 +333,26 @@ return [
     'part_bib_assigned_later' => 'Your payment has been confirmed. BIB numbers will be assigned by the organizer. Please check back later.',
     'part_bib_show_qr' => 'Show this QR code at the check-in counter',
     'part_kilometers' => 'kilometers',
+
+    // Documents Page
+    'docs_badge' => 'Documents',
+    'docs_title' => 'Official Documents',
+    'docs_subtitle' => 'Download the official Race Guide and Power of Attorney (Surat Kuasa) for registration and Race Pack collection.',
+    'docs_race_guide_title' => 'Race Guide (Event Handbook)',
+    'docs_race_guide_desc' => 'Comprehensive guide containing race rules, rundown schedule, route map details, mandatory gears list, and other essential information for all runners.',
+    'docs_surat_kuasa_title' => 'Race Pack Collection Power of Attorney',
+    'docs_surat_kuasa_desc' => 'Use this authorization form if you are unable to collect your Race Pack yourself and need to delegate it to someone else. Must be signed with a duty stamp (meterai) and copy of ID card.',
+    'docs_download' => 'Download Document',
+    'docs_file_size' => 'File Size',
+
+    // GPX Page
+    'gpx_badge' => 'GPX Routes',
+    'gpx_title' => 'Official GPX Routes',
+    'gpx_subtitle' => 'Download the official GPX files to import into your sports watch (Garmin, Coros, Suunto) or navigation applications (Strava, Komoot).',
+    'gpx_download' => 'Download GPX',
+    'gpx_5k_desc' => 'A family and beginner-friendly route, presenting a beautiful green scenery around Bukit Pupay and Bukit Wangun.',
+    'gpx_10k_desc' => 'An intermediate endurance test, running through green hills, pine forests, and Saung Eling area.',
+    'gpx_15k_desc' => 'The ultimate challenge with technical trails, significant elevation, passing Mulyaharja to Lembah Fatamorgana.',
 
     // Language
     'lang_id' => '🇮🇩 Indonesia',

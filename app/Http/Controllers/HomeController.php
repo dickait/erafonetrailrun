@@ -46,4 +46,14 @@ class HomeController extends Controller
         $event = Event::where('is_active', true)->latest('event_date')->first();
         return view('public.results', compact('event'));
     }
+
+    public function documents()
+    {
+        return view('public.documents');
+    }
+
+    public function gpx()
+    {
+        return view('public.gpx');
+    }
 }
