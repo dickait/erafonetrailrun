@@ -26,7 +26,12 @@ class MidtransController extends Controller
      */
     public function createToken(Request $request)
     {
-        $participant = Participant::with(['category', 'latestPayment'])->findOrFail($request->participant_id);
+        $participant = Participant::with(['category', 'latestPayment', 'event'])->findOrFail($request->participant_id);
+
+        if (!$participant->event || !$participant->event->isRegistrationOpen()) {
+            return response()->json(['error' => 'Pendaftaran telah ditutup. Pembayaran tidak dapat dilanjutkan.'], 403);
+        }
+
         $payment = $participant->latestPayment;
 
         if (!$payment) {

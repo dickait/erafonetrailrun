@@ -184,8 +184,33 @@
                     </div>
 
                     @if($participant->payment_status == 'pending' && isset($participant->latestPayment))
-                        <div class="mt-8">
-                            @if(config('services.payment') === 'manual')
+                        @if(!$participant->event || !$participant->event->isRegistrationOpen())
+                            <div class="mt-8 p-6 bg-brand-50 border border-brand-200 rounded-2xl text-center">
+                                <svg class="w-16 h-16 mx-auto text-brand-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                                <h4 class="font-display font-bold text-brand-600 mb-2 text-lg uppercase tracking-wider">
+                                    Registrasi & Pembayaran Ditutup
+                                </h4>
+                                <p class="text-sm text-surface-700 leading-relaxed max-w-md mx-auto">
+                                    Mohon maaf, pendaftaran dan pembayaran untuk acara ini telah ditutup karena periode registrasi telah berakhir. Transaksi pembayaran baru tidak dapat diproses.
+                                </p>
+                                @php
+                                    $waMessageSupport = "Halo Admin Era Trail Run 2026,\nSaya ingin menanyakan status pembayaran pendaftaran saya yang tertunda (Order ID: " . ($latestPayment->order_id ?? '-') . ") setelah pendaftaran ditutup.";
+                                    $waUrlSupport = "https://wa.me/628561310130?text=" . urlencode($waMessageSupport);
+                                @endphp
+                                <div class="mt-6">
+                                    <a href="{{ $waUrlSupport }}" target="_blank"
+                                       style="background-color: #25D366 !important; color: white !important;"
+                                       class="inline-flex items-center justify-center gap-2 px-6 py-3 font-bold rounded-xl shadow-md transition-all hover:opacity-90">
+                                        Hubungi Panitia via WhatsApp
+                                    </a>
+                                </div>
+                            </div>
+                        @else
+                            <div class="mt-8">
+                                @if(config('services.payment') === 'manual')
                                 <div class="bg-surface-50 border border-surface-200 rounded-2xl p-6 mb-6">
                                     <h4
                                         class="font-display font-bold text-surface-900 mb-4 text-center text-lg uppercase tracking-wider">
@@ -425,6 +450,7 @@
                                 });
                             }
                         </script>
+                        @endif
                     @endif
 
                     @if($participant->payment_status == 'paid')

@@ -30,12 +30,18 @@
                             </svg>
                             <h4 class="text-xl font-display font-bold text-surface-900 mb-2">
                                 {{ __('messages.part_payment_pending') }}</h4>
-                            <p class="text-surface-700 mb-6">{{ __('messages.status_complete_payment') }} Rp
-                                {{ number_format($participant->category->getCurrentPrice(), 0, ',', '.') }}</p>
-                            @if($participant->payments->first())
-                                <a href="{{ $participant->payments->first()->payment_link ?? '#' }}" target="_blank"
-                                    class="inline-block px-8 py-3 bg-gradient-to-r from-accent-500 to-accent-600 text-white font-semibold rounded-xl hover:from-accent-600 hover:to-accent-700 transition-all shadow-lg shadow-accent-500/20">Bayar
-                                    Sekarang</a>
+                            @if(!$participant->event || !$participant->event->isRegistrationOpen())
+                                <p class="text-brand-600 font-semibold mb-6 px-4 py-3 bg-brand-50 border border-brand-100 rounded-xl leading-relaxed">
+                                    Registrasi telah ditutup. Pembayaran tidak lagi diterima.
+                                </p>
+                            @else
+                                <p class="text-surface-700 mb-6">{{ __('messages.status_complete_payment') }} Rp
+                                    {{ number_format($participant->category->getCurrentPrice(), 0, ',', '.') }}</p>
+                                @if($participant->payments->first())
+                                    <a href="{{ $participant->payments->first()->payment_link ?? '#' }}" target="_blank"
+                                        class="inline-block px-8 py-3 bg-gradient-to-r from-accent-500 to-accent-600 text-white font-semibold rounded-xl hover:from-accent-600 hover:to-accent-700 transition-all shadow-lg shadow-accent-500/20">Bayar
+                                        Sekarang</a>
+                                @endif
                             @endif
                         @elseif($participant->payment_status == 'paid')
                             <svg class="w-16 h-16 mx-auto text-emerald-400 mb-4" fill="none" stroke="currentColor"
