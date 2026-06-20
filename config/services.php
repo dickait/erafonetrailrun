@@ -43,6 +43,8 @@ return [
 
     'payment' => env('PAYMENT', 'manual'),
 
+    'is_open' => env('IS_OPEN', true),
+
     'midtrans' => [
         'server_key' => env('MIDTRANS_API_SERVER_KEY'),
         'client_key' => env('MIDTRANS_API_CLIENT_KEY'),

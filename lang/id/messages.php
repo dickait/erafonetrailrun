@@ -13,13 +13,13 @@ return [
     'nav_login' => 'Masuk',
     'nav_dashboard' => 'Dasbor',
     'nav_register' => 'Daftar Sekarang',
-    'nav_reg_closed' => 'Pendaftaran akan dibuka',
+    'nav_reg_closed' => 'Pendaftaran ditutup',
     'nav_logout' => 'Keluar',
     'nav_view_site' => 'Lihat Situs',
 
     // Hero
     'hero_badge' => 'Pendaftaran Dibuka',
-    'hero_badge_closed' => 'Pendaftaran akan dibuka',
+    'hero_badge_closed' => 'Pendaftaran ditutup',
     'hero_subtitle' => 'Taklukkan jalur',
     'hero_location' => 'Bogor Nirwana Residence, Bogor',
     'hero_tagline' => 'Run Smart. Run Trail. Run With Erafone.',

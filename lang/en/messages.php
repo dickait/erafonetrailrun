@@ -13,13 +13,13 @@ return [
     'nav_login' => 'Login',
     'nav_dashboard' => 'Dashboard',
     'nav_register' => 'Register Now',
-    'nav_reg_closed' => 'Registration will be opened',
+    'nav_reg_closed' => 'Registration closed',
     'nav_logout' => 'Logout',
     'nav_view_site' => 'View Site',
 
     // Hero
     'hero_badge' => 'Registration Open',
-    'hero_badge_closed' => 'Registration will be opened',
+    'hero_badge_closed' => 'Registration closed',
     'hero_subtitle' => 'Conquer the trails of',
     'hero_location' => 'Bogor Nirwana Residence, Bogor',
     'hero_tagline' => 'Run Smart. Run Trail. Run With Erafone.',

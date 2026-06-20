@@ -34,6 +34,10 @@ class Event extends Model
 
     public function isRegistrationOpen(): bool
     {
+        if (!config('services.is_open', true)) {
+            return false;
+        }
+
         $now = now();
         return $this->is_active
             && ($this->registration_open === null || $now->gte($this->registration_open))
