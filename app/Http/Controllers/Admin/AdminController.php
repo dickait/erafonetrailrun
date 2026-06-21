@@ -248,7 +248,11 @@ class AdminController extends Controller
                     } elseif ($col == 'created_at') {
                         $pRow[] = $p->created_at->format('Y-m-d H:i:s');
                     } else {
-                        $pRow[] = $p->{$col};
+                        $val = $p->{$col};
+                        if (in_array($col, ['identity_number', 'phone', 'emergency_contact_phone']) && !empty($val)) {
+                            $val = '="' . $val . '"';
+                        }
+                        $pRow[] = $val;
                     }
                 }
                 fputcsv($file, $pRow);
@@ -261,7 +265,11 @@ class AdminController extends Controller
                             if ($col == 'created_at') {
                                 $fmRow[] = $fm->created_at->format('Y-m-d H:i:s');
                             } else {
-                                $fmRow[] = $fm->{$col};
+                                $val = $fm->{$col};
+                                if (in_array($col, ['identity_number', 'phone', 'emergency_contact_phone']) && !empty($val)) {
+                                    $val = '="' . $val . '"';
+                                }
+                                $fmRow[] = $val;
                             }
                         } else {
                             if ($col == 'category_id') {
@@ -607,7 +615,11 @@ class AdminController extends Controller
                 // 1. Participant Row
                 $pRow = [];
                 foreach ($pCols as $col) {
-                    $pRow[] = $p->{$col};
+                    $val = $p->{$col};
+                    if (in_array($col, ['identity_number', 'phone', 'emergency_contact_phone']) && !empty($val)) {
+                        $val = '="' . $val . '"';
+                    }
+                    $pRow[] = $val;
                 }
                 
                 $pRow[] = 'Primary'; // member_type
@@ -630,7 +642,11 @@ class AdminController extends Controller
                     $fmRow = [];
                     foreach ($pCols as $col) {
                         if (array_key_exists($col, $fm->getAttributes())) {
-                            $fmRow[] = $fm->{$col};
+                            $val = $fm->{$col};
+                            if (in_array($col, ['identity_number', 'phone', 'emergency_contact_phone']) && !empty($val)) {
+                                $val = '="' . $val . '"';
+                            }
+                            $fmRow[] = $val;
                         } else {
                             // Inherit some fields from parent if they don't exist in fm
                             if (in_array($col, ['event_id', 'category_id', 'payment_status'])) {
