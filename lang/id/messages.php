@@ -342,7 +342,7 @@ return [
     'docs_race_guide_title' => 'Race Guide (Panduan Lomba)',
     'docs_race_guide_desc' => 'Panduan lengkap mengenai tata tertib, jadwal rundown acara, peta rute lari, perlengkapan wajib (mandatory gear), dan informasi penting lainnya untuk seluruh pelari.',
     'docs_surat_kuasa_title' => 'Surat Kuasa Pengambilan Race Pack',
-    'docs_surat_kuasa_desc' => 'Gunakan dokumen ini jika pengambilan Race Pack Anda diwakilkan oleh orang lain. Wajib diisi lengkap dan disertai tanda tangan di atas meterai beserta lampiran KTP.',
+    'docs_surat_kuasa_desc' => 'Gunakan dokumen ini jika pengambilan Race Pack Anda diwakilkan oleh orang lain. Surat kuasa ini wajib diisi lengkap untuk mengambil paket lomba atas nama Anda, serta wajib menyertakan dokumen pendukung berikut:<br>1. Print out Email Konfirmasi pendaftaran<br>2. Fotocopy KTP peserta',
     'docs_download' => 'Unduh Dokumen',
     'docs_file_size' => 'Ukuran File',
 

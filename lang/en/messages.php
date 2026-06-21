@@ -341,7 +341,7 @@ return [
     'docs_race_guide_title' => 'Race Guide (Event Handbook)',
     'docs_race_guide_desc' => 'Comprehensive guide containing race rules, rundown schedule, route map details, mandatory gears list, and other essential information for all runners.',
     'docs_surat_kuasa_title' => 'Race Pack Collection Power of Attorney',
-    'docs_surat_kuasa_desc' => 'Use this authorization form if you are unable to collect your Race Pack yourself and need to delegate it to someone else. Must be signed with a duty stamp (meterai) and copy of ID card.',
+    'docs_surat_kuasa_desc' => 'Use this authorization form if you are unable to collect your Race Pack yourself and need to delegate it to someone else. This form must be completed to collect the race pack on your behalf, and must include the following supporting documents:<br>1. Printed registration confirmation email<br>2. Copy of the participant\'s ID card',
     'docs_download' => 'Download Document',
     'docs_file_size' => 'File Size',
 

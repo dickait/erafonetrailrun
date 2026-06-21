@@ -83,7 +83,7 @@
                             {{ __('messages.docs_surat_kuasa_title') }}
                         </h3>
                         <p class="text-surface-600 text-sm leading-relaxed mb-6">
-                            {{ __('messages.docs_surat_kuasa_desc') }}
+                            {!! __('messages.docs_surat_kuasa_desc') !!}
                         </p>
                     </div>
 
