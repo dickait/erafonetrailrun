@@ -362,10 +362,25 @@ class AdminController extends Controller
             });
         }
         if ($request->filled('status')) $query->where('status', $request->status);
+
+        $startDate = $request->input('start_date', now()->subDays(14)->startOfDay()->toDateTimeString());
+        $endDate = $request->input('end_date', now()->endOfDay()->toDateTimeString());
+
         if ($request->filled('start_date')) $query->where('created_at', '>=', $request->start_date);
+        else $query->where('created_at', '>=', $startDate);
+
         if ($request->filled('end_date')) $query->where('created_at', '<=', $request->end_date);
+        else $query->where('created_at', '<=', $endDate);
 
         $payments = $query->latest()->get();
+
+        // Column selection logic matching payments() method
+        $allColumns = DB::getSchemaBuilder()->getColumnListing('payments');
+        $defaultCols = ['invoice_id', 'participant_id', 'amount', 'status', 'payment_method', 'created_at', 'paid_at'];
+        $requestedCols = $request->input('cols', $defaultCols);
+
+        // Ensure we only process valid columns (with participant_id as the special case)
+        $requestedCols = array_intersect($requestedCols, array_merge(['participant_id'], $allColumns));
 
         $headers = [
             'Content-type' => 'text/csv',
@@ -375,23 +390,69 @@ class AdminController extends Controller
             'Expires' => '0'
         ];
 
-        $callback = function() use ($payments) {
+        $headerMap = [
+            'invoice_id' => ['ID Invoice'],
+            'participant_id' => ['Nama Peserta', 'BIB', 'Kategori'],
+            'amount' => ['Amount'],
+            'status' => ['Status'],
+            'payment_method' => ['Method'],
+            'paid_at' => ['Tgl Bayar'],
+            'created_at' => ['Tgl Daftar'],
+            'discount_amount' => ['Diskon'],
+            'fee_amount' => ['Biaya'],
+            'final_amount' => ['Total'],
+            'gateway_id' => ['Gateway ID'],
+            'order_id' => ['Order ID'],
+            'payment_link' => ['Link'],
+        ];
+
+        $csvHeader = [];
+        foreach ($requestedCols as $col) {
+            if (isset($headerMap[$col])) {
+                foreach ($headerMap[$col] as $lbl) {
+                    $csvHeader[] = $lbl;
+                }
+            } else {
+                $csvHeader[] = ucwords(str_replace('_', ' ', $col));
+            }
+        }
+
+        $callback = function() use ($payments, $requestedCols, $csvHeader) {
             $file = fopen('php://output', 'w');
             fputs($file, "\xEF\xBB\xBF");
-            fputcsv($file, ['ID Invoice', 'Nama Peserta', 'BIB', 'Kategori', 'Amount', 'Status', 'Method', 'Tgl Daftar', 'Tgl Bayar']);
+            fputcsv($file, $csvHeader);
 
             foreach ($payments as $pay) {
-                fputcsv($file, [
-                    $pay->invoice_id ?? $pay->mayar_invoice_id ?? '-',
-                    $pay->participant->full_name ?? '-',
-                    $pay->participant->bib_number ?? '-',
-                    $pay->participant->category->name ?? '-',
-                    $pay->final_amount ?? $pay->amount,
-                    $pay->status,
-                    $pay->payment_method ?? '-',
-                    $pay->created_at->format('Y-m-d H:i:s'),
-                    $pay->paid_at ? $pay->paid_at->format('Y-m-d H:i:s') : '-'
-                ]);
+                $row = [];
+                foreach ($requestedCols as $col) {
+                    if ($col === 'participant_id') {
+                        $row[] = $pay->participant->full_name ?? '-';
+                        $row[] = $pay->participant->bib_number ?? '-';
+                        $row[] = $pay->participant->category->name ?? '-';
+                    } elseif ($col === 'created_at') {
+                        $row[] = $pay->created_at ? $pay->created_at->format('Y-m-d H:i:s') : '-';
+                    } elseif ($col === 'paid_at') {
+                        $row[] = $pay->paid_at ? $pay->paid_at->format('Y-m-d H:i:s') : '-';
+                    } elseif ($col === 'invoice_id') {
+                        $row[] = $pay->invoice_id ?? $pay->mayar_invoice_id ?? '-';
+                    } elseif ($col === 'amount') {
+                        $row[] = $pay->amount;
+                    } elseif ($col === 'discount_amount') {
+                        $row[] = $pay->discount_amount;
+                    } elseif ($col === 'fee_amount') {
+                        $row[] = $pay->fee_amount;
+                    } elseif ($col === 'final_amount') {
+                        $row[] = $pay->final_amount ?? $pay->amount;
+                    } else {
+                        $val = $pay->{$col};
+                        if (is_array($val) || is_object($val)) {
+                            $row[] = json_encode($val);
+                        } else {
+                            $row[] = $val ?? '-';
+                        }
+                    }
+                }
+                fputcsv($file, $row);
             }
             fclose($file);
         };
