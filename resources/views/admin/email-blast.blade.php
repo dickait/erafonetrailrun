@@ -12,7 +12,7 @@
                 <h3 class="text-lg font-bold text-surface-900 mb-1">{{ __('messages.admin_email_bulk') }}</h3>
                 <p class="text-surface-500 text-[11px] mb-4">{{ __('messages.admin_email_bulk_desc', ['count' => $paidCount]) }}</p>
                 
-                <form id="bulkForm" method="POST" action="{{ route('admin.email-blast.send') }}" onsubmit="return confirm('{{ __('messages.admin_send_confirm') }}')" class="space-y-4">
+                <form id="bulkForm" method="POST" action="{{ route('admin.email-blast.send') }}" onsubmit="return validateAndConfirm('bulk')" class="space-y-4">
                     @csrf
                     <div>
                         <label class="block text-[10px] font-bold text-surface-400 uppercase mb-1">Template</label>
@@ -28,7 +28,7 @@
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-surface-400 uppercase mb-1">{{ __('messages.admin_message') }}</label>
-                        <textarea name="body" rows="6" required placeholder="Message..." class="body-input w-full px-3 py-2 bg-surface-50 border border-surface-300 rounded-xl text-xs text-surface-900 focus:border-brand-500 transition-colors"></textarea>
+                        <textarea name="body" rows="6" placeholder="Message..." class="body-input w-full px-3 py-2 bg-surface-50 border border-surface-300 rounded-xl text-xs text-surface-900 focus:border-brand-500 transition-colors"></textarea>
                     </div>
                     <div class="flex gap-2 pt-2">
                         <button type="button" onclick="updatePreview('bulk')" class="px-3 py-2.5 bg-surface-100 hover:bg-surface-200 text-surface-700 font-bold rounded-xl transition-all text-[10px] uppercase">
@@ -51,7 +51,7 @@
                 <h3 class="text-lg font-bold text-surface-900 mb-1">{{ __('messages.admin_email_single') }}</h3>
                 <p class="text-surface-500 text-[11px] mb-4">{{ __('messages.admin_email_single_desc') }}</p>
                 
-                <form id="singleForm" method="POST" action="{{ route('admin.email-single.send') }}" class="space-y-4">
+                <form id="singleForm" method="POST" action="{{ route('admin.email-single.send') }}" onsubmit="return validateAndConfirm('single')" class="space-y-4">
                     @csrf
                     <div>
                         <label class="block text-[10px] font-bold text-surface-400 uppercase mb-1">{{ __('messages.admin_email_to') }}</label>
@@ -71,7 +71,7 @@
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-surface-400 uppercase mb-1">{{ __('messages.admin_message') }}</label>
-                        <textarea name="body" rows="4" required placeholder="Message..." class="body-input w-full px-3 py-2 bg-surface-50 border border-surface-300 rounded-xl text-xs text-surface-900 focus:border-brand-500 transition-colors"></textarea>
+                        <textarea name="body" rows="4" placeholder="Message..." class="body-input w-full px-3 py-2 bg-surface-50 border border-surface-300 rounded-xl text-xs text-surface-900 focus:border-brand-500 transition-colors"></textarea>
                     </div>
                     <div class="flex gap-2 pt-2">
                         <button type="button" onclick="updatePreview('single')" class="px-3 py-2.5 bg-white border border-surface-300 text-surface-700 font-bold rounded-xl hover:bg-surface-50 transition-all text-[10px] uppercase">
@@ -121,8 +121,63 @@
     </div>
 </div>
 
+@push('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.2/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        tinymce.init({
+            selector: '.body-input',
+            height: 350,
+            menubar: false,
+            plugins: [
+                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+            ],
+            toolbar: 'undo redo | blocks | ' +
+                'bold italic forecolor backcolor | alignleft aligncenter ' +
+                'alignright alignjustify | bullist numlist outdent indent | ' +
+                'link image | removeformat | code help',
+            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px; color: #334155; }',
+            promotion: false,
+            branding: false,
+            setup: function (editor) {
+                editor.on('change keyup', function () {
+                    editor.save();
+                });
+            }
+        });
+    });
+
+    function validateAndConfirm(type) {
+        if (typeof tinymce !== 'undefined') {
+            tinymce.triggerSave();
+        }
+        const formId = type === 'bulk' ? 'bulkForm' : 'singleForm';
+        const form = document.getElementById(formId);
+        const body = form.querySelector('.body-input').value.trim();
+        const subject = form.querySelector('.subject-input').value.trim();
+        
+        if (!subject) {
+            alert('Subject is required.');
+            return false;
+        }
+        
+        if (!body || body === '<p></p>' || body === '<br>' || body === '') {
+            alert('Message is required.');
+            return false;
+        }
+        
+        if (type === 'bulk') {
+            return confirm('{{ __('messages.admin_send_confirm') }}');
+        }
+        return true;
+    }
+
     function updatePreview(type) {
+        if (typeof tinymce !== 'undefined') {
+            tinymce.triggerSave();
+        }
         const formId = type === 'bulk' ? 'bulkForm' : 'singleForm';
         const form = document.getElementById(formId);
         const template = form.querySelector('.template-selector').value;
@@ -159,4 +214,5 @@
         previewFrame.src = previewUrl;
     }
 </script>
+@endpush
 @endsection

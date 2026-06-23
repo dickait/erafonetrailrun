@@ -51,7 +51,7 @@
               @endif
 
               <div style="margin-bottom: 30px; color: #333333;">
-                {!! nl2br(e($emailBody)) !!}
+                {!! $emailBody !!}
               </div>
 
               <p style="margin-top:20px;">
