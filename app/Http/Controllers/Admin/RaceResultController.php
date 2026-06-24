@@ -41,6 +41,8 @@ class RaceResultController extends Controller
             $participant = Participant::where('bib_number', $bib)->first();
             
             if ($participant) {
+                $distance = (int)$participant->category->distance_km;
+                $ageCategory = $distance === 5 ? 'Family' : ($participant->age >= 40 ? 'Master' : 'Open');
                 RaceResult::updateOrCreate(
                     ['participant_id' => $participant->id],
                     [
@@ -50,7 +52,7 @@ class RaceResultController extends Controller
                         'status' => $row['status'] ?? 'FINISHED',
                         'distance_km' => $participant->category->distance_km,
                         'gender' => $participant->gender,
-                        'age_category' => $participant->age >= 40 ? 'Master' : 'Open',
+                        'age_category' => $ageCategory,
                     ]
                 );
                 $count++;
@@ -68,16 +70,10 @@ class RaceResultController extends Controller
             // Reset podiums first
             RaceResult::query()->update(['is_podium' => false, 'rank_overall' => null, 'rank_category' => null, 'rank_group' => null]);
 
-            // 1. Overall Ranking
-            RaceResult::where('status', 'FINISHED')
-                ->whereNotNull('gun_time')
-                ->orderBy('gun_time')
-                ->get()
-                ->each(function (RaceResult $result, $index) {
-                    $result->update(['rank_overall' => $index + 1]);
-                });
+            // Normalize 5K age category to 'Family'
+            RaceResult::where('distance_km', 5)->update(['age_category' => 'Family']);
 
-            // 2. Category (Distance) Ranking
+            // Calculate Overall Rank and Category Rank (both grouped per distance category)
             $distances = RaceResult::distinct()->pluck('distance_km');
             foreach ($distances as $distance) {
                 RaceResult::where('distance_km', $distance)
@@ -86,12 +82,17 @@ class RaceResultController extends Controller
                     ->orderBy('gun_time')
                     ->get()
                     ->each(function (RaceResult $result, $index) {
-                        $result->update(['rank_category' => $index + 1]);
+                        $rank = $index + 1;
+                        $result->update([
+                            'rank_overall' => $rank,
+                            'rank_category' => $rank
+                        ]);
                     });
             }
 
-            // 3. Group Ranking (Distance + Age Category + Gender) & Podium
+            // 3. Group Ranking (Distance + Age Category + Gender) & Podium (excluding 5K)
             $groups = RaceResult::select('distance_km', 'age_category', 'gender')
+                ->where('distance_km', '!=', 5)
                 ->distinct()
                 ->get();
 
@@ -114,6 +115,16 @@ class RaceResultController extends Controller
                         ]);
                     });
             }
+
+            // For 5K Family: set rank_group identical to rank_overall
+            RaceResult::where('distance_km', 5)
+                ->where('status', 'FINISHED')
+                ->get()
+                ->each(function (RaceResult $result) {
+                    $result->update([
+                        'rank_group' => $result->rank_overall
+                    ]);
+                });
         });
 
         Cache::forget('race_results_public_data');

@@ -26,7 +26,7 @@
     </section>
 
     <section class="py-16 bg-white" id="all-results" x-data="{ 
-        activeTab: 'all', 
+        activeTab: '5', 
         search: '',
         searchInput: '',
         performSearch() {
@@ -140,7 +140,7 @@
             // Text
             ctx.fillStyle = '#57534e';
             ctx.font = '18px sans-serif';
-            ctx.fillText('for successfully completing the Erafone Trail Run 2026 in the ' + result.distance_km + 'K Category', 600, 425);
+            ctx.fillText('for successfully completing the Erafone Trail Run 2026 in the ' + (parseFloat(result.distance_km) === 5 ? '5K Family' : parseFloat(result.distance_km) + 'K') + ' Category', 600, 425);
             
             // Stats box
             ctx.fillStyle = '#f8fafc';
@@ -289,13 +289,12 @@
                 <!-- Tabs Navigation -->
                 <div class="flex flex-wrap gap-2">
                     <template x-for="tab in [
-                        {id:'all', label:'All Results'},
                         {id:'5', label:'5K Family'},
                         {id:'10', label:'10K'},
                         {id:'15', label:'15K'},
                         {id:'podium', label:'Podium Winners'}
                     ]">
-                        <button @click="activeTab = tab.id; if(tab.id !== 'all' && tab.id !== 'podium') { filterDistance = tab.id; } else { filterDistance = 'all'; }" 
+                        <button @click="activeTab = tab.id; if(tab.id !== 'podium') { filterDistance = tab.id; } else { filterDistance = 'all'; }" 
                                 :class="activeTab === tab.id ? 'bg-brand-600 text-white shadow-md shadow-brand-600/10' : 'bg-surface-50 text-surface-700 hover:bg-surface-100 border border-surface-200'"
                                 class="px-5 py-2.5 rounded-xl font-bold transition-all duration-200 flex items-center gap-1.5 text-xs">
                             <span x-text="tab.label"></span>
@@ -384,10 +383,10 @@
                 
                 <!-- Reset Filters Button -->
                 <div class="mt-4 flex justify-end">
-                    <button @click="filterGender = 'all'; filterAgeCategory = 'all'; filterDistance = 'all'; activeTab = 'all'; sortBy = 'rank_asc'; searchInput = ''; search = '';" 
+                    <button @click="filterGender = 'all'; filterAgeCategory = 'all'; filterDistance = 'all'; activeTab = '5'; sortBy = 'rank_asc'; searchInput = ''; search = '';" 
                             class="text-xs font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H18.2" />
+                        <svg class="w-3.5 h-3.5 animate-spin-hover" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                         </svg>
                         Reset Filters
                     </button>
@@ -449,7 +448,7 @@
                                     </td>
                                     
                                     <!-- Pos (Category position in that distance) -->
-                                    <td class="px-4 py-3.5 font-display font-bold text-surface-900" x-text="'#' + (result.rank_category || '-')"></td>
+                                    <td class="px-4 py-3.5 font-display font-bold text-surface-900" x-text="result.rank_category ? '#' + result.rank_category : '-'"></td>
                                     
                                     <!-- Race No (BIB) -->
                                     <td class="px-4 py-3.5">
@@ -466,9 +465,9 @@
                                     
                                     <!-- Category (Distance + Age group) -->
                                     <td class="px-4 py-3.5">
-                                        <div class="flex flex-col">
-                                            <span class="font-bold text-surface-700" x-text="parseFloat(result.distance_km) + 'K'"></span>
-                                            <span class="text-[9px] text-surface-400 uppercase font-bold" x-text="result.age_category"></span>
+                                        <div class="whitespace-nowrap font-bold text-surface-700">
+                                            <span x-text="parseFloat(result.distance_km) === 5 ? '5K Family' : parseFloat(result.distance_km) + 'K'"></span>
+                                            <span x-show="parseFloat(result.distance_km) !== 5" x-text="' ' + result.age_category"></span>
                                         </div>
                                     </td>
                                     
@@ -482,7 +481,7 @@
                                     <td class="px-4 py-3.5 font-mono text-surface-700" x-text="result.gender_pos ? '#' + result.gender_pos : '-'"></td>
                                     
                                     <!-- Pace -->
-                                    <td class="px-4 py-3.5 font-mono text-surface-600" x-text="result.pace || '-'"></td>
+                                    <td class="px-4 py-3.5 font-mono text-surface-600" x-text="result.pace && result.pace !== '-' ? result.pace + ' min/km' : '-'"></td>
                                 </tr>
                                 <!-- Expanded row immediately follows parent row -->
                                 <tr x-show="isRowExpanded(result.id)" x-cloak class="bg-surface-50/40 border-b border-surface-200">
@@ -504,7 +503,7 @@
                                                 </div>
                                                 <div>
                                                     <span class="text-[9px] text-surface-400 block font-semibold uppercase">Overall Rank</span>
-                                                    <span class="font-mono font-bold text-surface-800" x-text="result.rank_overall ? '#' + result.rank_overall : '-'"></span>
+                                                    <span class="font-mono font-bold text-surface-800" x-text="result.rank_overall ? '#' + result.rank_overall + '/' + allData[parseInt(result.distance_km)].length : '-'"></span>
                                                 </div>
                                             </div>
                                             
@@ -632,7 +631,7 @@
                         <div class="grid grid-cols-2 gap-3">
                             <div class="bg-surface-50 p-3 rounded-2xl border border-surface-200/60">
                                 <span class="text-[9px] font-bold text-surface-400 uppercase tracking-wider block mb-0.5">Distance Category</span>
-                                <span class="font-display font-black text-lg text-surface-800" x-text="selectedResult ? parseFloat(selectedResult.distance_km) + 'K' : '-'"></span>
+                                <span class="font-display font-black text-lg text-surface-800" x-text="selectedResult ? (parseFloat(selectedResult.distance_km) === 5 ? '5K Family' : parseFloat(selectedResult.distance_km) + 'K') : '-'"></span>
                             </div>
                             <div class="bg-surface-50 p-3 rounded-2xl border border-surface-200/60">
                                 <span class="text-[9px] font-bold text-surface-400 uppercase tracking-wider block mb-0.5">Age Group / Gender</span>
@@ -648,14 +647,14 @@
                             </div>
                             <div class="bg-surface-50 p-3 rounded-2xl border border-surface-200/60 col-span-2">
                                 <span class="text-[9px] font-bold text-surface-400 uppercase tracking-wider block mb-0.5">Calculated Pace</span>
-                                <span class="font-mono font-bold text-lg text-surface-800" x-text="selectedResult ? selectedResult.pace + ' min/km' : '-'"></span>
+                                <span class="font-mono font-bold text-lg text-surface-800" x-text="selectedResult && selectedResult.pace && selectedResult.pace !== '-' ? selectedResult.pace + ' min/km' : '-'"></span>
                             </div>
                         </div>
                         
                         <div class="border-t border-surface-100 pt-4 space-y-2">
                             <h5 class="text-[9px] font-bold text-surface-400 uppercase tracking-wider mb-1.5">Rankings & Standing</h5>
                             <div class="flex justify-between items-center text-xs py-1 border-b border-surface-50">
-                                <span class="text-surface-600" x-text="selectedResult ? 'Category Position (' + selectedResult.distance_km + 'K)' : 'Category Position'"></span>
+                                <span class="text-surface-600" x-text="selectedResult ? 'Category Position (' + (parseFloat(selectedResult.distance_km) === 5 ? '5K Family' : parseFloat(selectedResult.distance_km) + 'K') + ')' : 'Category Position'"></span>
                                 <span class="font-mono font-bold text-surface-900" x-text="selectedResult && selectedResult.rank_category ? '#' + selectedResult.rank_category : '-'"></span>
                             </div>
                             <div class="flex justify-between items-center text-xs py-1 border-b border-surface-50">
@@ -668,7 +667,7 @@
                             </div>
                             <div class="flex justify-between items-center text-xs py-1">
                                 <span class="text-surface-600">Overall Event Position</span>
-                                <span class="font-mono font-bold text-surface-900" x-text="selectedResult && selectedResult.rank_overall ? '#' + selectedResult.rank_overall : '-'"></span>
+                                <span class="font-mono font-bold text-surface-900" x-text="selectedResult && selectedResult.rank_overall ? '#' + selectedResult.rank_overall + '/' + allData[parseInt(selectedResult.distance_km)].length : '-'"></span>
                             </div>
                         </div>
                     </div>
