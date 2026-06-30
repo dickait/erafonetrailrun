@@ -820,6 +820,9 @@ class AdminController extends Controller
                 // Extract fields
                 $csvCategory = isset($row['category_id']) ? trim($row['category_id']) : '';
                 $email = isset($row['email']) && trim($row['email']) !== '' ? trim($row['email']) : null;
+                if ($email && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $email = null;
+                }
                 $jerseySize = isset($row['jersey_size']) ? trim($row['jersey_size']) : null;
                 $bibNumber = isset($row['bib_number']) ? trim($row['bib_number']) : null;
                 $checklist = isset($row['checklist']) ? trim($row['checklist']) : '0';
