@@ -1,11 +1,103 @@
-﻿Pl.,Bib,Name,Gender,Finish Time,Category Distance
-1.,1809,Septiana Nia Swastika,F,1:38:22,15K Female Master
-2.,1805,Sinta Wanti,F,1:45:11,15K Female Master
-3.,1806,Yustina Wardhani Setyowati,F,1:46:10,15K Female Master
-4.,601,SWESTY,F,1:57:22,15K Female Master
-5.,1808,Siti Nurjanah,F,2:11:04,15K Female Master
-6.,1802,Maria Oktafani,F,2:28:09,15K Female Master
-7.,1804,Agustaria Margaretta,F,2:34:18,15K Female Master
-8.,1807,Silvia Feronica Tambunan,F,3:09:59,15K Female Master
-9.,1803,Fitri Rachmadiarti,F,3:11:23,15K Female Master
-10.,1801,Tuty Hikmawaty Cholid,F,3:17:26,15K Female Master
+Pl.,Bib,Name,Gender,Finish Time,Category Distance
+1.,2090,Sunardin Sunardin,M,50:30,10K Male Open
+2.,2077,Nurdin Lahaya,M,50:39,10K Male Open
+3.,2030,Dikki Abdul Majid,M,51:03,10K Male Open
+4.,2081,Kismadi Kismadi,M,53:45,10K Male Open
+5.,2037,Almedia Billyardo Tatambihe,M,55:55,10K Male Open
+6.,2080,Kautsar Aldi Muharriqh,M,56:03,10K Male Open
+7.,2038,Rio Ibnu Saputra,M,56:32,10K Male Open
+8.,2072,Rully Van Hood Nababan,M,59:20,10K Male Open
+9.,2032,Situmorang Situmorang,M,1:00:11,10K Male Open
+10.,2045,Setia Warman,M,1:01:08,10K Male Open
+11.,2056,Karlos Nababan,M,1:01:34,10K Male Open
+12.,2085,Andre Kresnahari,M,1:01:57,10K Male Open
+13.,2029,Muhamad Ikhsan Mustofa,M,1:05:43,10K Male Open
+14.,2006,Heru Fachrezie,M,1:06:11,10K Male Open
+15.,2073,Lukman Nur Hakim,M,1:07:10,10K Male Open
+16.,2084,Josua Alferdo,M,1:10:50,10K Male Open
+17.,2022,Ichya Yusuf Syauqy,M,1:10:58,10K Male Open
+18.,2093,Rino Eko Saputro,M,1:12:11,10K Male Open
+19.,2096,Ahmad Arkana Dhanisworo,M,1:12:42,10K Male Open
+20.,2057,Gilang S Putranto,M,1:16:00,10K Male Open
+21.,2071,Bima Satrya Nurohim,M,1:18:01,10K Male Open
+22.,2099,Abhivaadan Altair,M,1:18:22,10K Male Open
+23.,2086,Aldi Rahmadan,M,1:18:37,10K Male Open
+24.,2083,Widi Surya Syaputra,M,1:23:38,10K Male Open
+25.,403,Yudi wahyudi,M,1:24:02,10K Male Open
+26.,2025,Agus Apriyanto,M,1:25:25,10K Male Open
+27.,2007,Jones Hutauruk,M,1:25:42,10K Male Open
+28.,2043,Dede Risnandar,M,1:29:04,10K Male Open
+29.,2063,Fajar Maulady M,M,1:29:44,10K Male Open
+30.,2064,Muhammad Ramlan Agustian,M,1:30:16,10K Male Open
+31.,2041,Adam Adha Ardyansyah,M,1:33:04,10K Male Open
+32.,2094,Pitra Gumelar,M,1:34:06,10K Male Open
+33.,2035,Muhammad Dwiansyah Damanik,M,1:35:13,10K Male Open
+34.,2101,Rizky Darmawan,M,1:38:41,10K Male Open
+35.,2058,Agustin Agustin,M,1:39:17,10K Male Open
+36.,2051,Heru Abidin,M,1:40:09,10K Male Open
+37.,2053,Sambas Sambas,M,1:40:32,10K Male Open
+38.,2026,Faisal Fikri Irawan,M,1:48:06,10K Male Open
+39.,2017,Fernandhi Agustian,M,1:49:10,10K Male Open
+40.,2100,Bayu Alief Muhamad,M,1:49:56,10K Male Open
+41.,2076,Choirul Anam,M,1:50:07,10K Male Open
+42.,2068,M Andriyan Syaipul Hadi,M,1:51:41,10K Male Open
+43.,2065,Charles Jonson Siregar,M,1:52:38,10K Male Open
+44.,2069,Muhammad Yandika Ramadhan,M,1:52:42,10K Male Open
+45.,2059,Gerry Armando,M,1:52:51,10K Male Open
+46.,2061,Muammar Haikal Gibran,M,1:53:31,10K Male Open
+47.,2089,Dedi Roland,M,1:54:26,10K Male Open
+48.,2027,Muhamad Alfaruqi,M,1:55:43,10K Male Open
+49.,2054,Andika Dian Furury,M,1:55:53,10K Male Open
+50.,2019,Raihan Rivai,M,1:55:57,10K Male Open
+51.,2021,Rizal Harry Pahlawan,M,1:57:25,10K Male Open
+52.,2011,Prabu Haryo Saputro,M,1:58:39,10K Male Open
+53.,2078,M. Ichsan Nur Zikri,M,1:59:34,10K Male Open
+54.,2023,Ryan Pranajaya Effendy,M,2:02:42,10K Male Open
+55.,2036,Hafidz Ardian D,M,2:04:08,10K Male Open
+56.,2091,Muhamad Fikri Revi Kusuma,M,2:07:35,10K Male Open
+57.,2034,Chrishan Theostwin Gomar,M,2:07:46,10K Male Open
+58.,2033,Ziven Akeno Hsu,M,2:07:47,10K Male Open
+59.,2087,Mohamad Idris,M,2:08:47,10K Male Open
+60.,2075,Abdhu Rochman Soleh,M,2:09:05,10K Male Open
+61.,2098,Fathul Huda,M,2:09:08,10K Male Open
+62.,2004,Felix Hendrian,M,2:09:12,10K Male Open
+63.,2009,Uyok Destiawan,M,2:09:47,10K Male Open
+64.,2055,Rahenry Iryawan,M,2:09:52,10K Male Open
+65.,2095,Imam Bazuri Ok,M,2:10:53,10K Male Open
+66.,2097,Julius Dimas Isha Pamungkas,M,2:11:20,10K Male Open
+67.,2008,Kiki Saepul,M,2:11:32,10K Male Open
+68.,2049,Anggi Meizar Ramdhan Nasution,M,2:13:54,10K Male Open
+69.,2067,Dedy Dedy,M,2:14:56,10K Male Open
+70.,2088,Taufik Ismaya,M,2:16:25,10K Male Open
+71.,2046,Armanto Armanto,M,2:20:55,10K Male Open
+72.,2040,Muhammad Rafi Solahuddin,M,2:20:57,10K Male Open
+73.,2042,Wahyu Widianto,M,2:21:02,10K Male Open
+74.,2005,Maxlian Lay,M,2:23:57,10K Male Open
+75.,2039,I Made Ananta Pradnya Putra,M,2:24:41,10K Male Open
+76.,2001,Dicka Ariptian Rahayu,M,2:25:15,10K Male Open
+77.,2020,Carol Marcelyano,M,2:25:24,10K Male Open
+78.,2024,Mul Yono,M,2:25:31,10K Male Open
+79.,2015,Chandra Wijanarko,M,2:25:56,10K Male Open
+80.,2082,Junjun Giyan Gumilar,M,2:26:28,10K Male Open
+81.,2070,Muhammad Bagas Ramadhan,M,2:34:20,10K Male Open
+82.,2060,Muhammad Haekal,M,2:35:47,10K Male Open
+83.,2074,Ikbal Abdullah,M,2:37:37,10K Male Open
+84.,2050,Gagah Muhammad Bungsu,M,2:37:55,10K Male Open
+85.,2048,Arie Niti Miharja,M,2:41:25,10K Male Open
+86.,2044,Adzie Fatharoni,M,2:41:28,10K Male Open
+87.,2092,Alvindo Yudoyono,M,2:44:38,10K Male Open
+88.,2018,Yoga Rohmat Setiyawan,M,2:58:14,10K Male Open
+89.,2016,Jeremy Hendrik,M,3:02:59,10K Male Open
+90.,2062,Muhammad Arya Nugraha,M,3:18:59,10K Male Open
+DNF,2052,Feisal Senen Amangbako,M,,10K Male Open
+DNS,2002,Bayu Ramadian,M,,10K Male Open
+DNS,2003,Dicka Dicka,M,,10K Male Open
+DNS,2010,Dito Putra,M,,10K Male Open
+DNS,2012,Ikbal Danu,M,,10K Male Open
+DNS,2013,Pandu Nugroho Serayu,M,,10K Male Open
+DNS,2014,Danu Dyan Kartika,M,,10K Male Open
+DNS,2028,Hanif Abiyan,M,,10K Male Open
+DNS,2031,Rajendra Nohan,M,,10K Male Open
+DNS,2047,Parhan Abdul Latif,M,,10K Male Open
+DNS,2066,Arya Bintang,M,,10K Male Open
+DNS,2079,Rayhan Alif Vanza,M,,10K Male Open

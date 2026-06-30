@@ -1,11 +1,114 @@
-﻿Pl.,Bib,Name,Gender,Finish Time,Category Distance
-1.,1809,Septiana Nia Swastika,F,1:38:22,15K Female Master
-2.,1805,Sinta Wanti,F,1:45:11,15K Female Master
-3.,1806,Yustina Wardhani Setyowati,F,1:46:10,15K Female Master
-4.,601,SWESTY,F,1:57:22,15K Female Master
-5.,1808,Siti Nurjanah,F,2:11:04,15K Female Master
-6.,1802,Maria Oktafani,F,2:28:09,15K Female Master
-7.,1804,Agustaria Margaretta,F,2:34:18,15K Female Master
-8.,1807,Silvia Feronica Tambunan,F,3:09:59,15K Female Master
-9.,1803,Fitri Rachmadiarti,F,3:11:23,15K Female Master
-10.,1801,Tuty Hikmawaty Cholid,F,3:17:26,15K Female Master
+Pl.,Bib,Name,Gender,Finish Time,Category Distance
+1.,15076,Putra Julio Ekdo Badayu,M,1:04:31,15K Male Open
+2.,15091,La Sufardian,M,1:05:49,15K Male Open
+3.,15080,Putra Aldio Hamzah,M,1:08:48,15K Male Open
+4.,15087,Willem Piris,M,1:10:31,15K Male Open
+5.,15102,Ridho Cahya Subagja,M,1:16:47,15K Male Open
+6.,15117,Mikdarullah Mikdarullah,M,1:21:42,15K Male Open
+7.,15120,Hanung Ananda Winata,M,1:21:42,15K Male Open
+8.,15121,Luis Simamora,M,1:28:16,15K Male Open
+9.,15065,Riki Sulaeman,M,1:40:26,15K Male Open
+10.,15073,Muhamad Ramdani,M,1:41:06,15K Male Open
+11.,15105,Muhamad Saif Al Yardi,M,1:45:23,15K Male Open
+12.,15108,Daffi Andra,M,1:46:36,15K Male Open
+13.,15008,Alfiansyah Alfiansyah,M,1:46:40,15K Male Open
+14.,15043,Denta Refsendo,M,1:46:51,15K Male Open
+15.,15079,Muhammad Afif Alazis,M,1:48:16,15K Male Open
+16.,15078,Yogi Pamungkas,M,1:52:11,15K Male Open
+17.,15085,Nasrul Hidayat,M,1:53:18,15K Male Open
+18.,15089,Frenky Cardinal Pasarinu,M,1:53:35,15K Male Open
+19.,15060,Muhamad Yogi Pratama,M,1:53:54,15K Male Open
+20.,15084,Sandi Solawat,M,1:54:25,15K Male Open
+21.,15086,Muhamad Saputra Saji,M,1:54:25,15K Male Open
+22.,15083,Alfiansyah Hidayat,M,1:54:47,15K Male Open
+23.,15058,Ponco Kusuma,M,1:56:36,15K Male Open
+24.,15072,Paud Jalanjalan,M,1:57:20,15K Male Open
+25.,15118,Japriah Febriansyah,M,2:04:50,15K Male Open
+26.,15004,Deri Riadi,M,2:05:50,15K Male Open
+27.,15007,Josia Roganda Gultom,M,2:07:03,15K Male Open
+28.,15075,Naufal Muhammad Iqbal,M,2:08:28,15K Male Open
+29.,15097,Aulia Farhan,M,2:09:40,15K Male Open
+30.,15114,Dafikri Husni,M,2:10:17,15K Male Open
+31.,15032,Jhon Noveri,M,2:12:32,15K Male Open
+32.,15106,Galih Prayoga,M,2:13:26,15K Male Open
+33.,15018,Dwira Sena Adila,M,2:14:41,15K Male Open
+34.,15066,Suganda Suganda,M,2:15:23,15K Male Open
+35.,15071,Bagus Aprianto,M,2:15:24,15K Male Open
+36.,15059,Made Dhira Dahni Pawitra,M,2:15:25,15K Male Open
+37.,15068,Devan Andria,M,2:15:28,15K Male Open
+38.,15055,Rahmat Hidayat,M,2:15:37,15K Male Open
+39.,15113,Aditya Dwiputra Haryana,M,2:16:06,15K Male Open
+40.,15014,Dhiya Naufal Pramoedya,M,2:16:13,15K Male Open
+41.,15069,Tedi Supardi,M,2:17:16,15K Male Open
+42.,15041,Muhammad Valen Akmal Fatnadi,M,2:17:43,15K Male Open
+43.,15009,Aldi Yusuf Mahendra,M,2:18:11,15K Male Open
+44.,15042,Oktaviando Samosir,M,2:18:19,15K Male Open
+45.,15107,Agi Juan Ardiansyah,M,2:20:27,15K Male Open
+46.,15003,Andreas Panahatan,M,2:20:57,15K Male Open
+47.,15036,Azwinur Azwinur,M,2:21:38,15K Male Open
+48.,15035,Faza Amrin,M,2:21:48,15K Male Open
+49.,15093,Haidir Mukmin,M,2:22:25,15K Male Open
+50.,15057,Anung Anindita Basuki,M,2:23:26,15K Male Open
+51.,15056,Ariando Ariando,M,2:23:26,15K Male Open
+52.,15025,Muhammad Syazidan,M,2:27:20,15K Male Open
+53.,15037,Agus Sutanto,M,2:27:46,15K Male Open
+54.,15006,Steven Steven,M,2:28:23,15K Male Open
+55.,15074,M. Iqbal,M,2:28:36,15K Male Open
+56.,15062,Yohannes Wijaya,M,2:28:41,15K Male Open
+57.,15033,Fauzi Nur Anjari,M,2:29:23,15K Male Open
+58.,15026,Rafael Kaliaga Barus,M,2:29:40,15K Male Open
+59.,15029,Zickri Chairullisan,M,2:30:05,15K Male Open
+60.,15001,Faizal Fadhilah D,M,2:31:38,15K Male Open
+61.,15013,Muhamad Givari Ramadan,M,2:32:07,15K Male Open
+62.,15034,Vektor Firdaus,M,2:32:30,15K Male Open
+63.,15028,Tomi Margiantara,M,2:32:58,15K Male Open
+64.,15047,Wisnu Abdiguna Surahman Murti,M,2:34:32,15K Male Open
+65.,15104,Muhammad Akram Alif,M,2:38:06,15K Male Open
+66.,15061,Stefen Christian,M,2:38:43,15K Male Open
+67.,15044,Dimas Restu Widi Wicaksono,M,2:39:22,15K Male Open
+68.,15063,Andrew Christophe,M,2:40:46,15K Male Open
+69.,15119,Marzuki Marzuki,M,2:41:32,15K Male Open
+70.,15077,Bejo Waluyo,M,2:41:32,15K Male Open
+71.,15048,Zidane Husein Alfarouk,M,2:42:14,15K Male Open
+72.,15052,Bregas Hairdhiawan,M,2:42:43,15K Male Open
+73.,15067,Yugi Limantara,M,2:44:58,15K Male Open
+74.,15095,Rakhel Rizqullah Fauzan,M,2:45:33,15K Male Open
+75.,15027,Dhika Aditya,M,2:45:52,15K Male Open
+76.,15054,Andi Mulya Indrianto,M,2:48:31,15K Male Open
+77.,15109,Ignatius Benni Pasaribu,M,2:50:10,15K Male Open
+78.,15110,Marcelio Dominiq,M,2:50:10,15K Male Open
+79.,15005,Ardinto Demiyasa,M,2:50:38,15K Male Open
+80.,15099,Ibrohim Binladin,M,2:51:13,15K Male Open
+81.,15098,Muhammad Reyjan,M,2:52:15,15K Male Open
+82.,15021,Suryatno Situmorang,M,2:54:22,15K Male Open
+83.,15023,Saad Saad,M,2:54:22,15K Male Open
+84.,15020,Rahmat Wahyudi,M,2:54:22,15K Male Open
+85.,15010,Hendri Winoto,M,2:54:32,15K Male Open
+86.,15090,Muhammad Sandy Setiawan,M,2:55:04,15K Male Open
+87.,15022,Muhamad Ismail,M,2:55:44,15K Male Open
+88.,15045,Alif Abdullah Zakaria,M,2:56:44,15K Male Open
+89.,15012,Christopher Diaz Caesar,M,2:58:17,15K Male Open
+90.,15038,Arfa Hamiz,M,2:58:20,15K Male Open
+91.,15053,Indra Gunawan,M,2:58:26,15K Male Open
+92.,15002,Devinwidjaja Devinwidjaja,M,2:59:33,15K Male Open
+93.,15046,Muhammad Anza Naufandia,M,2:59:39,15K Male Open
+94.,15070,Hery Ismayadi,M,3:00:33,15K Male Open
+95.,15115,Samsul Pahmi Toriq,M,3:04:32,15K Male Open
+96.,15122,Hadianto Hadianto,M,3:04:35,15K Male Open
+97.,15019,Daris Akmal Kautsar,M,3:06:42,15K Male Open
+98.,15040,Adyatma Aji Firjatullah,M,3:10:58,15K Male Open
+99.,15016,Pradya Muharam Andika,M,3:13:56,15K Male Open
+100.,15064,Yosafat Wijaya Arifin,M,3:15:02,15K Male Open
+101.,15050,Dafid Margetha,M,3:15:13,15K Male Open
+102.,15051,Akhmad Syarif Hidayatullah,M,3:15:13,15K Male Open
+103.,15088,Caesario Wahyu,M,3:21:29,15K Male Open
+104.,15092,Nico Dynnar,M,3:29:41,15K Male Open
+DNS,15015,Gilang Dwi Nugroho,M,,15K Male Open
+DNS,15017,Rafly Akmal Kautsar,M,,15K Male Open
+DNS,15024,Surya Ahmad Maulani,M,,15K Male Open
+DNS,15031,Sholihin Nafar,M,,15K Male Open
+DNS,15049,Zulkifli Mangkau,M,,15K Male Open
+DNS,15100,Ananda Alvin Toalu,M,,15K Male Open
+DNS,15111,Muhammad Indra Prastia,M,,15K Male Open
+DNS,15112,Dhaniindrawardana Dhaniindrawardana,M,,15K Male Open
+DNS,15116,Alfiansyah Hidayat,M,,15K Male Open

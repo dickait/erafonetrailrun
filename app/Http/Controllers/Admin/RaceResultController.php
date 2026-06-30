@@ -44,8 +44,10 @@ class RaceResultController extends Controller
                 continue;
             }
 
-            // Clean headers: strip whitespace
-            $header = array_map('trim', $header);
+            // Clean headers: strip BOM and whitespace
+            $header = array_map(function($h) {
+                return trim(preg_replace('/^[\x{FEFF}\x{200B}]+/u', '', $h));
+            }, $header);
 
             while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
                 // Combine headers and row data. Ensure matching lengths
@@ -141,14 +143,47 @@ class RaceResultController extends Controller
                         $ageCategory = 'Master';
                     }
 
-                    // Parse Gun Time
-                    $gunTime = $row['Finish Time'] ?? $row['gun_time'] ?? $row['finish_time'] ?? null;
+                    // Clean and parse Pl. (Rank) and status
+                    $plVal = trim($row['Pl.'] ?? $row['pl'] ?? $row['overall'] ?? $row['rank_overall'] ?? '');
+                    $finishTimeRaw = trim($row['Finish Time'] ?? $row['gun_time'] ?? $row['finish_time'] ?? '');
 
-                    // Parse Rank Overall
+                    $normalizeTime = function($timeStr) {
+                        if (empty($timeStr)) {
+                            return null;
+                        }
+                        $timeStr = trim($timeStr);
+                        $parts = explode(':', $timeStr);
+                        $count = count($parts);
+                        if ($count === 2) {
+                            $minutes = (int)$parts[0];
+                            $seconds = (int)$parts[1];
+                            return sprintf("00:%02d:%02d", $minutes, $seconds);
+                        } elseif ($count === 3) {
+                            $hours = (int)$parts[0];
+                            $minutes = (int)$parts[1];
+                            $seconds = (int)$parts[2];
+                            return sprintf("%02d:%02d:%02d", $hours, $minutes, $seconds);
+                        }
+                        return $timeStr;
+                    };
+
+                    $status = 'FINISHED';
+                    $gunTime = $finishTimeRaw !== '' ? $normalizeTime($finishTimeRaw) : null;
                     $rankOverall = null;
-                    $plVal = $row['Pl.'] ?? $row['pl'] ?? $row['overall'] ?? $row['rank_overall'] ?? null;
-                    if ($plVal !== null) {
-                        $rankOverall = (int)rtrim($plVal, '.');
+
+                    if ($plVal === 'DNS') {
+                        $status = 'DNS';
+                        $gunTime = null;
+                    } elseif ($plVal === 'DNF') {
+                        $status = 'DNF';
+                        $gunTime = null;
+                    } elseif ($gunTime === null) {
+                        $status = 'DNS';
+                    } else {
+                        $cleanPl = rtrim($plVal, '.');
+                        if (is_numeric($cleanPl)) {
+                            $rankOverall = (int)$cleanPl;
+                        }
                     }
 
                     // Update or Create RaceResult record
@@ -162,7 +197,7 @@ class RaceResultController extends Controller
                             'gender' => $gender,
                             'age_category' => $ageCategory,
                             'rank_overall' => $rankOverall,
-                            'status' => $row['status'] ?? 'FINISHED',
+                            'status' => $status,
                         ]
                     );
 
