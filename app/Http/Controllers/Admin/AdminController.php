@@ -790,6 +790,7 @@ class AdminController extends Controller
         $syncedCount = 0;
         $createdCount = 0;
         $processedParticipants = [];
+        $processedFamilyMembers = [];
 
         foreach ($request->file('bib_csvs') as $file) {
             if (!$file->isValid()) {
@@ -893,17 +894,16 @@ class AdminController extends Controller
                             $participant = null; // unset participant to trigger family member logic
 
                             // Try to find existing family member under this leader
-                            $familyMember = \App\Models\FamilyMember::where('participant_id', $leaderId)
+                            $familyMembers = \App\Models\FamilyMember::where('participant_id', $leaderId)
                                 ->where('full_name', $fullName)
-                                ->first();
+                                ->get();
                             
-                            if (!$familyMember && $jerseySize) {
-                                $familyMember = \App\Models\FamilyMember::where('full_name', $fullName)
-                                    ->where('jersey_size', $jerseySize)
-                                    ->first();
-                            }
-                            if (!$familyMember) {
-                                $familyMember = \App\Models\FamilyMember::where('full_name', $fullName)->first();
+                            $familyMember = null;
+                            foreach ($familyMembers as $fm) {
+                                if (!isset($processedFamilyMembers[$fm->id])) {
+                                    $familyMember = $fm;
+                                    break;
+                                }
                             }
                             
                             // If no family member found, we will create a new family member under this leader
@@ -916,14 +916,29 @@ class AdminController extends Controller
                         // For other categories, search family_members first
                         if ($email) {
                             $familyMember = \App\Models\FamilyMember::where('email', $email)->first();
+                            if ($familyMember && isset($processedFamilyMembers[$familyMember->id])) {
+                                $familyMember = null;
+                            }
                         }
                         if (!$familyMember && $jerseySize) {
-                            $familyMember = \App\Models\FamilyMember::where('full_name', $fullName)
+                            $familyMembers = \App\Models\FamilyMember::where('full_name', $fullName)
                                 ->where('jersey_size', $jerseySize)
-                                ->first();
+                                ->get();
+                            foreach ($familyMembers as $fm) {
+                                if (!isset($processedFamilyMembers[$fm->id])) {
+                                    $familyMember = $fm;
+                                    break;
+                                }
+                            }
                         }
                         if (!$familyMember) {
-                            $familyMember = \App\Models\FamilyMember::where('full_name', $fullName)->first();
+                            $familyMembers = \App\Models\FamilyMember::where('full_name', $fullName)->get();
+                            foreach ($familyMembers as $fm) {
+                                if (!isset($processedFamilyMembers[$fm->id])) {
+                                    $familyMember = $fm;
+                                    break;
+                                }
+                            }
                         }
 
                         if (!$familyMember) {
@@ -1019,6 +1034,7 @@ class AdminController extends Controller
                             $familyMember->update($updateData);
                         }
                         $syncedCount++;
+                        $processedFamilyMembers[$familyMember->id] = true;
                     }
                 } elseif ($createNewFamilyMember) {
                     // Create new family member under the leader (for 5K Internal double names)
@@ -1053,7 +1069,7 @@ class AdminController extends Controller
                     }
                     $dateOfBirth = now()->subYears($age)->startOfYear()->format('Y-m-d');
 
-                    \App\Models\FamilyMember::create([
+                    $newFm = \App\Models\FamilyMember::create([
                         'participant_id' => $familyMemberLeaderId,
                         'role' => 'saudara',
                         'full_name' => $fullName,
@@ -1070,6 +1086,7 @@ class AdminController extends Controller
                         'nationality' => 'Indonesia',
                     ]);
                     $createdCount++;
+                    $processedFamilyMembers[$newFm->id] = true;
                 } else {
                     // Create new participant with "data seadanya"
                     $keteranganLower = strtolower($keterangan);
