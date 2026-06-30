@@ -85,11 +85,12 @@
             'category_id' => 'Kategori',
             'payment_status' => 'Status',
             'checked_in' => 'Check-in',
+            'rpc' => 'RPC',
             'created_at' => 'Tgl Daftar',
             'shirt_size' => 'Ukuran Kaos',
             'blood_type' => 'Gol. Darah',
         ];
-        $displayCols = $requestedCols ?? ['full_name', 'email', 'phone', 'age', 'shirt_size', 'payment_status', 'created_at'];
+        $displayCols = $requestedCols ?? ['full_name', 'email', 'phone', 'age', 'shirt_size', 'payment_status', 'rpc', 'created_at'];
     @endphp
 
     <div class="admin-main-wrapper">
@@ -200,6 +201,31 @@
             </form>
         </div>
 
+        {{-- BIB Sync Section --}}
+        <div class="bg-white border border-surface-300 rounded-xl mb-6 shadow-sm p-4 md:p-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                <div>
+                    <h3 class="text-sm font-bold text-surface-800 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89M9 11l3 3L22 4"></path></svg>
+                        Sinkronisasi BIB Peserta (CSV)
+                    </h3>
+                    <p class="text-xs text-surface-500 mt-1">Unggah file CSV BIB (5K/10K/15K) untuk menyelaraskan nomor BIB peserta. Peserta baru akan ditambahkan jika tidak ditemukan.</p>
+                </div>
+            </div>
+            <form action="{{ route('admin.participants.sync-bib') }}" method="POST" enctype="multipart/form-data" class="flex flex-col sm:flex-row gap-3 items-end">
+                @csrf
+                <div class="flex-1 w-full">
+                    <label class="text-[10px] font-bold text-surface-400 uppercase tracking-widest block mb-1.5 ml-1">Pilih File CSV BIB</label>
+                    <input type="file" name="bib_csvs[]" multiple required accept=".csv,text/csv" 
+                        class="w-full text-sm text-surface-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border file:border-surface-300 file:text-xs file:font-semibold file:bg-surface-50 file:text-surface-700 hover:file:bg-surface-100 cursor-pointer focus:outline-none">
+                </div>
+                <button type="submit" class="w-full sm:w-auto px-6 py-2 bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold rounded-xl h-[38px] cursor-pointer transition-colors shadow-sm uppercase tracking-wider flex items-center justify-center gap-2">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                    SINKRONISASI
+                </button>
+            </form>
+        </div>
+
         {{-- SCROLLABLE TABLE CARD --}}
         <div class="table-card shadow-sm">
             <div class="table-responsive">
@@ -241,6 +267,12 @@
                                             @else
                                                 <span class="text-surface-300">—</span>
                                             @endif
+                                        @elseif($col == 'rpc') 
+                                            @if($p->rpc)
+                                                <span class="text-emerald-500 font-bold">✓</span>
+                                            @else
+                                                <span class="text-surface-300">—</span>
+                                            @endif
                                         @elseif($col == 'created_at') {{ $p->created_at->format('d/m/y H:i') }}
                                         @else 
                                             @if(is_array($p->{$col}))
@@ -269,6 +301,12 @@
                                             <span class="px-2 py-0.5 text-[9px] font-bold rounded-full border border-surface-200 bg-white text-surface-400">{{ strtoupper($p->payment_status) }}</span>
                                         @elseif($col == 'checked_in')
                                             @if($fm->checked_in)
+                                                <span class="text-emerald-400 text-xs">✓</span>
+                                            @else
+                                                <span class="text-surface-200 text-xs">—</span>
+                                            @endif
+                                        @elseif($col == 'rpc')
+                                            @if($fm->rpc)
                                                 <span class="text-emerald-400 text-xs">✓</span>
                                             @else
                                                 <span class="text-surface-200 text-xs">—</span>
@@ -319,7 +357,14 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             const urlParams = new URLSearchParams(window.location.search);
-            if (!urlParams.has('cols[]')) {
+            let hasCols = false;
+            for (const key of urlParams.keys()) {
+                if (key.startsWith('cols')) {
+                    hasCols = true;
+                    break;
+                }
+            }
+            if (!hasCols) {
                 const saved = localStorage.getItem('admin_participants_cols_v2');
                 if (saved) {
                     const cols = JSON.parse(saved);

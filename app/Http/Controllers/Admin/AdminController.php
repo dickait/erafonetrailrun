@@ -144,7 +144,7 @@ class AdminController extends Controller
         
         // If no columns requested, use the user's specified default set
         if (empty($requestedCols)) {
-            $requestedCols = ['full_name', 'email', 'phone', 'age', 'shirt_size', 'payment_status', 'created_at'];
+            $requestedCols = ['full_name', 'email', 'phone', 'age', 'shirt_size', 'payment_status', 'rpc', 'created_at'];
         }
 
         $finalCols = array_unique(array_merge($essentialCols, $requestedCols));
@@ -172,13 +172,19 @@ class AdminController extends Controller
         if ($request->filled('category')) $query->where('category_id', $request->category);
         if ($request->filled('payment_status')) $query->where('payment_status', $request->payment_status);
 
-        // Date Range Filter (Default: Last 14 days)
-        $now = now();
-        $startDate = $request->input('start_date', $now->copy()->subDays(14)->format('Y-m-d\TH:i'));
-        $endDate = $request->input('end_date', $now->format('Y-m-d\TH:i'));
+        // Date Range Filter (Default: Last 14 days based on latest participant's registration date)
+        $latestParticipantDate = Participant::where('event_id', optional($event)->id)->latest('created_at')->value('created_at');
+        $latestDate = $latestParticipantDate ? Carbon::parse($latestParticipantDate) : now();
 
-        $query->where('created_at', '>=', $startDate);
-        $query->where('created_at', '<=', $endDate);
+        $startDate = $request->input('start_date', $latestDate->copy()->subDays(14)->format('Y-m-d\TH:i'));
+        $endDate = $request->input('end_date', $latestDate->format('Y-m-d\TH:i'));
+
+        if ($startDate) {
+            $query->where('created_at', '>=', Carbon::parse($startDate));
+        }
+        if ($endDate) {
+            $query->where('created_at', '<=', Carbon::parse($endDate)->endOfMinute());
+        }
 
         $perPageInput = $request->input('per_page', 20);
         if ($perPageInput === 'all') {
@@ -218,7 +224,7 @@ class AdminController extends Controller
 
         // Column selection
         $allColumns = DB::getSchemaBuilder()->getColumnListing('participants');
-        $requestedCols = $request->input('cols', ['full_name', 'email', 'phone', 'age', 'shirt_size', 'payment_status', 'created_at']);
+        $requestedCols = $request->input('cols', ['full_name', 'email', 'phone', 'age', 'shirt_size', 'payment_status', 'rpc', 'created_at']);
         
         // Add member_type column for clarity
         $finalHeader = array_merge(['member_type'], $requestedCols);
@@ -318,14 +324,19 @@ class AdminController extends Controller
             $query->where('status', $request->status);
         }
 
-        $startDate = $request->input('start_date', now()->subDays(14)->startOfDay()->toDateTimeString());
-        $endDate = $request->input('end_date', now()->endOfDay()->toDateTimeString());
+        // Date Range Filter (Default: Last 14 days based on latest payment date)
+        $latestPaymentDate = Payment::latest('created_at')->value('created_at');
+        $latestDate = $latestPaymentDate ? Carbon::parse($latestPaymentDate) : now();
 
-        if ($request->filled('start_date')) $query->where('created_at', '>=', $request->start_date);
-        else $query->where('created_at', '>=', $startDate);
+        $startDate = $request->input('start_date', $latestDate->copy()->subDays(14)->format('Y-m-d\TH:i'));
+        $endDate = $request->input('end_date', $latestDate->format('Y-m-d\TH:i'));
 
-        if ($request->filled('end_date')) $query->where('created_at', '<=', $request->end_date);
-        else $query->where('created_at', '<=', $endDate);
+        if ($startDate) {
+            $query->where('created_at', '>=', Carbon::parse($startDate));
+        }
+        if ($endDate) {
+            $query->where('created_at', '<=', Carbon::parse($endDate)->endOfMinute());
+        }
 
         // Column selection logic
         $allColumns = DB::getSchemaBuilder()->getColumnListing('payments');
@@ -363,14 +374,19 @@ class AdminController extends Controller
         }
         if ($request->filled('status')) $query->where('status', $request->status);
 
-        $startDate = $request->input('start_date', now()->subDays(14)->startOfDay()->toDateTimeString());
-        $endDate = $request->input('end_date', now()->endOfDay()->toDateTimeString());
+        // Date Range Filter (Default: Last 14 days based on latest payment date)
+        $latestPaymentDate = Payment::latest('created_at')->value('created_at');
+        $latestDate = $latestPaymentDate ? Carbon::parse($latestPaymentDate) : now();
 
-        if ($request->filled('start_date')) $query->where('created_at', '>=', $request->start_date);
-        else $query->where('created_at', '>=', $startDate);
+        $startDate = $request->input('start_date', $latestDate->copy()->subDays(14)->format('Y-m-d\TH:i'));
+        $endDate = $request->input('end_date', $latestDate->format('Y-m-d\TH:i'));
 
-        if ($request->filled('end_date')) $query->where('created_at', '<=', $request->end_date);
-        else $query->where('created_at', '<=', $endDate);
+        if ($startDate) {
+            $query->where('created_at', '>=', Carbon::parse($startDate));
+        }
+        if ($endDate) {
+            $query->where('created_at', '<=', Carbon::parse($endDate)->endOfMinute());
+        }
 
         $payments = $query->latest()->get();
 
@@ -757,5 +773,244 @@ class AdminController extends Controller
         $participant->update(['checked_in' => true, 'checked_in_at' => now()]);
 
         return response()->json(['success' => true, 'participant' => $participant->load('category')]);
+    }
+
+    public function syncBib(Request $request)
+    {
+        $request->validate([
+            'bib_csvs' => 'required|array',
+            'bib_csvs.*' => 'required|file|mimes:csv,txt'
+        ]);
+
+        $event = Event::latest()->first();
+        if (!$event) {
+            return back()->with('error', 'No active event found.');
+        }
+
+        $syncedCount = 0;
+        $createdCount = 0;
+
+        foreach ($request->file('bib_csvs') as $file) {
+            if (!$file->isValid()) {
+                continue;
+            }
+            $filePath = $file->getPathname();
+            $rows = $this->parseCsv($filePath);
+
+            foreach ($rows as $row) {
+                $rawName = isset($row['full_name']) ? trim($row['full_name']) : '';
+                if (empty($rawName) || strtolower($rawName) === 'bod') {
+                    continue; // Skip empty names or "BOD" placeholders
+                }
+
+                // Format the name as Title Case (Capital Camel)
+                $fullName = ucwords(strtolower($rawName));
+
+                // Extract fields
+                $csvCategory = isset($row['category_id']) ? trim($row['category_id']) : '';
+                $email = isset($row['email']) ? trim($row['email']) : null;
+                $jerseySize = isset($row['jersey_size']) ? trim($row['jersey_size']) : null;
+                $bibNumber = isset($row['bib_number']) ? trim($row['bib_number']) : null;
+                $checklist = isset($row['checklist']) ? trim($row['checklist']) : '0';
+                $keterangan = isset($row['keterangan']) ? trim($row['keterangan']) : '';
+
+                // Find category
+                $category = null;
+                if ($csvCategory) {
+                    if (strtolower($csvCategory) === '5k internal') {
+                        $category = Category::where('slug', 'like', '%5k%')->first();
+                    } else {
+                        $category = Category::where('name', 'like', "%{$csvCategory}%")
+                            ->orWhere('slug', 'like', "%" . \Illuminate\Support\Str::slug($csvCategory) . "%")
+                            ->first();
+                    }
+
+                    if (!$category) {
+                        $slug = \Illuminate\Support\Str::slug($csvCategory);
+                        if (str_contains($slug, '5k') || str_contains($slug, 'internal')) {
+                            $category = Category::where('slug', 'like', '%5k%')->first();
+                        } elseif (str_contains($slug, '10k')) {
+                            $category = Category::where('slug', 'like', '%10k%')->first();
+                        } elseif (str_contains($slug, '15k')) {
+                            $category = Category::where('slug', 'like', '%15k%')->first();
+                        }
+                    }
+                }
+
+                if (!$category) {
+                    // Fallback to first available category
+                    $category = Category::first();
+                }
+
+                if (!$category) {
+                    continue; // No category found, skip
+                }
+
+                // Try to find existing family member first
+                $familyMember = null;
+                if ($email) {
+                    $familyMember = \App\Models\FamilyMember::where('email', $email)->first();
+                }
+                if (!$familyMember && $jerseySize) {
+                    $familyMember = \App\Models\FamilyMember::where('full_name', $fullName)
+                        ->where('jersey_size', $jerseySize)
+                        ->first();
+                }
+                if (!$familyMember) {
+                    $familyMember = \App\Models\FamilyMember::where('full_name', $fullName)->first();
+                }
+
+                // If not found in family_members, search in participants
+                $participant = null;
+                if (!$familyMember) {
+                    if ($email) {
+                        $participant = Participant::where('email', $email)->first();
+                    }
+                    if (!$participant && $jerseySize) {
+                        $participant = Participant::where('full_name', $fullName)
+                            ->where('jersey_size', $jerseySize)
+                            ->where('category_id', $category->id)
+                            ->first();
+                    }
+                    if (!$participant) {
+                        $participant = Participant::where('full_name', $fullName)
+                            ->where('category_id', $category->id)
+                            ->first();
+                    }
+                }
+
+                $rpc = ($checklist === '1');
+
+                if ($participant) {
+                    // Sync existing participant only if paid
+                    if ($participant->payment_status === 'paid') {
+                        $updateData = [];
+                        if ($bibNumber) {
+                            $updateData['bib_number'] = $bibNumber;
+                        }
+                        if ($jerseySize && $participant->jersey_size !== $jerseySize) {
+                            $updateData['jersey_size'] = $jerseySize;
+                        }
+                        if ($rpc !== $participant->rpc) {
+                            $updateData['rpc'] = $rpc;
+                        }
+                        if ($rpc !== $participant->checked_in) {
+                            $updateData['checked_in'] = $rpc;
+                            $updateData['checked_in_at'] = $rpc ? now() : null;
+                        }
+
+                        if (!empty($updateData)) {
+                            $participant->update($updateData);
+                        }
+                        $syncedCount++;
+                    }
+                } elseif ($familyMember) {
+                    // Sync existing family member only if parent is paid
+                    $parentPaid = $familyMember->participant && $familyMember->participant->payment_status === 'paid';
+                    if ($parentPaid) {
+                        $updateData = [];
+                        if ($bibNumber) {
+                            $updateData['bib_number'] = $bibNumber;
+                        }
+                        if ($jerseySize && $familyMember->jersey_size !== $jerseySize) {
+                            $updateData['jersey_size'] = $jerseySize;
+                        }
+                        if ($rpc !== $familyMember->rpc) {
+                            $updateData['rpc'] = $rpc;
+                        }
+                        if ($rpc !== $familyMember->checked_in) {
+                            $updateData['checked_in'] = $rpc;
+                            $updateData['checked_in_at'] = $rpc ? now() : null;
+                        }
+
+                        if (!empty($updateData)) {
+                            $familyMember->update($updateData);
+                        }
+                        $syncedCount++;
+                    }
+                } else {
+                    // Create new participant with "data seadanya"
+                    $keteranganLower = strtolower($keterangan);
+                    
+                    // Determine gender
+                    $gender = 'male'; // default
+                    if (str_contains($keteranganLower, 'putra') || str_contains($keteranganLower, 'male') || str_contains($keteranganLower, 'men')) {
+                        $gender = 'male';
+                    } elseif (str_contains($keteranganLower, 'putri') || str_contains($keteranganLower, 'female') || str_contains($keteranganLower, 'women')) {
+                        $gender = 'female';
+                    }
+
+                    // Determine age & date_of_birth
+                    $age = null;
+                    if (str_contains($keteranganLower, 'open')) {
+                        $age = rand(18, 39);
+                    } elseif (str_contains($keteranganLower, 'master')) {
+                        $age = rand(40, 65);
+                    } else {
+                        $age = rand(20, 35);
+                    }
+                    $dateOfBirth = now()->subYears($age)->startOfYear()->format('Y-m-d');
+
+                    // Generate dummy email if not present
+                    if (!$email) {
+                        $cleanName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $fullName));
+                        $email = $cleanName . '_' . ($bibNumber ?: rand(1000, 9999)) . '@example.com';
+                    }
+
+                    Participant::create([
+                        'event_id' => $event->id,
+                        'category_id' => $category->id,
+                        'full_name' => $fullName,
+                        'email' => $email,
+                        'phone' => '08123456789',
+                        'gender' => $gender,
+                        'date_of_birth' => $dateOfBirth,
+                        'age' => $age,
+                        'jersey_size' => $jerseySize,
+                        'bib_number' => $bibNumber,
+                        'payment_status' => 'paid',
+                        'checked_in' => $rpc,
+                        'checked_in_at' => $rpc ? now() : null,
+                        'rpc' => $rpc,
+                        'nationality' => 'Indonesia',
+                    ]);
+                    $createdCount++;
+                }
+            }
+        }
+
+        // Clear public race results cache to update display
+        \Illuminate\Support\Facades\Cache::forget('race_results_public_data');
+
+        return back()->with('success', "Berhasil sinkronisasi BIB: {$syncedCount} peserta diperbarui, {$createdCount} peserta baru ditambahkan.");
+    }
+
+    private function parseCsv($filePath)
+    {
+        $rows = [];
+        if (empty($filePath) || !file_exists($filePath)) {
+            return $rows;
+        }
+        if (($handle = fopen($filePath, 'r')) !== false) {
+            $header = fgetcsv($handle, 1000, ',');
+            if ($header) {
+                $header[0] = preg_replace('/^\xEF\xBB\xBF/', '', $header[0]);
+                $header = array_map('trim', $header);
+
+                while (($data = fgetcsv($handle, 1000, ',')) !== false) {
+                    if (count($header) === count($data)) {
+                        $rows[] = array_combine($header, $data);
+                    } else {
+                        $temp = [];
+                        foreach ($header as $i => $colName) {
+                            $temp[$colName] = isset($data[$i]) ? $data[$i] : null;
+                        }
+                        $rows[] = $temp;
+                    }
+                }
+            }
+            fclose($handle);
+        }
+        return $rows;
     }
 }

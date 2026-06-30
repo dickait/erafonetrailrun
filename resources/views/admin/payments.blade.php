@@ -352,7 +352,14 @@
             // LocalStorage Persistence for columns
             document.addEventListener('DOMContentLoaded', function () {
                 const urlParams = new URLSearchParams(window.location.search);
-                if (!urlParams.has('cols[]')) {
+                let hasCols = false;
+                for (const key of urlParams.keys()) {
+                    if (key.startsWith('cols')) {
+                        hasCols = true;
+                        break;
+                    }
+                }
+                if (!hasCols) {
                     const saved = localStorage.getItem('admin_payments_cols_v1');
                     if (saved) {
                         const cols = JSON.parse(saved);

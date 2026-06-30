@@ -72,6 +72,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/participants', [AdminController::class, 'participants'])->name('participants');
     Route::get('/participants/export', [AdminController::class, 'exportParticipants'])->name('participants.export');
+    Route::post('/participants/sync-bib', [AdminController::class, 'syncBib'])->name('participants.sync-bib');
     Route::get('/payments', [AdminController::class, 'payments'])->name('payments');
     Route::get('/payments/export', [AdminController::class, 'exportPayments'])->name('payments.export');
     // Route::post('/payments/{payment}/update-status', [AdminController::class, 'updatePaymentStatus'])->name('payments.update-status');
@@ -88,6 +89,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Race Results
     Route::get('/race-results', [\App\Http\Controllers\Admin\RaceResultController::class, 'index'])->name('race-results.index');
     Route::post('/race-results/import', [\App\Http\Controllers\Admin\RaceResultController::class, 'import'])->name('race-results.import');
+    Route::post('/race-results/import-latest', [\App\Http\Controllers\Admin\LatestResultImportController::class, 'importLatest'])->name('race-results.import-latest');
     Route::post('/race-results/process', [\App\Http\Controllers\Admin\RaceResultController::class, 'process'])->name('race-results.process');
     Route::delete('/race-results/clear', [\App\Http\Controllers\Admin\RaceResultController::class, 'clear'])->name('race-results.clear');
 });

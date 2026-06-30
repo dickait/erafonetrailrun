@@ -30,4 +30,14 @@ class FamilyMember extends Model
     {
         return $this->belongsTo(City::class);
     }
+
+    protected function casts(): array
+    {
+        return [
+            'date_of_birth' => 'date',
+            'checked_in' => 'boolean',
+            'checked_in_at' => 'datetime',
+            'rpc' => 'boolean',
+        ];
+    }
 }

@@ -36,6 +36,7 @@ class Participant extends Model
         'bib_number',
         'checked_in',
         'checked_in_at',
+        'rpc',
     ];
 
     protected function casts(): array
@@ -44,6 +45,7 @@ class Participant extends Model
             'date_of_birth' => 'date',
             'checked_in' => 'boolean',
             'checked_in_at' => 'datetime',
+            'rpc' => 'boolean',
         ];
     }
 

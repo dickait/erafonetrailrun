@@ -12,11 +12,11 @@
             <form action="{{ route('admin.race-results.import') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                 @csrf
                 <div>
-                    <label class="text-xs text-surface-500 block mb-1">CSV File (bib_number, gun_time, net_time, status)</label>
-                    <input type="file" name="csv_file" class="w-full text-sm border border-surface-200 rounded-lg p-2" required>
+                    <label class="text-xs text-surface-500 block mb-1">CSV Files (You can select multiple files)</label>
+                    <input type="file" name="csv_files[]" class="w-full text-sm border border-surface-200 rounded-lg p-2" multiple required>
                 </div>
                 <button type="submit" class="bg-brand-500 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-brand-600 transition-colors">
-                    Upload CSV
+                    Upload CSV Files
                 </button>
             </form>
         </div>
@@ -25,6 +25,13 @@
         <div class="bg-white border border-surface-300 rounded-xl shadow-sm p-6">
             <h3 class="text-sm font-bold text-surface-900 uppercase tracking-wider mb-4">Actions</h3>
             <div class="flex flex-wrap gap-3">
+                <form action="{{ route('admin.race-results.import-latest') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-600 transition-colors">
+                        Import CSV Terbaru
+                    </button>
+                </form>
+
                 <form action="{{ route('admin.race-results.process') }}" method="POST">
                     @csrf
                     <button type="submit" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-emerald-600 transition-colors">

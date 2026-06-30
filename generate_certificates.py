@@ -173,7 +173,7 @@ def process_csv(csv_path, limit=None):
 
 if __name__ == "__main__":
     # Path to your results CSV file
-    csv_file = "public/results/10k-female-master.csv"
+    csv_file = "public/results-csv/10k-female-master.csv"
     
     # To run a test generation for only the first row (1 certificate), set limit=1.
     # To generate all certificates, set limit=None.
