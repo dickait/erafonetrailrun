@@ -789,6 +789,7 @@ class AdminController extends Controller
 
         $syncedCount = 0;
         $createdCount = 0;
+        $processedParticipants = [];
 
         foreach ($request->file('bib_csvs') as $file) {
             if (!$file->isValid()) {
@@ -796,6 +797,16 @@ class AdminController extends Controller
             }
             $filePath = $file->getPathname();
             $rows = $this->parseCsv($filePath);
+
+            $fileName = strtolower($file->getClientOriginalName() ?: $file->getFilename());
+            $fileCategory = null;
+            if (str_contains($fileName, '15k')) {
+                $fileCategory = Category::where('slug', 'like', '%15k%')->first();
+            } elseif (str_contains($fileName, '10k')) {
+                $fileCategory = Category::where('slug', 'like', '%10k%')->first();
+            } elseif (str_contains($fileName, '5k')) {
+                $fileCategory = Category::where('slug', 'like', '%5k%')->first();
+            }
 
             foreach ($rows as $row) {
                 $rawName = isset($row['full_name']) ? trim($row['full_name']) : '';
@@ -808,15 +819,15 @@ class AdminController extends Controller
 
                 // Extract fields
                 $csvCategory = isset($row['category_id']) ? trim($row['category_id']) : '';
-                $email = isset($row['email']) ? trim($row['email']) : null;
+                $email = isset($row['email']) && trim($row['email']) !== '' ? trim($row['email']) : null;
                 $jerseySize = isset($row['jersey_size']) ? trim($row['jersey_size']) : null;
                 $bibNumber = isset($row['bib_number']) ? trim($row['bib_number']) : null;
                 $checklist = isset($row['checklist']) ? trim($row['checklist']) : '0';
                 $keterangan = isset($row['keterangan']) ? trim($row['keterangan']) : '';
 
                 // Find category
-                $category = null;
-                if ($csvCategory) {
+                $category = $fileCategory;
+                if (!$category && $csvCategory) {
                     if (strtolower($csvCategory) === '5k internal') {
                         $category = Category::where('slug', 'like', '%5k%')->first();
                     } else {
@@ -846,23 +857,92 @@ class AdminController extends Controller
                     continue; // No category found, skip
                 }
 
-                // Try to find existing family member first
+                $is5k = str_contains(strtolower($category->slug), '5k');
+                $isInternal = str_contains(strtolower($csvCategory), 'internal');
                 $familyMember = null;
-                if ($email) {
-                    $familyMember = \App\Models\FamilyMember::where('email', $email)->first();
-                }
-                if (!$familyMember && $jerseySize) {
-                    $familyMember = \App\Models\FamilyMember::where('full_name', $fullName)
-                        ->where('jersey_size', $jerseySize)
-                        ->first();
-                }
-                if (!$familyMember) {
-                    $familyMember = \App\Models\FamilyMember::where('full_name', $fullName)->first();
-                }
-
-                // If not found in family_members, search in participants
                 $participant = null;
-                if (!$familyMember) {
+                $createNewFamilyMember = false;
+                $familyMemberLeaderId = null;
+
+                if ($is5k) {
+                    if ($isInternal) {
+                        // Search participant first
+                        if ($email) {
+                            $participant = Participant::where('email', $email)->first();
+                        }
+                        if (!$participant && $jerseySize) {
+                            $participant = Participant::where('full_name', $fullName)
+                                ->where('jersey_size', $jerseySize)
+                                ->where('category_id', $category->id)
+                                ->first();
+                        }
+                        if (!$participant) {
+                            $participant = Participant::where('full_name', $fullName)
+                                ->where('category_id', $category->id)
+                                ->first();
+                        }
+
+                        // If participant is found, check if it's already processed in this import run
+                        if ($participant && isset($processedParticipants[$participant->id])) {
+                            // This participant is already processed, so this row is a double name!
+                            // We must treat it as a family member.
+                            $leaderId = $participant->id;
+                            $participant = null; // unset participant to trigger family member logic
+
+                            // Try to find existing family member under this leader
+                            $familyMember = \App\Models\FamilyMember::where('participant_id', $leaderId)
+                                ->where('full_name', $fullName)
+                                ->first();
+                            
+                            if (!$familyMember && $jerseySize) {
+                                $familyMember = \App\Models\FamilyMember::where('full_name', $fullName)
+                                    ->where('jersey_size', $jerseySize)
+                                    ->first();
+                            }
+                            if (!$familyMember) {
+                                $familyMember = \App\Models\FamilyMember::where('full_name', $fullName)->first();
+                            }
+                            
+                            // If no family member found, we will create a new family member under this leader
+                            if (!$familyMember) {
+                                $createNewFamilyMember = true;
+                                $familyMemberLeaderId = $leaderId;
+                            }
+                        }
+                    } else {
+                        // For other categories, search family_members first
+                        if ($email) {
+                            $familyMember = \App\Models\FamilyMember::where('email', $email)->first();
+                        }
+                        if (!$familyMember && $jerseySize) {
+                            $familyMember = \App\Models\FamilyMember::where('full_name', $fullName)
+                                ->where('jersey_size', $jerseySize)
+                                ->first();
+                        }
+                        if (!$familyMember) {
+                            $familyMember = \App\Models\FamilyMember::where('full_name', $fullName)->first();
+                        }
+
+                        if (!$familyMember) {
+                            if ($email) {
+                                $participant = Participant::where('email', $email)->first();
+                            }
+                            if (!$participant && $jerseySize) {
+                                $participant = Participant::where('full_name', $fullName)
+                                    ->where('jersey_size', $jerseySize)
+                                    ->where('category_id', $category->id)
+                                    ->first();
+                            }
+                            if (!$participant) {
+                                $participant = Participant::where('full_name', $fullName)
+                                    ->where('category_id', $category->id)
+                                    ->first();
+                            }
+                        }
+                    }
+                } else {
+                    // For non-5k categories (10k, 15k), do NOT check family_members at all!
+                    // Only search participants
                     if ($email) {
                         $participant = Participant::where('email', $email)->first();
                     }
@@ -876,6 +956,12 @@ class AdminController extends Controller
                         $participant = Participant::where('full_name', $fullName)
                             ->where('category_id', $category->id)
                             ->first();
+                    }
+
+                    // If participant is found and already processed, this is a double name in a non-5k category.
+                    // We treat it as a new participant to be created.
+                    if ($participant && isset($processedParticipants[$participant->id])) {
+                        $participant = null; // Unset to force new participant creation
                     }
                 }
 
@@ -903,6 +989,9 @@ class AdminController extends Controller
                             $participant->update($updateData);
                         }
                         $syncedCount++;
+
+                        // Mark as processed
+                        $processedParticipants[$participant->id] = true;
                     }
                 } elseif ($familyMember) {
                     // Sync existing family member only if parent is paid
@@ -928,26 +1017,86 @@ class AdminController extends Controller
                         }
                         $syncedCount++;
                     }
+                } elseif ($createNewFamilyMember) {
+                    // Create new family member under the leader (for 5K Internal double names)
+                    $keteranganLower = strtolower($keterangan);
+                    
+                    // Determine gender: putra -> male (M), putri -> female (F)
+                    $gender = 'male'; // default
+                    if (
+                        str_contains($keteranganLower, 'putri') || 
+                        str_contains($keteranganLower, 'female') || 
+                        str_contains($keteranganLower, 'women') || 
+                        preg_match('/\b(f|female)\b/', $keteranganLower)
+                    ) {
+                        $gender = 'female';
+                    } elseif (
+                        str_contains($keteranganLower, 'putra') || 
+                        str_contains($keteranganLower, 'male') || 
+                        str_contains($keteranganLower, 'men') || 
+                        preg_match('/\b(m|male)\b/', $keteranganLower)
+                    ) {
+                        $gender = 'male';
+                    }
+
+                    // Determine age & date_of_birth: Open < 40, Master >= 40
+                    $age = null;
+                    if (str_contains($keteranganLower, 'open')) {
+                        $age = rand(18, 39); // Open: < 40
+                    } elseif (str_contains($keteranganLower, 'master')) {
+                        $age = rand(40, 65); // Master: >= 40
+                    } else {
+                        $age = rand(20, 35); // Default
+                    }
+                    $dateOfBirth = now()->subYears($age)->startOfYear()->format('Y-m-d');
+
+                    \App\Models\FamilyMember::create([
+                        'participant_id' => $familyMemberLeaderId,
+                        'role' => 'saudara',
+                        'full_name' => $fullName,
+                        'email' => $email ?: null,
+                        'phone' => null, // empty / null since no phone column in CSV
+                        'gender' => $gender,
+                        'date_of_birth' => $dateOfBirth,
+                        'age' => $age,
+                        'jersey_size' => $jerseySize,
+                        'bib_number' => $bibNumber,
+                        'checked_in' => $rpc,
+                        'checked_in_at' => $rpc ? now() : null,
+                        'rpc' => $rpc,
+                        'nationality' => 'Indonesia',
+                    ]);
+                    $createdCount++;
                 } else {
                     // Create new participant with "data seadanya"
                     $keteranganLower = strtolower($keterangan);
                     
-                    // Determine gender
+                    // Determine gender: putra -> male (M), putri -> female (F)
                     $gender = 'male'; // default
-                    if (str_contains($keteranganLower, 'putra') || str_contains($keteranganLower, 'male') || str_contains($keteranganLower, 'men')) {
-                        $gender = 'male';
-                    } elseif (str_contains($keteranganLower, 'putri') || str_contains($keteranganLower, 'female') || str_contains($keteranganLower, 'women')) {
+                    if (
+                        str_contains($keteranganLower, 'putri') || 
+                        str_contains($keteranganLower, 'female') || 
+                        str_contains($keteranganLower, 'women') || 
+                        preg_match('/\b(f|female)\b/', $keteranganLower)
+                    ) {
                         $gender = 'female';
+                    } elseif (
+                        str_contains($keteranganLower, 'putra') || 
+                        str_contains($keteranganLower, 'male') || 
+                        str_contains($keteranganLower, 'men') || 
+                        preg_match('/\b(m|male)\b/', $keteranganLower)
+                    ) {
+                        $gender = 'male';
                     }
 
-                    // Determine age & date_of_birth
+                    // Determine age & date_of_birth: Open < 40, Master >= 40
                     $age = null;
                     if (str_contains($keteranganLower, 'open')) {
-                        $age = rand(18, 39);
+                        $age = rand(18, 39); // Open: < 40
                     } elseif (str_contains($keteranganLower, 'master')) {
-                        $age = rand(40, 65);
+                        $age = rand(40, 65); // Master: >= 40
                     } else {
-                        $age = rand(20, 35);
+                        $age = rand(20, 35); // Default
                     }
                     $dateOfBirth = now()->subYears($age)->startOfYear()->format('Y-m-d');
 
@@ -957,12 +1106,12 @@ class AdminController extends Controller
                         $email = $cleanName . '_' . ($bibNumber ?: rand(1000, 9999)) . '@example.com';
                     }
 
-                    Participant::create([
+                    $newParticipant = Participant::create([
                         'event_id' => $event->id,
                         'category_id' => $category->id,
                         'full_name' => $fullName,
                         'email' => $email,
-                        'phone' => '08123456789',
+                        'phone' => '', // empty string since phone is NOT NULL but not in CSV
                         'gender' => $gender,
                         'date_of_birth' => $dateOfBirth,
                         'age' => $age,
@@ -975,6 +1124,9 @@ class AdminController extends Controller
                         'nationality' => 'Indonesia',
                     ]);
                     $createdCount++;
+
+                    // Mark as processed
+                    $processedParticipants[$newParticipant->id] = true;
                 }
             }
         }
