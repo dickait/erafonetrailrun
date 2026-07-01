@@ -45,6 +45,8 @@ return [
 
     'is_open' => env('IS_OPEN', true),
 
+    'is_over' => env('IS_OVER', 'no') === 'yes',
+
     'midtrans' => [
         'server_key' => env('MIDTRANS_API_SERVER_KEY'),
         'client_key' => env('MIDTRANS_API_CLIENT_KEY'),
