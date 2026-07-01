@@ -91,6 +91,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/race-results/import', [\App\Http\Controllers\Admin\RaceResultController::class, 'import'])->name('race-results.import');
     Route::post('/race-results/import-latest', [\App\Http\Controllers\Admin\LatestResultImportController::class, 'importLatest'])->name('race-results.import-latest');
     Route::post('/race-results/process', [\App\Http\Controllers\Admin\RaceResultController::class, 'process'])->name('race-results.process');
+    Route::post('/race-results/generate-certificates', [\App\Http\Controllers\Admin\RaceResultController::class, 'generateCertificates'])->name('race-results.generate-certificates');
     Route::delete('/race-results/clear', [\App\Http\Controllers\Admin\RaceResultController::class, 'clear'])->name('race-results.clear');
 });
 

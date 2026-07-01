@@ -39,6 +39,13 @@
                     </button>
                 </form>
 
+                <form action="{{ route('admin.race-results.generate-certificates') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="bg-amber-500 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-amber-600 transition-colors">
+                        Generate PDF Certificates
+                    </button>
+                </form>
+
                 <form action="{{ route('admin.race-results.clear') }}" method="POST" onsubmit="return confirm('Are you sure you want to clear all results?')">
                     @csrf
                     @method('DELETE')

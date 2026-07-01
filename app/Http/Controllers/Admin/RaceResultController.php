@@ -289,6 +289,22 @@ class RaceResultController extends Controller
         Cache::forget('race_results_public_data');
     }
 
+    public function generateCertificates()
+    {
+        $basePath = base_path();
+        $output = [];
+        $returnVar = 0;
+        
+        // Execute python script
+        exec("cd /d " . escapeshellarg($basePath) . " && python generate_certificates.py 2>&1", $output, $returnVar);
+        
+        if ($returnVar !== 0) {
+            return redirect()->back()->with('error', "Failed to generate certificates. Error: " . implode("<br>", array_slice($output, -10)));
+        }
+        
+        return redirect()->back()->with('success', "Certificates generated successfully!");
+    }
+
     public function clear()
     {
         RaceResult::truncate();

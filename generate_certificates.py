@@ -28,8 +28,8 @@ CONFIG = {
     
     # 2. BIB Number
     "bib": {
-        "x": 155,
-        "y": 60,
+        "x": 156,
+        "y": 58,
         "font_name": "Helvetica-Bold",
         "font_size": 16,
         "color": "#FFFFFF",
@@ -39,7 +39,7 @@ CONFIG = {
     # 3. Gender
     "gender": {
         "x": 302,
-        "y": 60,
+        "y": 58,
         "font_name": "Helvetica-Bold",
         "font_size": 16,
         "color": "#FFFFFF",
@@ -49,8 +49,8 @@ CONFIG = {
     
     # 4. Finish Time
     "finish_time": {
-        "x": 480,
-        "y": 60,
+        "x": 482,
+        "y": 58,
         "font_name": "Helvetica-Bold",
         "font_size": 16,
         "color": "#FFFFFF",
@@ -60,13 +60,25 @@ CONFIG = {
     # 5. Distance
     "distance": {
         "x": 667,
-        "y": 60,
+        "y": 64,
         "font_name": "Helvetica-Bold",
         "font_size": 16,
         "color": "#FFFFFF",
         "alignment": "center",
         # Auto-extract distance from category, e.g. "15K Female Master" -> "15K"
         "transform": lambda val: val.split()[0] if val else "",
+    },
+    
+    # 6. Category Detail (shown below distance)
+    "category_detail": {
+        "x": 667,
+        "y": 48,
+        "font_name": "Helvetica-Bold",
+        "font_size": 10,
+        "color": "#FFFFFF",
+        "alignment": "center",
+        # Auto-extract remaining part of category, e.g. "15K Female Master" -> "FEMALE MASTER"
+        "transform": lambda val: " ".join(val.split()[1:]).upper() if val and len(val.split()) > 1 else "",
     }
 }
 
@@ -120,6 +132,7 @@ def generate_single_certificate(data, output_filename):
     draw_text(can, data.get("Gender", ""), CONFIG["gender"])
     draw_text(can, data.get("Finish Time", ""), CONFIG["finish_time"])
     draw_text(can, data.get("Category Distance", ""), CONFIG["distance"])
+    draw_text(can, data.get("Category Distance", ""), CONFIG["category_detail"])
     
     can.save()
     packet.seek(0)
@@ -170,11 +183,22 @@ def process_csv(csv_path, limit=None):
                 break
                 
         print(f"Finished. Generated {count} certificates.")
-
 if __name__ == "__main__":
-    # Path to your results CSV file
-    csv_file = "public/results-csv/10k-female-master.csv"
+    import argparse
+    import glob
+
+    parser = argparse.ArgumentParser(description="Generate race finisher certificates.")
+    parser.add_argument("--csv", type=str, help="Path to a specific results CSV file.")
+    parser.add_argument("--limit", type=int, default=None, help="Limit the number of certificates to generate per CSV file.")
     
-    # To run a test generation for only the first row (1 certificate), set limit=1.
-    # To generate all certificates, set limit=None.
-    process_csv(csv_file, limit=1)
+    args = parser.parse_args()
+    
+    if args.csv:
+        process_csv(args.csv, limit=args.limit)
+    else:
+        csv_files = sorted(glob.glob("public/results-csv/*.csv"))
+        if not csv_files:
+            print("No CSV files found in public/results-csv/")
+        else:
+            for csv_file in csv_files:
+                process_csv(csv_file, limit=args.limit)

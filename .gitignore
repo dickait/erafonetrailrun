@@ -16,6 +16,8 @@
 /public/build
 /public/hot
 /public/storage
+/public/certificates
+/public/certificates/*.pdf
 /storage/*.key
 /storage/app/public
 /storage/pail
@@ -24,3 +26,4 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 *.zip
+
