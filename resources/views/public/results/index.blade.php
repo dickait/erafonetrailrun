@@ -57,6 +57,18 @@
             if (!str) return '';
             return str.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
         },
+        getGroupTotalCount(result) {
+            if (!result) return 0;
+            const distance = parseInt(result.distance_km);
+            const list = this.allData[distance] || [];
+            return list.filter(r => r.age_category === result.age_category && r.gender === result.gender).length;
+        },
+        getGenderTotalCount(result) {
+            if (!result) return 0;
+            const distance = parseInt(result.distance_km);
+            const list = this.allData[distance] || [];
+            return list.filter(r => r.gender === result.gender).length;
+        },
         selectedResult: null,
         showModal: false,
         showDetailsModal(result) {
@@ -619,19 +631,19 @@
                         <div class="border-t border-surface-100 pt-4 space-y-2">
                             <h5 class="text-[9px] font-bold text-black uppercase tracking-wider mb-1.5">Rankings & Standing</h5>
                             <div class="flex justify-between items-center text-xs py-1 border-b border-surface-50">
-                                <span class="text-black" x-text="selectedResult ? 'Category Position (' + (parseFloat(selectedResult.distance_km) === 5 ? '5K Family' : parseFloat(selectedResult.distance_km) + 'K') + ')' : 'Category Position'"></span>
+                                <span class="text-black" x-text="selectedResult ? 'Distance Position (' + (parseFloat(selectedResult.distance_km) === 5 ? '5K Family' : parseFloat(selectedResult.distance_km) + 'K') + ')' : 'Distance Position'"></span>
                                 <span class="font-mono font-bold text-black" x-text="selectedResult && selectedResult.rank_category ? '#' + selectedResult.rank_category : '-'"></span>
                             </div>
                             <div class="flex justify-between items-center text-xs py-1 border-b border-surface-50">
-                                <span class="text-black" x-text="selectedResult ? 'Group Position (' + capitalize(selectedResult.age_category) + ' ' + capitalize(selectedResult.gender) + ')' : 'Group Position'"></span>
-                                <span class="font-mono font-bold text-black" x-text="selectedResult && selectedResult.rank_group ? '#' + selectedResult.rank_group : '-'"></span>
+                                <span class="text-black" x-text="selectedResult ? 'Category Position (' + (parseFloat(selectedResult.distance_km) === 5 ? '5K' : parseFloat(selectedResult.distance_km) + 'K') + ' ' + capitalize(selectedResult.age_category) + ' ' + capitalize(selectedResult.gender) + ')' : 'Category Position'"></span>
+                                <span class="font-mono font-bold text-black" x-text="selectedResult && selectedResult.rank_group ? '#' + selectedResult.rank_group + '/' + getGroupTotalCount(selectedResult) : '-'"></span>
                             </div>
                             <div class="flex justify-between items-center text-xs py-1 border-b border-surface-50">
-                                <span class="text-black" x-text="selectedResult ? 'Gender Position (' + capitalize(selectedResult.gender) + ')' : 'Gender Position'"></span>
-                                <span class="font-mono font-bold text-black" x-text="selectedResult && selectedResult.gender_pos ? '#' + selectedResult.gender_pos : '-'"></span>
+                                <span class="text-black" x-text="selectedResult ? 'Gender Position (' + (parseFloat(selectedResult.distance_km) === 5 ? '5K' : parseFloat(selectedResult.distance_km) + 'K') + ' ' + capitalize(selectedResult.gender) + ')' : 'Gender Position'"></span>
+                                <span class="font-mono font-bold text-black" x-text="selectedResult && selectedResult.gender_pos ? '#' + selectedResult.gender_pos + '/' + getGenderTotalCount(selectedResult) : '-'"></span>
                             </div>
                             <div class="flex justify-between items-center text-xs py-1">
-                                <span class="text-black">Overall Event Position</span>
+                                <span class="text-black" x-text="selectedResult ? 'Overall Event Position (' + (parseFloat(selectedResult.distance_km) === 5 ? '5K Family' : parseFloat(selectedResult.distance_km) + 'K') + ')' : 'Overall Event Position'"></span>
                                 <span class="font-mono font-bold text-black" x-text="selectedResult && selectedResult.rank_overall ? '#' + selectedResult.rank_overall + '/' + allData[parseInt(selectedResult.distance_km)].length : '-'"></span>
                             </div>
                         </div>
