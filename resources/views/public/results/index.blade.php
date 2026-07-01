@@ -20,13 +20,17 @@
                 {{ __('messages.results_title') }}
             </h1>
             <p class="text-white/70 text-lg max-w-2xl mx-auto">
-                {{ __('messages.results_subtitle') }}
+                @if($totalCount > 0)
+                    {{ app()->getLocale() === 'id' ? 'Hasil Resmi Lomba Era Trail Run 2026' : 'Official Race Results for Era Trail Run 2026' }}
+                @else
+                    {{ __('messages.results_subtitle') }}
+                @endif
             </p>
         </div>
     </section>
 
     <section class="py-16 bg-white" id="all-results" x-data="{ 
-        activeTab: '5', 
+        activeTab: '10', 
         search: '',
         searchInput: '',
         performSearch() {
@@ -48,6 +52,10 @@
         },
         isRowExpanded(id) {
             return this.expandedRows.includes(id);
+        },
+        capitalize(str) {
+            if (!str) return '';
+            return str.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
         },
         selectedResult: null,
         showModal: false,
@@ -284,111 +292,50 @@
         }
     }">
         <div class="max-w-7xl mx-auto px-4">
-            <!-- Tabs and Advanced Toggle Container -->
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8 border-b border-surface-150 pb-6">
-                <!-- Tabs Navigation -->
+            <!-- Tabs Navigation -->
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 border-b border-surface-150 pb-6">
                 <div class="flex flex-wrap gap-2">
                     <template x-for="tab in [
-                        {id:'5', label:'5K Family'},
-                        {id:'10', label:'10K'},
-                        {id:'15', label:'15K'},
+                        {id:'10', label:'10K Overall'},
+                        {id:'15', label:'15K Overall'},
                         {id:'podium', label:'Podium Winners'}
                     ]">
-                        <button @click="activeTab = tab.id; if(tab.id !== 'podium') { filterDistance = tab.id; } else { filterDistance = 'all'; }" 
+                        <button @click="activeTab = tab.id; filterGender = 'all'; filterAgeCategory = 'all'; if(tab.id !== 'podium') { filterDistance = tab.id; } else { filterDistance = 'all'; }" 
                                 :class="activeTab === tab.id ? 'bg-brand-600 text-white shadow-md shadow-brand-600/10' : 'bg-surface-50 text-black hover:bg-surface-100 border border-surface-200'"
                                 class="px-5 py-2.5 rounded-xl font-bold transition-all duration-200 flex items-center gap-1.5 text-xs">
                             <span x-text="tab.label"></span>
                         </button>
                     </template>
                 </div>
-                
-                <!-- Advanced Toggle -->
-                <div class="flex items-center gap-2" x-show="activeTab !== 'podium'">
-                    <button @click="showAdvanced = !showAdvanced" 
-                            :class="showAdvanced ? 'bg-brand-50 border-brand-500 text-brand-600' : 'bg-white border-surface-200 text-black hover:bg-surface-50'"
-                            class="inline-flex items-center gap-1.5 px-5 py-2.5 border rounded-xl font-bold transition-all duration-200 text-xs shadow-sm focus:outline-none">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                        </svg>
-                        Advanced Filters
-                        <span x-show="filterGender !== 'all' || filterAgeCategory !== 'all' || filterDistance !== 'all' || sortBy !== 'rank_asc'" class="w-1.5 h-1.5 rounded-full bg-brand-500 inline-block"></span>
-                    </button>
-                </div>
             </div>
 
-            <!-- Advanced Filters Form -->
-            <div x-show="showAdvanced && activeTab !== 'podium'" 
-                 x-transition:enter="transition ease-out duration-200"
-                 x-transition:enter-start="opacity-0 transform -translate-y-4"
-                 x-transition:enter-end="opacity-100 transform translate-y-0"
-                 x-transition:leave="transition ease-in duration-150"
-                 x-transition:leave-start="opacity-100 transform translate-y-0"
-                 x-transition:leave-end="opacity-0 transform -translate-y-4"
-                 class="bg-surface-50 border border-surface-200 rounded-2xl p-5 mb-8"
-                 x-cloak>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                    <!-- Distance Filter -->
-                    <div>
-                        <label class="block text-[10px] font-bold text-black uppercase tracking-wider mb-1.5">Distance</label>
-                        <select x-model="filterDistance" 
-                                @change="if(filterDistance !== 'all') { activeTab = filterDistance; }"
-                                class="w-full px-3 py-2 bg-white border border-surface-300 rounded-xl text-black focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors outline-none text-xs">
-                            <option value="all">All Distances</option>
-                            <option value="5">5K Family</option>
-                            <option value="10">10K</option>
-                            <option value="15">15K</option>
-                        </select>
-                    </div>
-
-                    <!-- Gender Filter -->
-                    <div>
-                        <label class="block text-[10px] font-bold text-black uppercase tracking-wider mb-1.5">Gender</label>
-                        <select x-model="filterGender" 
-                                class="w-full px-3 py-2 bg-white border border-surface-300 rounded-xl text-black focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors outline-none text-xs">
-                            <option value="all">All Genders</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                        </select>
-                    </div>
-
-                    <!-- Age Category Filter -->
-                    <div>
-                        <label class="block text-[10px] font-bold text-black uppercase tracking-wider mb-1.5">Age Category</label>
-                        <select x-model="filterAgeCategory" 
-                                class="w-full px-3 py-2 bg-white border border-surface-300 rounded-xl text-black focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors outline-none text-xs">
-                            <option value="all">All Categories</option>
-                            <option value="open">Open</option>
-                            <option value="master">Master</option>
-                        </select>
-                    </div>
-
-                    <!-- Sort By Filter -->
-                    <div>
-                        <label class="block text-[10px] font-bold text-black uppercase tracking-wider mb-1.5">Sort By</label>
-                        <select x-model="sortBy" 
-                                class="w-full px-3 py-2 bg-white border border-surface-300 rounded-xl text-black focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors outline-none text-xs">
-                            <option value="rank_asc">Position (Ascending)</option>
-                            <option value="rank_desc">Position (Descending)</option>
-                            <option value="bib_asc">BIB Number (Ascending)</option>
-                            <option value="bib_desc">BIB Number (Descending)</option>
-                            <option value="name_asc">Name (A - Z)</option>
-                            <option value="name_desc">Name (Z - A)</option>
-                            <option value="time_asc">Time (Fastest)</option>
-                            <option value="time_desc">Time (Slowest)</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <!-- Reset Filters Button -->
-                <div class="mt-4 flex justify-end">
-                    <button @click="filterGender = 'all'; filterAgeCategory = 'all'; filterDistance = 'all'; activeTab = '5'; sortBy = 'rank_asc'; searchInput = ''; search = '';" 
-                            class="text-xs font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1">
-                        <svg class="w-3.5 h-3.5 animate-spin-hover" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-                        </svg>
-                        Reset Filters
-                    </button>
-                </div>
+            <!-- Sub Category Filters for 10K / 15K -->
+            <div x-show="activeTab === '10' || activeTab === '15'" class="mb-8 flex flex-wrap gap-2 justify-center" x-cloak>
+                <button @click="filterGender = 'all'; filterAgeCategory = 'all'"
+                        :class="filterGender === 'all' && filterAgeCategory === 'all' ? 'bg-brand-600 text-white shadow-sm' : 'bg-surface-50 text-black hover:bg-surface-100 border border-surface-200'"
+                        class="px-4 py-2 rounded-xl font-bold transition-all duration-200 text-xs">
+                    Overall
+                </button>
+                <button @click="filterGender = 'male'; filterAgeCategory = 'open'"
+                        :class="filterGender === 'male' && filterAgeCategory === 'open' ? 'bg-brand-600 text-white shadow-sm' : 'bg-surface-50 text-black hover:bg-surface-100 border border-surface-200'"
+                        class="px-4 py-2 rounded-xl font-bold transition-all duration-200 text-xs">
+                    Male Open
+                </button>
+                <button @click="filterGender = 'male'; filterAgeCategory = 'master'"
+                        :class="filterGender === 'male' && filterAgeCategory === 'master' ? 'bg-brand-600 text-white shadow-sm' : 'bg-surface-50 text-black hover:bg-surface-100 border border-surface-200'"
+                        class="px-4 py-2 rounded-xl font-bold transition-all duration-200 text-xs">
+                    Male Master
+                </button>
+                <button @click="filterGender = 'female'; filterAgeCategory = 'open'"
+                        :class="filterGender === 'female' && filterAgeCategory === 'open' ? 'bg-brand-600 text-white shadow-sm' : 'bg-surface-50 text-black hover:bg-surface-100 border border-surface-200'"
+                        class="px-4 py-2 rounded-xl font-bold transition-all duration-200 text-xs">
+                    Female Open
+                </button>
+                <button @click="filterGender = 'female'; filterAgeCategory = 'master'"
+                        :class="filterGender === 'female' && filterAgeCategory === 'master' ? 'bg-brand-600 text-white shadow-sm' : 'bg-surface-50 text-black hover:bg-surface-100 border border-surface-200'"
+                        class="px-4 py-2 rounded-xl font-bold transition-all duration-200 text-xs">
+                    Female Master
+                </button>
             </div>
 
             <!-- Client-side Search -->
@@ -396,7 +343,7 @@
                 <div class="flex flex-col sm:flex-row gap-2">
                     <div class="relative flex-1">
                         <input type="text" x-model="searchInput" @keydown.enter.prevent="performSearch()" placeholder="Cari nomor BIB atau Nama..." 
-                               class="w-full px-4 py-2.5 bg-white border border-surface-300 rounded-xl text-surface-900 placeholder-surface-400 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors outline-none text-sm">
+                               class="w-full px-4 py-2.5 bg-white border border-surface-300 rounded-xl text-black placeholder-surface-400 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors outline-none text-sm">
                         
                         <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
                             <button type="button" @click.prevent="searchInput = ''; performSearch();" x-show="searchInput.length > 0" x-transition class="text-surface-300 hover:text-brand-500 transition-colors">
@@ -419,10 +366,46 @@
                         <thead class="bg-surface-50 text-black uppercase text-[9px] font-bold tracking-wider border-b border-surface-200">
                             <tr>
                                 <th class="px-4 py-3.5 w-10 text-center"></th>
-                                <th class="px-4 py-3.5">Pos</th>
-                                <th class="px-4 py-3.5">Race No</th>
-                                <th class="px-4 py-3.5">Name</th>
-                                <th class="px-4 py-3.5">Time</th>
+                                <!-- Pos Column Sortable -->
+                                <th class="px-4 py-3.5 cursor-pointer select-none hover:bg-surface-100 transition-colors" @click="sortBy = (sortBy === 'rank_asc' ? 'rank_desc' : 'rank_asc')">
+                                    <div class="flex items-center gap-1.5">
+                                        <span>Pos</span>
+                                        <span class="flex flex-col text-[8px] leading-[4px]">
+                                            <span :class="sortBy === 'rank_asc' ? 'text-brand-600' : 'text-black/30'">▲</span>
+                                            <span :class="sortBy === 'rank_desc' ? 'text-brand-600' : 'text-black/30'">▼</span>
+                                        </span>
+                                    </div>
+                                </th>
+                                <!-- Race No Column Sortable -->
+                                <th class="px-4 py-3.5 cursor-pointer select-none hover:bg-surface-100 transition-colors" @click="sortBy = (sortBy === 'bib_asc' ? 'bib_desc' : 'bib_asc')">
+                                    <div class="flex items-center gap-1.5">
+                                        <span>Race No</span>
+                                        <span class="flex flex-col text-[8px] leading-[4px]">
+                                            <span :class="sortBy === 'bib_asc' ? 'text-brand-600' : 'text-black/30'">▲</span>
+                                            <span :class="sortBy === 'bib_desc' ? 'text-brand-600' : 'text-black/30'">▼</span>
+                                        </span>
+                                    </div>
+                                </th>
+                                <!-- Name Column Sortable -->
+                                <th class="px-4 py-3.5 cursor-pointer select-none hover:bg-surface-100 transition-colors" @click="sortBy = (sortBy === 'name_asc' ? 'name_desc' : 'name_asc')">
+                                    <div class="flex items-center gap-1.5">
+                                        <span>Name</span>
+                                        <span class="flex flex-col text-[8px] leading-[4px]">
+                                            <span :class="sortBy === 'name_asc' ? 'text-brand-600' : 'text-black/30'">▲</span>
+                                            <span :class="sortBy === 'name_desc' ? 'text-brand-600' : 'text-black/30'">▼</span>
+                                        </span>
+                                    </div>
+                                </th>
+                                <!-- Time Column Sortable -->
+                                <th class="px-4 py-3.5 cursor-pointer select-none hover:bg-surface-100 transition-colors" @click="sortBy = (sortBy === 'time_asc' ? 'time_desc' : 'time_asc')">
+                                    <div class="flex items-center gap-1.5">
+                                        <span>Time</span>
+                                        <span class="flex flex-col text-[8px] leading-[4px]">
+                                            <span :class="sortBy === 'time_asc' ? 'text-brand-600' : 'text-black/30'">▲</span>
+                                            <span :class="sortBy === 'time_desc' ? 'text-brand-600' : 'text-black/30'">▼</span>
+                                        </span>
+                                    </div>
+                                </th>
                                 <th class="px-4 py-3.5">Category</th>
                                 <th class="px-4 py-3.5">Cat Pos</th>
                                 <th class="px-4 py-3.5">Gender</th>
@@ -569,7 +552,7 @@
                                                             {{ $winner->rank_group }}
                                                         </div>
                                                         <div class="flex-1 min-w-0">
-                                                            <div class="font-bold text-black truncate">{{ $winner->participant->full_name }}</div>
+                                                            <div class="font-bold text-black truncate uppercase">{{ $winner->participant->full_name }}</div>
                                                             <div class="text-xs text-black font-mono">BIB: {{ $winner->bib_number }}</div>
                                                         </div>
                                                         <div class="text-right">
@@ -629,7 +612,7 @@
                             </div>
                             <div class="bg-surface-50 p-3 rounded-2xl border border-surface-200/60">
                                 <span class="text-[9px] font-bold text-black uppercase tracking-wider block mb-0.5">Age Group / Gender</span>
-                                <span class="font-display font-black text-lg text-black" x-text="selectedResult ? selectedResult.age_category + ' (' + (selectedResult.gender === 'male' ? 'M' : 'F') + ')' : '-'"></span>
+                                <span class="font-display font-black text-lg text-black" x-text="selectedResult ? capitalize(selectedResult.age_category) + ' (' + (selectedResult.gender === 'male' ? 'M' : 'F') + ')' : '-'"></span>
                             </div>
                             <div class="bg-surface-50 p-3 rounded-2xl border border-surface-200/60 col-span-2">
                                 <span class="text-[9px] font-bold text-black uppercase tracking-wider block mb-0.5">Finish Time</span>
@@ -644,11 +627,11 @@
                                 <span class="font-mono font-bold text-black" x-text="selectedResult && selectedResult.rank_category ? '#' + selectedResult.rank_category : '-'"></span>
                             </div>
                             <div class="flex justify-between items-center text-xs py-1 border-b border-surface-50">
-                                <span class="text-black" x-text="selectedResult ? 'Group Position (' + selectedResult.age_category + ' ' + selectedResult.gender + ')' : 'Group Position'"></span>
+                                <span class="text-black" x-text="selectedResult ? 'Group Position (' + capitalize(selectedResult.age_category) + ' ' + capitalize(selectedResult.gender) + ')' : 'Group Position'"></span>
                                 <span class="font-mono font-bold text-black" x-text="selectedResult && selectedResult.rank_group ? '#' + selectedResult.rank_group : '-'"></span>
                             </div>
                             <div class="flex justify-between items-center text-xs py-1 border-b border-surface-50">
-                                <span class="text-black" x-text="selectedResult ? 'Gender Position (' + selectedResult.gender + ')' : 'Gender Position'"></span>
+                                <span class="text-black" x-text="selectedResult ? 'Gender Position (' + capitalize(selectedResult.gender) + ')' : 'Gender Position'"></span>
                                 <span class="font-mono font-bold text-black" x-text="selectedResult && selectedResult.gender_pos ? '#' + selectedResult.gender_pos : '-'"></span>
                             </div>
                             <div class="flex justify-between items-center text-xs py-1">
