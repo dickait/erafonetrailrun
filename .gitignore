@@ -18,6 +18,8 @@
 /public/storage
 /public/certificates
 /public/certificates/*.pdf
+/public/results-csv/*.csv
+/public/bib/*.csv
 /storage/*.key
 /storage/app/public
 /storage/pail

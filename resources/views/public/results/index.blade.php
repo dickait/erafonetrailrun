@@ -79,7 +79,12 @@
         certResult: null,
         getCertificatePdfUrl(result) {
             if (!result || !result.bib_number || !result.participant) return '#';
-            const nameSlug = result.participant.full_name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+            var rawName = result.participant.full_name.trim();
+            var words = rawName.split(/\s+/);
+            if (words.length === 1) {
+                rawName = rawName + ' ' + rawName;
+            }
+            var nameSlug = rawName.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
             return '/certificates/certificate_' + result.bib_number + '_' + nameSlug + '.pdf';
         },
         downloadCertificatePdf(result) {
