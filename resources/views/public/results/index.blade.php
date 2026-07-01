@@ -79,8 +79,24 @@
         certResult: null,
         getCertificatePdfUrl(result) {
             if (!result || !result.bib_number || !result.participant) return '#';
-            const nameSlug = result.participant.full_name.trim().replace(/\s+/g, '_').toLowerCase();
+            const nameSlug = result.participant.full_name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
             return '/certificates/certificate_' + result.bib_number + '_' + nameSlug + '.pdf';
+        },
+        downloadCertificatePdf(result) {
+            if (!result || !result.bib_number || !result.participant) return;
+            var url = this.getCertificatePdfUrl(result);
+            
+            fetch(url, { method: 'HEAD' })
+                .then(function(response) {
+                    if (response.ok) {
+                        window.open(url, '_blank');
+                    } else {
+                        alert('Certificate is not available yet. It is currently being prepared.');
+                    }
+                })
+                .catch(function() {
+                    alert('Certificate is not available yet. It is currently being prepared.');
+                });
         },
         generateCertificate(result) {
             this.certResult = result;
@@ -504,13 +520,13 @@
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                     </svg>
                                                     Detailed Results
-                                                </button>
-                                                <button @click="generateCertificate(result)" class="flex-1 md:flex-none inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl shadow-sm transition-all text-xs" type="button">
-                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                    </svg>
-                                                    Download Certificate
-                                                </button>
+                                                 </button>
+                                                 <a @click.prevent="downloadCertificatePdf(result)" :href="getCertificatePdfUrl(result)" class="flex-1 md:flex-none inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl shadow-sm transition-all text-xs">
+                                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                     </svg>
+                                                     Download Certificate
+                                                 </a>
                                             </div>
                                         </div>
                                     </td>
@@ -658,9 +674,9 @@
                         <button @click="showModal = false" class="px-4 py-2 bg-white border border-surface-300 hover:bg-surface-50 text-black font-semibold rounded-xl text-xs transition-colors">
                             Close
                         </button>
-                        <button @click="showModal = false; generateCertificate(selectedResult)" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl text-xs transition-colors shadow-sm">
+                        <a @click.prevent="downloadCertificatePdf(selectedResult)" :href="getCertificatePdfUrl(selectedResult)" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl text-xs transition-colors shadow-sm flex items-center justify-center">
                             Download Certificate
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>

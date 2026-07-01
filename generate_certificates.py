@@ -1,6 +1,7 @@
 import os
 import csv
 import io
+import re
 import pypdf
 from reportlab.pdfgen import canvas
 from reportlab.lib.colors import HexColor
@@ -108,16 +109,22 @@ def draw_text(can, text, spec):
     else:
         can.drawString(x, y, text)
 
+_TEMPLATE_BYTES = None
+
 def generate_single_certificate(data, output_filename):
     """Generate a single certificate PDF by overlaying text on the template."""
+    global _TEMPLATE_BYTES
     template_path = CONFIG["template_path"]
     
-    if not os.path.exists(template_path):
-        print(f"Error: Template PDF not found at '{template_path}'")
-        return False
-        
-    # Read the template PDF
-    reader = pypdf.PdfReader(template_path)
+    if _TEMPLATE_BYTES is None:
+        if not os.path.exists(template_path):
+            print(f"Error: Template PDF not found at '{template_path}'")
+            return False
+        with open(template_path, "rb") as f:
+            _TEMPLATE_BYTES = f.read()
+            
+    # Read the template PDF from memory cache
+    reader = pypdf.PdfReader(io.BytesIO(_TEMPLATE_BYTES))
     template_page = reader.pages[0]
     width = float(template_page.mediabox.width)
     height = float(template_page.mediabox.height)
@@ -171,7 +178,8 @@ def process_csv(csv_path, limit=None):
             
             # Format filename using Bib number and Name
             bib_num = cleaned_row.get("Bib", f"unknown_{count}")
-            name_slug = cleaned_row.get("Name", "participant").replace(" ", "_").lower()
+            raw_name = cleaned_row.get("Name", "participant").strip().lower()
+            name_slug = re.sub(r'[^a-z0-9]+', '_', raw_name).strip('_')
             output_filename = os.path.join(CONFIG["output_dir"], f"certificate_{bib_num}_{name_slug}.pdf")
             
             # Generate the certificate
