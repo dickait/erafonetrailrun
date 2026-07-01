@@ -40,8 +40,7 @@ class ResultsController extends Controller
         // Cache the entire results for 60 minutes
         $data = Cache::remember('race_results_public_data', 3600, function () {
             $allResults = RaceResult::with('participant:id,full_name,community')
-                ->where('status', 'FINISHED')
-                ->orderBy('rank_overall')
+                ->whereIn('status', ['FINISHED', 'DNF', 'DNS'])
                 ->get();
 
             $processedResults = collect();
@@ -52,9 +51,23 @@ class ResultsController extends Controller
             });
 
             foreach ($byDistance as $distanceVal => $resultsInDistance) {
-                // Ensure results are sorted by gun_time
-                $sorted = $resultsInDistance->sortBy(function ($r) {
-                    return $r->gun_time ?: '99:99:99';
+                // Ensure results are sorted: FINISHED (by gun_time) -> DNF -> DNS
+                $sorted = $resultsInDistance->sort(function ($a, $b) {
+                    $statusOrder = ['FINISHED' => 1, 'DNF' => 2, 'DNS' => 3];
+                    $aStatus = $statusOrder[$a->status] ?? 1;
+                    $bStatus = $statusOrder[$b->status] ?? 1;
+                    
+                    if ($aStatus !== $bStatus) {
+                        return $aStatus <=> $bStatus;
+                    }
+                    
+                    if ($a->status === 'FINISHED') {
+                        $aTime = $a->gun_time ?: '99:99:99';
+                        $bTime = $b->gun_time ?: '99:99:99';
+                        return strcmp($aTime, $bTime);
+                    }
+                    
+                    return $a->bib_number <=> $b->bib_number;
                 })->values();
 
                 $genderCounters = [
@@ -62,33 +75,72 @@ class ResultsController extends Controller
                     'female' => 0,
                 ];
 
-                foreach ($sorted as $index => $result) {
-                    $gender = strtolower($result->gender);
-                    if ($gender !== 'male' && $gender !== 'female') {
-                        $gender = 'male';
+                $finishersCount = 0;
+                foreach ($sorted as $result) {
+                    if ($result->status === 'FINISHED') {
+                        $finishersCount++;
+                        $gender = strtolower($result->gender);
+                        if ($gender !== 'male' && $gender !== 'female') {
+                            $gender = 'male';
+                        }
+
+                        $genderCounters[$gender]++;
+                        $result->gender_pos = $genderCounters[$gender];
+
+                        if (!$result->rank_category) {
+                            $result->rank_category = $finishersCount;
+                        }
+
+                        // Calculate pace
+                        $timeForPace = $result->net_time ?: $result->gun_time;
+                        $result->pace = self::calculatePace($timeForPace, (float)$result->distance_km);
+                    } else {
+                        $result->gender_pos = null;
+                        $result->rank_category = null;
+                        $result->rank_overall = null;
+                        $result->rank_group = null;
+                        $result->pace = '-';
                     }
-
-                    $genderCounters[$gender]++;
-                    $result->gender_pos = $genderCounters[$gender];
-
-                    if (!$result->rank_category) {
-                        $result->rank_category = $index + 1;
-                    }
-
-                    // Calculate pace
-                    $timeForPace = $result->net_time ?: $result->gun_time;
-                    $result->pace = self::calculatePace($timeForPace, (float)$result->distance_km);
 
                     $processedResults->push($result);
                 }
             }
 
+            // Custom sort function for tabs
+            $sortResults = function ($collection) {
+                return $collection->sort(function ($a, $b) {
+                    $statusOrder = ['FINISHED' => 1, 'DNF' => 2, 'DNS' => 3];
+                    $aStatus = $statusOrder[$a->status] ?? 1;
+                    $bStatus = $statusOrder[$b->status] ?? 1;
+                    if ($aStatus !== $bStatus) {
+                        return $aStatus <=> $bStatus;
+                    }
+                    if ($a->status === 'FINISHED') {
+                        $aRank = $a->rank_category ?: $a->rank_overall ?: 999999;
+                        $bRank = $b->rank_category ?: $b->rank_overall ?: 999999;
+                        return $aRank <=> $bRank;
+                    }
+                    return $a->bib_number <=> $b->bib_number;
+                })->values();
+            };
+
             // Group by distance for tabs
             $groupedResults = [
-                'all' => $processedResults->sortBy('rank_overall')->values(),
-                '5' => $processedResults->filter(fn($r) => (int)$r->distance_km === 5)->sortBy('rank_category')->values(),
-                '10' => $processedResults->filter(fn($r) => (int)$r->distance_km === 10)->sortBy('rank_category')->values(),
-                '15' => $processedResults->filter(fn($r) => (int)$r->distance_km === 15)->sortBy('rank_category')->values(),
+                'all' => $processedResults->sort(function ($a, $b) {
+                    $statusOrder = ['FINISHED' => 1, 'DNF' => 2, 'DNS' => 3];
+                    $aStatus = $statusOrder[$a->status] ?? 1;
+                    $bStatus = $statusOrder[$b->status] ?? 1;
+                    if ($aStatus !== $bStatus) {
+                        return $aStatus <=> $bStatus;
+                    }
+                    if ($a->status === 'FINISHED') {
+                        return ($a->rank_overall ?: 999999) <=> ($b->rank_overall ?: 999999);
+                    }
+                    return $a->bib_number <=> $b->bib_number;
+                })->values(),
+                '5' => $sortResults($processedResults->filter(fn($r) => (int)$r->distance_km === 5)),
+                '10' => $sortResults($processedResults->filter(fn($r) => (int)$r->distance_km === 10)),
+                '15' => $sortResults($processedResults->filter(fn($r) => (int)$r->distance_km === 15)),
             ];
 
             // Podium data
@@ -104,7 +156,7 @@ class ResultsController extends Controller
             return [
                 'groupedResults' => $groupedResults,
                 'podiums' => $podiums,
-                'totalCount' => $allResults->count()
+                'totalCount' => $allResults->where('status', 'FINISHED')->count()
             ];
         });
 

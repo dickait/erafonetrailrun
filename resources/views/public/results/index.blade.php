@@ -437,7 +437,7 @@
                                 <!-- Time Column Sortable -->
                                 <th class="px-4 py-3.5 cursor-pointer select-none hover:bg-surface-100 transition-colors" @click="sortBy = (sortBy === 'time_asc' ? 'time_desc' : 'time_asc')">
                                     <div class="flex items-center gap-1.5">
-                                        <span>Time</span>
+                                        <span>Finish Time</span>
                                         <span class="flex flex-col text-[8px] leading-[4px]">
                                             <span :class="sortBy === 'time_asc' ? 'text-brand-600' : 'text-black/30'">▲</span>
                                             <span :class="sortBy === 'time_desc' ? 'text-brand-600' : 'text-black/30'">▼</span>
@@ -466,7 +466,7 @@
                                     </td>
                                     
                                     <!-- Pos (Category position in that distance, swapped to rank_group when filtered) -->
-                                    <td class="px-4 py-3.5 font-display font-bold text-black" x-text="(filterGender !== 'all' || filterAgeCategory !== 'all') ? (result.rank_group ? '#' + result.rank_group : '-') : (result.rank_category ? '#' + result.rank_category : '-')"></td>
+                                    <td class="px-4 py-3.5 font-display font-bold text-black" x-text="result.status !== 'FINISHED' ? '-' : ((filterGender !== 'all' || filterAgeCategory !== 'all') ? (result.rank_group ? '#' + result.rank_group : '-') : (result.rank_category ? '#' + result.rank_category : '-'))"></td>
                                     
                                     <!-- Race No (BIB) -->
                                     <td class="px-4 py-3.5">
@@ -479,7 +479,7 @@
                                     <td class="px-4 py-3.5 font-bold text-black uppercase" x-text="result.participant ? result.participant.full_name : '-'"></td>
                                     
                                     <!-- Time (Net Time preference, fallback to Gun Time) -->
-                                    <td class="px-4 py-3.5 font-mono font-bold text-brand-500" x-text="result.net_time || result.gun_time || '-'"></td>
+                                    <td class="px-4 py-3.5 font-mono font-bold text-brand-500" x-text="result.status !== 'FINISHED' ? result.status : (result.net_time || result.gun_time || '-')"></td>
                                     
                                     <!-- Category (Distance + Age group) -->
                                     <td class="px-4 py-3.5">
@@ -490,13 +490,13 @@
                                     </td>
                                     
                                     <!-- Cat Pos (Position in group, swapped to rank_category when filtered) -->
-                                    <td class="px-4 py-3.5 font-mono text-black" x-text="(filterGender !== 'all' || filterAgeCategory !== 'all') ? (result.rank_category ? '#' + result.rank_category : '-') : (result.rank_group ? '#' + result.rank_group : '-')"></td>
+                                    <td class="px-4 py-3.5 font-mono text-black" x-text="result.status !== 'FINISHED' ? '-' : ((filterGender !== 'all' || filterAgeCategory !== 'all') ? (result.rank_category ? '#' + result.rank_category : '-') : (result.rank_group ? '#' + result.rank_group : '-'))"></td>
                                     
                                     <!-- Gender -->
                                     <td class="px-4 py-3.5 uppercase text-black" x-text="result.gender"></td>
                                     
                                     <!-- Gen Pos (Position in distance + gender) -->
-                                    <td class="px-4 py-3.5 font-mono text-black" x-text="result.gender_pos ? '#' + result.gender_pos : '-'"></td>
+                                    <td class="px-4 py-3.5 font-mono text-black" x-text="result.status !== 'FINISHED' ? '-' : (result.gender_pos ? '#' + result.gender_pos : '-')"></td>
                                 </tr>
                                 <!-- Expanded row immediately follows parent row -->
                                 <tr x-show="isRowExpanded(result.id)" x-cloak class="bg-surface-50/40 border-b border-surface-200">
@@ -526,7 +526,7 @@
                                                     </svg>
                                                     Detailed Results
                                                  </button>
-                                                 <a @click.prevent="downloadCertificatePdf(result)" :href="getCertificatePdfUrl(result)" class="flex-1 md:flex-none inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl shadow-sm transition-all text-xs">
+                                                 <a x-show="result.status === 'FINISHED'" @click.prevent="downloadCertificatePdf(result)" :href="getCertificatePdfUrl(result)" class="flex-1 md:flex-none inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl shadow-sm transition-all text-xs">
                                                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                                      </svg>
@@ -640,15 +640,15 @@
                         </div>
                         
                         <div class="grid grid-cols-2 gap-3">
-                            <div class="bg-surface-50 p-3 rounded-2xl border border-surface-200/60">
+                            <div class="bg-surface-50 p-3 rounded-2xl border border-surface-300">
                                 <span class="text-[9px] font-bold text-black uppercase tracking-wider block mb-0.5">Distance Category</span>
                                 <span class="font-display font-black text-lg text-black" x-text="selectedResult ? (parseFloat(selectedResult.distance_km) === 5 ? '5K Family' : parseFloat(selectedResult.distance_km) + 'K') : '-'"></span>
                             </div>
-                            <div class="bg-surface-50 p-3 rounded-2xl border border-surface-200/60">
+                            <div class="bg-surface-50 p-3 rounded-2xl border border-surface-300">
                                 <span class="text-[9px] font-bold text-black uppercase tracking-wider block mb-0.5">Age Group / Gender</span>
                                 <span class="font-display font-black text-lg text-black" x-text="selectedResult ? capitalize(selectedResult.age_category) + ' (' + (selectedResult.gender === 'male' ? 'M' : 'F') + ')' : '-'"></span>
                             </div>
-                            <div class="bg-surface-50 p-3 rounded-2xl border border-surface-200/60 col-span-2">
+                            <div class="bg-surface-50 p-3 rounded-2xl border border-surface-300 col-span-2">
                                 <span class="text-[9px] font-bold text-black uppercase tracking-wider block mb-0.5">Finish Time</span>
                                 <span class="font-mono font-bold text-lg text-brand-600" x-text="selectedResult ? selectedResult.gun_time || '-' : '-'"></span>
                             </div>
@@ -679,7 +679,7 @@
                         <button @click="showModal = false" class="px-4 py-2 bg-white border border-surface-300 hover:bg-surface-50 text-black font-semibold rounded-xl text-xs transition-colors">
                             Close
                         </button>
-                        <a @click.prevent="downloadCertificatePdf(selectedResult)" :href="getCertificatePdfUrl(selectedResult)" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl text-xs transition-colors shadow-sm flex items-center justify-center">
+                        <a x-show="selectedResult && selectedResult.status === 'FINISHED'" @click.prevent="downloadCertificatePdf(selectedResult)" :href="getCertificatePdfUrl(selectedResult)" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl text-xs transition-colors shadow-sm flex items-center justify-center">
                             Download Certificate
                         </a>
                     </div>
