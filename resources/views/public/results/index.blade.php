@@ -369,7 +369,7 @@
                                 <!-- Pos Column Sortable -->
                                 <th class="px-4 py-3.5 cursor-pointer select-none hover:bg-surface-100 transition-colors" @click="sortBy = (sortBy === 'rank_asc' ? 'rank_desc' : 'rank_asc')">
                                     <div class="flex items-center gap-1.5">
-                                        <span>Pos</span>
+                                        <span x-text="(filterGender !== 'all' || filterAgeCategory !== 'all') ? 'Cat Pos' : 'Pos'"></span>
                                         <span class="flex flex-col text-[8px] leading-[4px]">
                                             <span :class="sortBy === 'rank_asc' ? 'text-brand-600' : 'text-black/30'">▲</span>
                                             <span :class="sortBy === 'rank_desc' ? 'text-brand-600' : 'text-black/30'">▼</span>
@@ -407,7 +407,7 @@
                                     </div>
                                 </th>
                                 <th class="px-4 py-3.5">Category</th>
-                                <th class="px-4 py-3.5">Cat Pos</th>
+                                <th class="px-4 py-3.5" x-text="(filterGender !== 'all' || filterAgeCategory !== 'all') ? 'Overall Pos' : 'Cat Pos'"></th>
                                 <th class="px-4 py-3.5">Gender</th>
                                 <th class="px-4 py-3.5">Gen Pos</th>
                             </tr>
@@ -427,8 +427,8 @@
                                         </button>
                                     </td>
                                     
-                                    <!-- Pos (Category position in that distance) -->
-                                    <td class="px-4 py-3.5 font-display font-bold text-black" x-text="result.rank_category ? '#' + result.rank_category : '-'"></td>
+                                    <!-- Pos (Category position in that distance, swapped to rank_group when filtered) -->
+                                    <td class="px-4 py-3.5 font-display font-bold text-black" x-text="(filterGender !== 'all' || filterAgeCategory !== 'all') ? (result.rank_group ? '#' + result.rank_group : '-') : (result.rank_category ? '#' + result.rank_category : '-')"></td>
                                     
                                     <!-- Race No (BIB) -->
                                     <td class="px-4 py-3.5">
@@ -451,8 +451,8 @@
                                         </div>
                                     </td>
                                     
-                                    <!-- Cat Pos (Position in distance + age group + gender) -->
-                                    <td class="px-4 py-3.5 font-mono text-black" x-text="result.rank_group ? '#' + result.rank_group : '-'"></td>
+                                    <!-- Cat Pos (Position in group, swapped to rank_category when filtered) -->
+                                    <td class="px-4 py-3.5 font-mono text-black" x-text="(filterGender !== 'all' || filterAgeCategory !== 'all') ? (result.rank_category ? '#' + result.rank_category : '-') : (result.rank_group ? '#' + result.rank_group : '-')"></td>
                                     
                                     <!-- Gender -->
                                     <td class="px-4 py-3.5 uppercase text-black" x-text="result.gender"></td>
@@ -465,14 +465,10 @@
                                     <td colspan="9" class="px-6 py-5">
                                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                             <!-- Quick Stats / Detailed Info -->
-                                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-3 text-xs w-full md:w-auto">
+                                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-x-8 gap-y-3 text-xs w-full md:w-auto">
                                                 <div>
                                                     <span class="text-[9px] text-black block font-semibold uppercase">Community/Club</span>
                                                     <span class="font-bold text-black" x-text="(result.participant && result.participant.community) || '-'"></span>
-                                                </div>
-                                                <div>
-                                                    <span class="text-[9px] text-black block font-semibold uppercase">Net Time</span>
-                                                    <span class="font-mono font-bold text-black" x-text="result.net_time || '-'"></span>
                                                 </div>
                                                 <div>
                                                     <span class="text-[9px] text-black block font-semibold uppercase">Finish Time</span>
