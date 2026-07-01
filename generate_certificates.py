@@ -178,7 +178,16 @@ def process_csv(csv_path, limit=None):
             
             # Format filename using Bib number and Name
             bib_num = cleaned_row.get("Bib", f"unknown_{count}")
-            raw_name = cleaned_row.get("Name", "participant").strip().lower()
+            # Clean name duplication (e.g. "Sunardin Sunardin" -> "Sunardin")
+            raw_name_original = cleaned_row.get("Name", "participant").strip()
+            words = raw_name_original.split()
+            if len(words) > 1 and len(set(w.lower() for w in words)) == 1:
+                cleaned_name = words[0]
+            else:
+                cleaned_name = raw_name_original
+            
+            cleaned_row["Name"] = cleaned_name
+            raw_name = cleaned_name.lower()
             name_slug = re.sub(r'[^a-z0-9]+', '_', raw_name).strip('_')
             output_filename = os.path.join(CONFIG["output_dir"], f"certificate_{bib_num}_{name_slug}.pdf")
             

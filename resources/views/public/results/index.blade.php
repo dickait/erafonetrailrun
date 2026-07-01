@@ -81,8 +81,18 @@
             if (!result || !result.bib_number || !result.participant) return '#';
             var rawName = result.participant.full_name.trim();
             var words = rawName.split(/\s+/);
-            if (words.length === 1) {
-                rawName = rawName + ' ' + rawName;
+            if (words.length !== 1) {
+                var isDuplicate = true;
+                var firstWord = words[0].toLowerCase();
+                for (var i = 1; words[i]; i++) {
+                    if (words[i].toLowerCase() !== firstWord) {
+                        isDuplicate = false;
+                        break;
+                    }
+                }
+                if (isDuplicate) {
+                    rawName = words[0];
+                }
             }
             var nameSlug = rawName.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
             return '/certificates/certificate_' + result.bib_number + '_' + nameSlug + '.pdf';
