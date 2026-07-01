@@ -635,7 +635,7 @@
                             </div>
                             <div>
                                 <h4 class="font-bold text-black text-sm uppercase" x-text="selectedResult && selectedResult.participant ? selectedResult.participant.full_name : ''"></h4>
-                                <p class="text-[10px] text-black font-mono" x-text="selectedResult && selectedResult.participant && selectedResult.participant.community ? 'Club: ' + selectedResult.participant.community : 'No Club / Community'"></p>
+                                <p class="text-[10px] text-black font-mono" x-text="selectedResult && selectedResult.participant && selectedResult.participant.community ? 'Community: ' + selectedResult.participant.community : 'No Community'"></p>
                             </div>
                         </div>
                         
