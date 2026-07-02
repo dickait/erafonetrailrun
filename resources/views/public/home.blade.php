@@ -3,8 +3,12 @@
 @section('content')
     <!-- Hero Section -->
     <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-br from-brand-900 via-brand-800 to-brand-950"></div>
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(239,28,36,0.3),transparent_60%)]"></div>
+        <!-- Hero Background Image -->
+        <div class="absolute inset-0">
+            <img src="{{ asset('storage/eratrailrun2026-photos/BIL03558.webp') }}" alt="Hero Background" class="w-full h-full object-cover object-center">
+            <div class="absolute inset-0 bg-gradient-to-br from-brand-950/90 via-brand-900/85 to-brand-950/95"></div>
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(239,28,36,0.3),transparent_60%)]"></div>
+        </div>
         <!-- Particles -->
         <div class="absolute inset-0" id="particles">
             @for($i = 0; $i < 6; $i++)
@@ -121,7 +125,7 @@
                 </div>
                 <div class="relative">
                     <div class="relative w-full aspect-square overflow-hidden rounded-3xl shadow-2xl">
-                        <img src="{{ asset('storage/last-event-photos/yog01152.webp') }}" alt="Last Event - Era Trail Run"
+                        <img src="{{ asset('storage/eratrailrun2026-photos/JRG04281.webp') }}" alt="About Event - Era Trail Run"
                             style="object-position: 50% 60%;"
                             loading="lazy"
                             class="w-full h-full object-cover object-center transition-transform duration-700 hover:scale-110" />
@@ -372,17 +376,17 @@
 
             @php
                 $previewPhotos = [
-                    'yog01298.webp', 'yog01447.webp', 'yog01659.webp',
-                    'yog00911.webp', 'yog00628.webp', 'yog01155.webp',
-                    'yog01210.webp', 'yog00977.webp', 'yog01574.webp'
+                    'DIP (719).webp', '0L9A0148.webp', 'DSCF2882.webp',
+                    'DIP (292).webp', 'RAR_0107.webp', 'KJRL2974.webp',
+                    'JPG_6529.webp', '0L9A0547.webp', '0L9A0724.webp'
                 ];
             @endphp
 
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12">
                 @foreach($previewPhotos as $photo)
                     <div class="aspect-square overflow-hidden rounded-2xl cursor-pointer group relative"
-                         onclick="openGalleryModal('{{ asset('storage/last-event-photos/' . $photo) }}', this)">
-                        <img src="{{ asset('storage/last-event-photos/' . $photo) }}" 
+                         onclick="openGalleryModal('{{ asset('storage/eratrailrun2026-photos/' . $photo) }}', this)">
+                        <img src="{{ asset('storage/eratrailrun2026-photos/' . $photo) }}" 
                              alt="Era Trail Run Gallery"
                              loading="lazy"
                              class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110">

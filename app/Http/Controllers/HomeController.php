@@ -25,7 +25,7 @@ class HomeController extends Controller
 
     public function gallery()
     {
-        $directory = storage_path('app/public/last-event-photos');
+        $directory = storage_path('app/public/eratrailrun2026-photos');
         $photos = [];
         
         if (file_exists($directory)) {
