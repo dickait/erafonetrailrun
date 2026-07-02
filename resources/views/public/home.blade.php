@@ -6,8 +6,8 @@
         <!-- Hero Background Image -->
         <div class="absolute inset-0">
             <img src="{{ asset('storage/eratrailrun2026-photos/BIL03558.webp') }}" alt="Hero Background" class="w-full h-full object-cover object-center">
-            <div class="absolute inset-0 bg-gradient-to-br from-brand-950/90 via-brand-900/85 to-brand-950/95"></div>
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(239,28,36,0.3),transparent_60%)]"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-surface-950/80 via-surface-950/45 to-surface-950/85"></div>
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(239,28,36,0.12),transparent_60%)]"></div>
         </div>
         <!-- Particles -->
         <div class="absolute inset-0" id="particles">
