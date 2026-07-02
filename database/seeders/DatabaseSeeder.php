@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
             'location' => 'Bogor Nirwana Residence, Bogor',
             'event_date' => '2026-06-28 06:00:00',
             'registration_open' => '2026-01-01 00:00:00',
-            'registration_close' => '2026-06-27 23:59:59',
+            'registration_close' => '2026-06-20 23:59:59',
             'is_active' => true,
         ]);
 

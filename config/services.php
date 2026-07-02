@@ -43,9 +43,9 @@ return [
 
     'payment' => env('PAYMENT', 'manual'),
 
-    'is_open' => env('IS_OPEN', true),
+    'is_open' => filter_var(env('IS_OPEN', true), FILTER_VALIDATE_BOOLEAN),
 
-    'is_over' => env('IS_OVER', 'no') === 'yes',
+    'is_over' => filter_var(env('IS_OVER', false), FILTER_VALIDATE_BOOLEAN),
 
     'midtrans' => [
         'server_key' => env('MIDTRANS_API_SERVER_KEY'),

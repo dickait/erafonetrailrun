@@ -27,7 +27,7 @@ return [
     'hero_categories_label' => 'Category:',
     'hero_description' => 'An epic journey through beautiful hills and forests.',
     'hero_register' => 'View Categories →',
-    'hero_learn_more' => 'Learn More',
+    'hero_learn_more' => 'View Gallery',
 
     // Countdown
     'countdown_days' => 'Days',

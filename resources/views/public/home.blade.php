@@ -72,7 +72,7 @@
                         {{ __('messages.hero_register') }}
                     </a>
                 @endif
-                <a href="#about"
+                <a href="{{ route('gallery') }}"
                     class="px-8 py-4 bg-white/10 border border-white/20 hover:border-white/40 text-white font-semibold rounded-2xl transition-all duration-300 hover:bg-white/20 backdrop-blur-sm">
                     {{ __('messages.hero_learn_more') }}
                 </a>

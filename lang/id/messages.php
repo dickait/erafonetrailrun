@@ -27,7 +27,7 @@ return [
     'hero_categories_label' => 'Kategori:',
     'hero_description' => 'Petualangan epik melewati bukit dan hutan yang indah.',
     'hero_register' => 'Lihat Kategori →',
-    'hero_learn_more' => 'Pelajari Lebih Lanjut',
+    'hero_learn_more' => 'Lihat Galeri',
 
     // Countdown
     'countdown_days' => 'Hari',
